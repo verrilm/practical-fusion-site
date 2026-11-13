@@ -23,8 +23,8 @@ a{color:inherit;text-decoration:none}
 @media (hover:hover) and (pointer:fine){body,a,button,input,textarea{cursor:none}}
 
 /* ---------- paper-mâché texture: one shared sheet over the whole site ---------- */
-.paper{position:fixed;inset:-50px;z-index:90;pointer-events:none;background:url("assets/paper.webp") 0 0/900px 900px repeat;mix-blend-mode:hard-light;opacity:.5}
-.paper.tone{mix-blend-mode:soft-light;opacity:.5;background-size:1300px 1300px;background-position:310px 170px}
+.paper{position:fixed;inset:0;z-index:90;pointer-events:none;background:url("assets/paper.webp") 0 0/384px 384px repeat;mix-blend-mode:hard-light;opacity:.28}
+.paper.tone{mix-blend-mode:soft-light;opacity:.55;background-size:1536px 1536px;background-position:211px 97px}
 
 /* ---------- starfield + cursor ---------- */
 #stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
@@ -67,7 +67,7 @@ a{color:inherit;text-decoration:none}
 .kicker{font-weight:500;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ember);display:flex;gap:14px;align-items:center;margin-bottom:26px;opacity:0;transform:translateY(10px);transition:opacity .7s,transform .7s}
 .center .kicker{justify-content:center}
 .kicker::before{content:"";width:28px;height:1px;background:currentColor}
-.chapter h1,.chapter h2{font-weight:400;font-size:clamp(38px,6.2vw,92px);line-height:1;letter-spacing:-.035em}
+.chapter h1,.chapter h2{font-weight:400;font-size:clamp(36px,5.2vw,80px);line-height:1;letter-spacing:-.035em}
 .chapter h2{font-size:clamp(34px,5.2vw,78px)}
 .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
 .w>span{display:inline-block;transform:translateY(105%);transition:transform 1s cubic-bezier(.2,.7,.1,1);transition-delay:calc(var(--i)*55ms)}
@@ -420,10 +420,10 @@ footer a:hover{color:var(--moon)}
     <div class="vignette"></div>
 
     <!-- chapter copy -->
-    <div class="chapter" data-ch="0">
-      <div class="kicker">Practical Fusion · Mission 001</div>
-      <h1 class="split">Every frontier begins with a single step.</h1>
-      <p>A story about power, the people who learn to harness it, and the companies they build with it.</p>
+    <div class="chapter" data-ch="0" style="max-width:min(720px,88vw)">
+      <div class="kicker">Practical Fusion Solutions · Consultancy &amp; venture studio</div>
+      <h1 class="split">We build companies whose innovations will change the world.</h1>
+      <p>We turn high-tech ideas into revenue-generating products and sustainable businesses, from semiconductors and AI to energy, quantum and biotech.</p>
       <div class="ctas"><a class="btn solid" href="#ch1" data-hover data-go="1">Begin the mission <span class="arr">↓</span></a></div>
     </div>
     <div class="chapter" data-ch="1">
@@ -447,19 +447,19 @@ footer a:hover{color:var(--moon)}
       <p>The difference is the tether: strategy, engineering, and a story people can follow. That's the work we do.</p>
     </div>
     <div class="chapter center" data-ch="5">
-      <div class="kicker">T+04 · Practical Fusion Solutions</div>
-      <h2 class="split">We build companies whose innovations will change the world.</h2>
-      <p>We're a consultancy and venture studio where semiconductors, AI, energy, quantum and biotech meet. We harnessed the nucleus, and now we're harnessing AI. The sky was never the limit.</p>
+      <div class="kicker">T+04 · Practical Fusion</div>
+      <h2 class="split">The sky was never the limit.</h2>
+      <p>We learned to harness the nucleus. Now it's AI's turn, and we help mission-driven innovators turn it into products, revenue and companies that last.</p>
       <div class="ctas"><a class="btn solid" href="#crew" data-hover>Meet the crew <span class="arr">→</span></a><a class="btn" href="#contact" data-hover>Make contact <span class="arr">→</span></a></div>
     </div>
 
     <nav class="hud" aria-label="Story chapters">
-      <a href="#" data-go="0" data-hover><span>LAUNCH</span><i></i></a>
+      <a href="#" data-go="0" data-hover><span>PRACTICAL FUSION</span><i></i></a>
       <a href="#" data-go="1" data-hover><span>T+00 · 1969</span><i></i></a>
       <a href="#" data-go="2" data-hover><span>T+01 · NUCLEUS</span><i></i></a>
       <a href="#" data-go="3" data-hover><span>T+02 · UNCHARTED</span><i></i></a>
       <a href="#" data-go="4" data-hover><span>T+03 · HARNESS</span><i></i></a>
-      <a href="#" data-go="5" data-hover><span>T+04 · FUSION</span><i></i></a>
+      <a href="#" data-go="5" data-hover><span>T+04 · NO LIMIT</span><i></i></a>
     </nav>
     <div class="scrollhint" id="hint"><span>Scroll to fly</span><i></i></div>
     <a class="skip" href="#crew" data-hover>Skip story →</a>

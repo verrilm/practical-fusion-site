@@ -4,7 +4,7 @@
 
 **Through-line:** *Power was always there. The breakthrough is learning to harness it.*
 
-**Art direction.** Clean line art with flat, two-tone cel shading, inspired by Moebius and Scavengers Reign (but entirely original drawings). Low detail, generous negative space. Deep indigo night built on the logo colour `#180552`, pale lilac line work, one warm "ember" accent `#FFB38A` reserved for the nucleus and moments of energy. Type: Nohemi Regular for slim, large headlines; Nohemi Medium for small uppercase labels.
+**Art direction.** Hand-inked line art (drawn over Midjourney compositions on iPad, one transparent layer per element) with flat cel shading, inspired by Moebius and Scavengers Reign (but entirely original drawings). Low detail, generous negative space. Deep indigo night built on the logo colour `#180552`, pale lilac line work, one warm "ember" accent `#FFB38A` reserved for the nucleus and moments of energy. One fine matte paper-tooth grain sits over the whole site in code, never baked into the art. Type: Nohemi Regular for slim, large headlines; Nohemi Medium for small uppercase labels.
 
 **Immersion layer (every scene).**
 - Cursor movement tilts the whole world a few degrees in 3D (perspective warp), and each illustration layer drifts by its depth: the far sky barely moves, the foreground rock moves most.
@@ -19,12 +19,12 @@
 
 | # | Scene | Visual | On-screen copy | Motion |
 |---|---|---|---|---|
-| 0 | **Launch** | A lone astronaut stands on a dark outcrop, looking up at a huge glowing planet ringed by three orbits: the atom as a celestial body. | *Mission 001.* "Every frontier begins with a single step." CTA: **Begin the mission** | Orbits turn slowly, the astronaut's visor catches the light, and the scene breathes with the cursor. |
+| 0 | **Launch** | A lone astronaut stands on a dark outcrop, looking up at a huge glowing planet ringed by three orbits: the atom as a celestial body. | *Practical Fusion Solutions · Consultancy & venture studio.* "We build companies whose innovations will change the world." A one-line description of what the company does. CTA: **Begin the mission** | Orbits turn slowly, the astronaut's visor catches the light, and the scene breathes with the cursor. |
 | 1 | **1969** | Lunar horizon, Earth rising, a tiny lander in the distance, and one boot print in the foreground dust. | *T+00 · July 20, 1969 · Sea of Tranquility.* "One small step redrew the map of the possible." | The camera starts low over the print and drifts toward Earth. |
 | 2 | **The nucleus** | A single atom fills the frame: a warm nucleus with electrons tracing their orbits. | *T+01 · The nucleus.* "The power inside the atom was always there." Harnessing it, not discovering it, changed the century. | Electrons orbit, the nucleus pulses, and faint energy rings radiate out. |
 | 3 | **Uncharted** | An astronaut floats on a tether facing a vast constellation of connected nodes: a neural map of the unknown. | *T+02 · Uncharted territory.* "Today's frontier is intelligence." AI is power waiting to be harnessed. | Nodes flicker on, one by one. The network drifts in deep parallax. |
 | 4 | **Harness** | Ribbons of raw energy sweep in from the dark and bend into orbit around a glowing core. The astronaut holds the tether, and a craft launches along a trajectory. | *T+03 · Harness.* "Raw, it's noise. Harnessed, it's propulsion." | Energy flows along the ribbons and the craft rides its arc. |
-| 5 | **Practical Fusion** | The logo atom assembles above a glowing horizon. | *T+04.* "We build companies whose innovations will change the world." CTAs: **Meet the crew** / **Make contact** | Rings settle into the logo, and the starfield slows. |
+| 5 | **No limit** | The logo atom assembles above a glowing horizon. | *T+04 · Practical Fusion.* "The sky was never the limit." We harnessed the nucleus; now it's AI's turn. CTAs: **Meet the crew** / **Make contact** | Rings settle into the logo, and the starfield slows. |
 
 ## Act II — The mission briefing (normal scroll, same universe)
 
