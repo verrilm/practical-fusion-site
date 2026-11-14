@@ -13,6 +13,8 @@
 </head>
 <body class="locked">
 
+<div class="edge-blur" aria-hidden="true"></div>
+
 <!-- ================= HEADER ================= -->
 <header class="nav" id="nav">
   <a class="brand" href="#top" data-home aria-label="Practical Fusion — home">
@@ -20,9 +22,9 @@
     <span><b>PRACTICAL</b> <span>FUSION</span></span>
   </a>
   <nav class="nav-right" aria-label="Sections">
-    <a class="nav-top" href="#top" data-home>Home</a>
+    <a class="nav-top" href="#top" data-home><span class="roll" data-t="Home"><span>Home</span></span></a>
     <div class="nav-item">
-      <button class="nav-top" type="button" aria-haspopup="true">Services<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <button class="nav-top" type="button" aria-haspopup="true"><span class="roll" data-t="Services"><span>Services</span></span><svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5l3 3 3-3"/></svg></button>
       <div class="dd"><div class="dd-panel">
         <div class="dd-left"><p class="dd-title">Three disciplines,<br>one team.</p><a class="dd-all" href="#services" data-jump>All our services<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
         <div class="dd-list">
@@ -33,7 +35,7 @@
       </div></div>
     </div>
     <div class="nav-item">
-      <button class="nav-top" type="button" aria-haspopup="true">Work<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <button class="nav-top" type="button" aria-haspopup="true"><span class="roll" data-t="Work"><span>Work</span></span><svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5l3 3 3-3"/></svg></button>
       <div class="dd"><div class="dd-panel">
         <div class="dd-left"><p class="dd-title">From idea to<br>steady state.</p><a class="dd-all" href="#stories" data-jump>View case studies<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
         <div class="dd-list">
@@ -45,17 +47,17 @@
       </div></div>
     </div>
     <div class="nav-item">
-      <button class="nav-top" type="button" aria-haspopup="true">About<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <button class="nav-top" type="button" aria-haspopup="true"><span class="roll" data-t="About"><span>About</span></span><svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5l3 3 3-3"/></svg></button>
       <div class="dd"><div class="dd-panel">
-        <div class="dd-left"><p class="dd-title">Consultancy &amp;<br>venture studio.</p><a class="dd-all" href="#about" data-jump>About us<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
+        <div class="dd-left"><p class="dd-title">Consultancy &amp;<br>venture studio.</p><a class="dd-all" href="about.html">About us<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
         <div class="dd-list">
-          <a class="dd-item" href="#about" data-jump><b><i></i>Who we are</b><span>The team behind Practical Fusion</span></a>
+          <a class="dd-item" href="about.html"><b><i></i>Who we are</b><span>The team behind Practical Fusion</span></a>
           <a class="dd-item" href="#venture" data-jump><b><i></i>Venture studio</b><span>How we invest in founders</span></a>
           <a class="dd-item" href="#contact" data-jump><b><i></i>Get in touch</b><span>Tell us about your project</span></a>
         </div>
       </div></div>
     </div>
-    <a href="#contact" data-jump class="nav-cta">Contact Us</a>
+    <a href="#contact" data-jump class="nav-cta"><span class="roll" data-t="Contact Us"><span>Contact Us</span></span></a>
   </nav>
 </header>
 
@@ -153,21 +155,6 @@
         <a class="btn fade" href="#contact" data-jump><span class="lbl">Begin your Mission</span><span class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
       </div>
       <canvas id="atom3d" aria-hidden="true"></canvas>
-    </div>
-  </section>
-
-  <section class="section about" id="about">
-    <div class="sec-head">
-      <p class="label split">About Us</p>
-      <div>
-        <h2 class="h-l split">Operators, engineers and storytellers for deep tech.</h2>
-        <p class="body-l fade">We've stood up institutes, won federal awards and launched products from a blank page. Now we bring that playbook to founders and organizations building what comes next.</p>
-      </div>
-    </div>
-    <div class="facts">
-      <div class="fact fade"><span>Where we work</span><p>Semiconductors, AI, energy, quantum and biotech</p></div>
-      <div class="fact fade" style="transition-delay:.1s"><span>How we engage</span><p>Full-time or fractional, as much or as little as you need</p></div>
-      <div class="fact fade" style="transition-delay:.2s"><span>Where we're based</span><p>West Palm Beach, Florida</p></div>
     </div>
   </section>
 

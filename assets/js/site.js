@@ -214,6 +214,7 @@ const FORM_ENDPOINT = "";
       }
     }
 
+    body.classList.toggle('scrolled', scrollY > 4);
     requestAnimationFrame(frame);
   }
 
@@ -227,7 +228,7 @@ const FORM_ENDPOINT = "";
   requestAnimationFrame(frame);
 
   // someone arriving at a section link (e.g. /#contact) skips the intro gate
-  if (location.hash && location.hash !== '#top' && $(location.hash)) { startMission(true); }
+  if (location.hash && location.hash !== '#top' && $(location.hash)) { const t = $(location.hash); startMission(true); requestAnimationFrame(() => t.scrollIntoView({ block: 'start' })); }
 
   /* ---------- contact form ---------- */
   const form = $('#form'), status = $('#status');

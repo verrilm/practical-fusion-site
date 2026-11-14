@@ -25,7 +25,7 @@ assets/vendor/                three.js (stored locally, no CDN)
 5. **Scroll:** sections slide over the scene with no rounding, shrinking or dimming.
 6. **Services:** each card's button unfolds its own label when the card is hovered.
 7. **Venture card:** the top half of a hollow wireframe atom in the right ~40% of the card, following the cursor.
-8. **About, Success Stories (static images), testimonial.**
+8. **Success Stories (static images), testimonial.** About is its own page (`about.html`).
 9. **Contact:** background, form card and landscape move at different speeds as it comes in; then it holds and the footer slides over it.
 
 ## Contact form
