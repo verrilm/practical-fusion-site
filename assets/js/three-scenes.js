@@ -215,5 +215,95 @@ function wireAtom() {
   })();
 }
 
+/* ============================================================
+   3. Section gems: a faceted crystal beside each section label.
+      Drops in with a background-coloured fill and white edges, then the fill
+      turns into a purple gradient and a dotted orbit grows out of it.
+   ============================================================ */
+function gemGeometry() {
+  // elongated hexagonal crystal: short crown, long pavilion, a slightly uneven girdle
+  const N = 6, top = [0, 0.25, 0], bot = [0, -0.37, 0], ring = [];
+  for (let i = 0; i < N; i++) {
+    const a = i / N * Math.PI * 2 + 0.3, r = 0.15 * (i % 2 ? 0.92 : 1);
+    ring.push([r * Math.cos(a), 0.04 + (i % 2 ? 0.012 : -0.012), r * Math.sin(a)]);
+  }
+  const p = [];
+  for (let i = 0; i < N; i++) {
+    const a = ring[i], b = ring[(i + 1) % N];
+    p.push(...top, ...b, ...a);   // crown facet
+    p.push(...bot, ...a, ...b);   // pavilion facet
+  }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3)); g.computeVertexNormals();
+  return g;
+}
+
+function sectionGems() {
+  const slots = [...document.querySelectorAll('.gem')]; if (!slots.length) return;
+  const geo = gemGeometry();
+  const edgePos = new THREE.EdgesGeometry(geo, 1).attributes.position.array;
+  const dotTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d'); g.fillStyle = '#fff'; g.beginPath(); g.arc(16, 16, 14, 0, Math.PI * 2); g.fill(); return new THREE.CanvasTexture(c); })();
+  const easeOut = x => 1 - Math.pow(1 - Math.min(Math.max(x, 0), 1), 3);
+  const easeIO = x => { x = Math.min(Math.max(x, 0), 1); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+
+  slots.forEach((slot, idx) => {
+    const canvas = slot.querySelector('canvas'); const renderer = makeRenderer(canvas); if (!renderer) return;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    renderer.setPixelRatio(dpr); renderer.setSize(200, 200, false);
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1.25, 1.25, 1.25, -1.25, -10, 10); camera.position.z = 5;
+
+    const tilt = new THREE.Group(); tilt.rotation.set(0.22, 0, 0.26); scene.add(tilt);
+    const spin = new THREE.Group(); spin.scale.setScalar(1.18); tilt.add(spin);
+
+    const fillMat = new THREE.ShaderMaterial({
+      uniforms: { uFill: { value: 0 }, uBg: { value: new THREE.Color('#030419') }, uPurple: { value: new THREE.Color('#8A78D8') } },
+      vertexShader: `varying vec3 vN; varying float vY;
+        void main(){ vN = normalize(normalMatrix * normal); vY = position.y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+      fragmentShader: `uniform float uFill; uniform vec3 uBg; uniform vec3 uPurple; varying vec3 vN; varying float vY;
+        void main(){
+          float lit = clamp(dot(normalize(vN), normalize(vec3(-0.55,0.7,0.6))), 0.0, 1.0);
+          float g = smoothstep(-0.40, 0.12, vY);                // purple through the body, fading to background at the tip
+          vec3 c = mix(uBg, uPurple * (0.45 + 0.75 * lit), g * 0.9 + 0.1 * lit);
+          gl_FragColor = vec4(mix(uBg, c, uFill), 1.0);
+        }`,
+      polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1
+    });
+    spin.add(new THREE.Mesh(geo, fillMat));
+    const eg = new LineSegmentsGeometry(); eg.setPositions(edgePos);
+    const lineMat = new LineMaterial({ color: '#FFFFFF', linewidth: 1.4 }); lineMat.resolution.set(200 * dpr, 200 * dpr);
+    spin.add(new LineSegments2(eg, lineMat));
+
+    // dotted orbit: lies almost edge-on, passes behind the gem on its far side
+    const orbit = new THREE.Group(); orbit.rotation.x = 1.25; tilt.add(orbit);
+    const dp = []; const ND = 48; for (let i = 0; i < ND; i++) { const a = i / ND * Math.PI * 2; dp.push(Math.cos(a), Math.sin(a), 0); }
+    const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.Float32BufferAttribute(dp, 3));
+    const dotMat = new THREE.PointsMaterial({ color: '#D9D1FF', size: 2.4 * dpr, sizeAttenuation: false, map: dotTex, transparent: true, opacity: 0, alphaTest: 0.01, depthWrite: false });
+    const dots = new THREE.Points(dg, dotMat); orbit.add(dots);
+
+    let visible = false, start = -1;
+    const clock = new THREE.Clock();
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { rootMargin: '120px' }).observe(slot);
+    new IntersectionObserver((es, o) => {
+      if (!es[0].isIntersecting) return;
+      o.disconnect(); slot.classList.add('on'); start = clock.getElapsedTime();
+    }, { rootMargin: '0px 0px -18% 0px', threshold: 1 }).observe(slot);
+
+    spin.rotation.y = idx * 1.3;
+    (function tick() {
+      requestAnimationFrame(tick);
+      const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+      if (!visible || start < 0) return;
+      const k = reduce ? 99 : t - start;
+      if (!reduce) { spin.rotation.y += dt * 0.35; dots.rotation.z -= dt * 0.25; }
+      fillMat.uniforms.uFill.value = easeIO((k - 1.25) / 1.1);           // once the gem has landed
+      const r = easeOut((k - 1.7) / 1.6);
+      orbit.scale.setScalar(0.1 + 0.42 * r);
+      dotMat.opacity = Math.min(1, r * 2.2) * 0.9;
+      renderer.render(scene, camera);
+    })();
+  });
+}
+
 dysonSun();
 wireAtom();
+sectionGems();
