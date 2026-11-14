@@ -163,7 +163,7 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .lines.in .lw{transform:none;transition:transform 1.2s var(--out) var(--d,0s)}
 /* blocks: wipe in from the left while sliding into place (same as verrilm.com) */
 /* cards: quick fade in while rising a little */
-.slide-in{opacity:0;transform:translateY(24px);transition:opacity .5s ease,transform .6s var(--out)}
+.slide-in{opacity:0;transform:translateY(70px);transition:opacity .9s ease,transform .9s var(--out)}
 .slide-in.in{opacity:1;transform:none}
 .fade{opacity:0;transform:translateY(24px);transition:opacity 1s .15s,transform 1.1s .15s var(--ease)}
 .fade.in{opacity:1;transform:none}
