@@ -227,9 +227,9 @@ const FORM_ENDPOINT = "";
         L.el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
       }
       // sun: big, bottom-right of the landing composition → left side on the mission
-      const Fw = Math.max(W, H * FRAME_AR), Fh = Fw / FRAME_AR, fx = (W - Fw) / 2, fy = H - Fh;
+      const Fw = Math.max(W, H * FRAME_AR), Fh = Fw / FRAME_AR, fx = W < H ? 0.32 * W - 0.268 * Fw : (W - Fw) / 2, fy = H - Fh;
       const narrow = W < 1100;
-      const x0 = fx + 0.875 * Fw, y0 = fy + 0.78 * Fh, r0 = 0.46 * Fh;
+      const x0 = W < H ? 0.95 * W : fx + 0.875 * Fw, y0 = fy + 0.78 * Fh, r0 = W < H ? 0.26 * Fh : 0.46 * Fh;
       const x1 = narrow ? 0.5 * W : 0.27 * W, y1 = narrow ? 0.34 * H : 0.5 * H, r1 = narrow ? 0.22 * Math.min(W, H) : 0.34 * H;
       PF.sun.x = lerp(x0, x1, m) - mx * 0.15 * 46; PF.sun.y = lerp(y0, y1, m) - my * 0.15 * 28;
       PF.sun.r = lerp(r0, r1, m);

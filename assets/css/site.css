@@ -121,6 +121,7 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 #sun3d{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 /* design frame (2847×1618 reference), always covers the width, sits on the bottom edge */
 .frame{position:absolute;left:50%;bottom:0;width:max(100vw,175.96vh);aspect-ratio:2847/1618;transform:translateX(-50%)}
+@media (max-aspect-ratio:1/1){.frame{left:calc(32vw - 175.96vh*.268);transform:none}}
 .bob{animation:bob 6s ease-in-out infinite}
 .bob.b2{animation-duration:7.5s;animation-delay:-3s;animation-direction:reverse}
 .bob.b3{animation-duration:8.5s;animation-delay:-5s}
@@ -217,18 +218,18 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .story .more{margin-top:16px}
 
 /* testimonial */
-.quote-wrap{margin-top:clamp(160px,15vw,240px);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
-.quote{max-width:1440px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;border-left:1px solid var(--line-soft);border-right:1px solid var(--line-soft);width:calc(100% - 2*var(--pad))}
-.quote > div{padding:110px 20px 108px;border-right:1px solid var(--line-soft)}
-.quote > div:last-child{border-right:0;position:relative;overflow:hidden}
+.quote-wrap{margin-top:clamp(160px,15vw,240px);border-top:1px dotted var(--line);border-bottom:1px dotted var(--line)}
+.quote{width:calc(100% - 2*var(--pad));max-width:1440px;margin:0 auto;display:grid;grid-template-columns:minmax(0,2.25fr) minmax(0,1fr);gap:10px;
+  border-left:1px dotted var(--line);border-right:1px dotted var(--line)}
+.quote > div{min-height:clamp(380px,32vw,420px)}
+.quote > div:first-child{display:flex;flex-direction:column;justify-content:center;padding:60px 20px;border-right:1px dotted var(--line)}
+.quote-side{display:flex;align-items:center;justify-content:center;padding:40px 20px;border-left:1px dotted var(--line)}
 .quote blockquote{font-family:"Nohemi";font-size:clamp(22px,2.1vw,30px);line-height:1.2;max-width:600px}
-.quote .who{margin-top:40px;font-size:15px;line-height:1.2}
-.quote .who{color:#fff}
+.quote .who{margin-top:56px;font-size:15px;line-height:1.2;color:#fff}
 .quote .who .org{display:block;margin-top:6px;color:var(--mute)}
-.quote-art{position:absolute;inset:0;background:
-  repeating-linear-gradient(90deg,var(--line-soft) 0 1px,transparent 1px 48px),
-  repeating-linear-gradient(0deg,var(--line-soft) 0 1px,transparent 1px 48px);opacity:.5;mask-image:radial-gradient(circle at 50% 50%,#000,transparent 70%)}
-.quote-art img{position:absolute;left:50%;top:50%;width:90px;transform:translate(-50%,-50%);opacity:.9}
+/* placeholder for the person's photo: swap the div for an <img> */
+.quote-photo{width:min(217px,80%);aspect-ratio:217/250;background:
+  repeating-linear-gradient(-45deg,rgba(255,255,255,.12) 0 1px,transparent 1px 16px),rgba(255,255,255,.06)}
 .stack-end{height:clamp(140px,12vw,190px)}
 
 /* contact (revealed underneath the stack) */
@@ -284,7 +285,7 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
   .venture-card{grid-template-columns:1fr;padding-bottom:300px}
   #atom3d{top:auto;bottom:-300px;right:0;width:100%;height:600px}
   .stories-grid{grid-template-columns:1fr;margin-top:70px}
-  .quote{grid-template-columns:1fr}.quote > div:last-child{min-height:240px}
+  .quote{grid-template-columns:1fr;gap:0}.quote > div{min-height:0}.quote > div:first-child{border-right:0}.quote-side{border-left:0;border-top:1px dotted var(--line);justify-content:flex-start}
   .mission{left:var(--pad);right:var(--pad);top:auto;bottom:10vh;transform:none}
   .mission p br{display:none}
   .f-grid,.f-bottom{grid-template-columns:1fr}.footer hr{margin-left:0}
@@ -299,3 +300,4 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
   .lw,.slide-in,.fade,.hero-title .w,.mission .w,.begin *{transition:none!important}
   .lw{transform:none}.slide-in{opacity:1;transform:none}
 }
+@media (max-aspect-ratio:1/1){.hero-title{top:22%}}
