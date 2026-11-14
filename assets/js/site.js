@@ -214,7 +214,6 @@ const FORM_ENDPOINT = "";
       }
     }
 
-    body.classList.toggle('scrolled', scrollY > 4);
     requestAnimationFrame(frame);
   }
 
