@@ -253,17 +253,20 @@ function sectionGems() {
     const camera = new THREE.OrthographicCamera(-1.25, 1.25, 1.25, -1.25, -10, 10); camera.position.z = 5;
 
     const tilt = new THREE.Group(); tilt.rotation.set(0.22, 0, 0.26); scene.add(tilt);
-    const spin = new THREE.Group(); spin.scale.setScalar(1.18); tilt.add(spin);
+    const spin = new THREE.Group(); spin.scale.setScalar(0.62); tilt.add(spin);
 
     const fillMat = new THREE.ShaderMaterial({
       uniforms: { uFill: { value: 0 }, uBg: { value: new THREE.Color('#030419') }, uPurple: { value: new THREE.Color('#8A78D8') } },
       vertexShader: `varying vec3 vN; varying float vY;
         void main(){ vN = normalize(normalMatrix * normal); vY = position.y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
-      fragmentShader: `uniform float uFill; uniform vec3 uBg; uniform vec3 uPurple; varying vec3 vN; varying float vY;
+      fragmentShader: `uniform float uFill; uniform vec3 uBg; varying vec3 vN; varying float vY;
         void main(){
-          float lit = clamp(dot(normalize(vN), normalize(vec3(-0.55,0.7,0.6))), 0.0, 1.0);
-          float g = smoothstep(-0.40, 0.12, vY);                // purple through the body, fading to background at the tip
-          vec3 c = mix(uBg, uPurple * (0.45 + 0.75 * lit), g * 0.9 + 0.1 * lit);
+          vec3 n = normalize(vN);
+          float lit = clamp(dot(n, normalize(vec3(-0.6,0.65,0.55))), 0.0, 1.0);
+          float g = smoothstep(-0.40, 0.25, vY);
+          vec3 deep = vec3(0.30,0.23,0.55), mid = vec3(0.52,0.44,0.78), light = vec3(0.80,0.75,0.96);
+          float k = clamp(lit * 0.75 + g * 0.35, 0.0, 1.0);
+          vec3 c = k < 0.5 ? mix(deep, mid, k * 2.0) : mix(mid, light, (k - 0.5) * 2.0);
           gl_FragColor = vec4(mix(uBg, c, uFill), 1.0);
         }`,
       polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1
@@ -273,12 +276,13 @@ function sectionGems() {
     const lineMat = new LineMaterial({ color: '#FFFFFF', linewidth: 1.4 }); lineMat.resolution.set(200 * dpr, 200 * dpr);
     spin.add(new LineSegments2(eg, lineMat));
 
-    // dotted orbit: lies almost edge-on, passes behind the gem on its far side
-    const orbit = new THREE.Group(); orbit.rotation.x = 1.25; tilt.add(orbit);
-    const dp = []; const ND = 48; for (let i = 0; i < ND; i++) { const a = i / ND * Math.PI * 2; dp.push(Math.cos(a), Math.sin(a), 0); }
-    const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.Float32BufferAttribute(dp, 3));
-    const dotMat = new THREE.PointsMaterial({ color: '#D9D1FF', size: 2.4 * dpr, sizeAttenuation: false, map: dotTex, transparent: true, opacity: 0, alphaTest: 0.01, depthWrite: false });
-    const dots = new THREE.Points(dg, dotMat); orbit.add(dots);
+    // orbit: a flat dashed circle around the gem, turning slowly
+    const orbit = new THREE.Group(); scene.add(orbit);
+    const dash = []; const ND = 26, R = 0.27;
+    for (let i = 0; i < ND; i++) { const a0 = i / ND * Math.PI * 2, a1 = a0 + Math.PI * 2 / ND * 0.55; dash.push(R * Math.cos(a0), R * Math.sin(a0), 0, R * Math.cos(a1), R * Math.sin(a1), 0); }
+    const dg = new LineSegmentsGeometry(); dg.setPositions(dash);
+    const dotMat = new LineMaterial({ color: '#CFC8EE', linewidth: 1.1, transparent: true, opacity: 0, depthTest: false }); dotMat.resolution.set(200 * dpr, 200 * dpr);
+    const dots = new LineSegments2(dg, dotMat); dots.renderOrder = -1; orbit.add(dots);
 
     let visible = false, start = -1;
     const clock = new THREE.Clock();
@@ -294,11 +298,11 @@ function sectionGems() {
       const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
       if (!visible || start < 0) return;
       const k = reduce ? 99 : t - start;
-      if (!reduce) { spin.rotation.y += dt * 0.35; dots.rotation.z -= dt * 0.25; }
+      if (!reduce) { spin.rotation.y += dt * 0.35; dots.rotation.z -= dt * 0.12; }
       fillMat.uniforms.uFill.value = easeIO((k - 1.25) / 1.1);           // once the gem has landed
       const r = easeOut((k - 1.7) / 1.6);
-      orbit.scale.setScalar(0.1 + 0.42 * r);
-      dotMat.opacity = Math.min(1, r * 2.2) * 0.9;
+      orbit.scale.setScalar(0.35 + 0.65 * r);
+      dotMat.opacity = Math.min(1, r * 1.8) * 0.8;
       renderer.render(scene, camera);
     })();
   });
