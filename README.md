@@ -1,44 +1,40 @@
-# Practical Fusion — "Mission 001" landing page
+# Practical Fusion Solutions — website
 
-A static, dependency-free, immersive landing page: one `index.html` plus the Nohemi fonts. See `STORYBOARD.md` for the narrative.
+A static site (no build step). Open it through a local server:
 
-```
-index.html              page, styles, scripts, and all illustrations (inline SVG)
-assets/fonts/           Nohemi Regular + Medium (woff2)
-STORYBOARD.md           the scene-by-scene story
-```
-
-## Preview locally
 ```bash
-python3 -m http.server 8000     # then open http://localhost:8000
+python3 -m http.server 8000   # then http://localhost:8000
 ```
-(Opening the file directly with file:// blocks the fonts. Use a local server.)
 
-## Deploy free on GitHub Pages
-1. Create a new repository on GitHub, e.g. `practical-fusion-site` (public, unless you're on a paid plan).
-2. Upload the contents of this folder to the repo root, either by dragging them into the GitHub web UI ("Add file → Upload files") or with:
-   ```bash
-   git init && git add . && git commit -m "Mission 001 landing page"
-   git branch -M main
-   git remote add origin https://github.com/<you>/practical-fusion-site.git
-   git push -u origin main
-   ```
-3. In the repo, go to **Settings → Pages → Build and deployment → Source: Deploy from a branch**, then choose **Branch: `main` / `(root)`** and **Save**.
-4. After about a minute the site is live at `https://<you>.github.io/practical-fusion-site/`.
+## Structure
+```
+index.html                    all sections
+assets/css/site.css           styles (Nohemi for headings, Geist for body)
+assets/js/site.js             intro, cursor perspective, mission transition, scroll effects, menu, form
+assets/js/three-scenes.js     the Dyson sun (hero) and the wireframe atom (venture card)
+assets/img/                   artwork (from the Framer draft; see "Assets to replace")
+assets/fonts/                 Nohemi, Geist
+assets/vendor/                three.js (stored locally, no CDN)
+```
 
-### Use the real domain (practical-fusion.com)
-1. Go to **Settings → Pages → Custom domain**, enter `www.practical-fusion.com` and save. GitHub adds a `CNAME` file.
-2. At the domain's DNS provider, add these records:
-   - `CNAME` record: `www` → `<you>.github.io`
-   - `A` records for the apex `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-3. Once the DNS check passes, tick **Enforce HTTPS**.
+## How the page flows
+1. **Intro:** the camera starts zoomed in and tilted, then settles. The headline words sharpen one by one, the header fades in, and the button grows from a dark pill.
+2. **Cursor:** every hero layer (sky, sun, rocks, canyon, astronaut) shifts by its depth, and the whole scene tilts in perspective.
+3. **Begin your Mission:** hovering zooms the scene in slightly. Clicking (or the first scroll) moves the camera up: the canyon drops away, the sun rises to the left, and the mission panel appears on the right.
+4. **Scroll:** the hero shrinks into a rounded card while the services slide over it. Headlines reveal word by word, and paragraphs fade up.
+5. **Venture card:** a see-through wireframe atom with three orbits follows the cursor.
+6. **Success stories:** each card's background, main image and logo move at different speeds.
+7. **Contact:** the main stack shrinks into a rounded card, revealing the contact section beneath.
 
-> ⚠️ Pointing the domain at GitHub replaces the current live site. Test on the `github.io` URL first.
+## Contact form
+GitHub Pages can't receive form submissions. Create a form at formspree.io and paste its URL into `FORM_ENDPOINT` at the top of `assets/js/site.js`.
 
-## Make the contact form work
-GitHub Pages can't process forms, so use a form service:
-1. Create a free form at https://formspree.io (or Basin or Getform) and copy its endpoint URL.
-2. In `index.html`, set `const FORM_ENDPOINT = "https://formspree.io/f/xxxxxxx";`
+## Assets to replace (exported at 2x, transparent PNG)
+- `astronaut` (currently 85 px wide, so it's blurry on retina screens)
+- `rocks-left`, `rocks-right`: separate rocks would let each one float on its own
+- Success story 1: separate background, scientist and SMART USA logo layers (currently one flat image)
+- Success story 4: its own image and logo (currently a placeholder)
+- `hero-sky`, `canyon`, `contact-floor`: higher resolution if available
 
-## Font licence
-Nohemi is from Pangram Pangram. Their free download is for personal use, so confirm you hold a commercial licence before this goes live on the company site.
+## Licences
+Nohemi (Pangram Pangram): check the commercial licence. Geist (Vercel): SIL Open Font License. three.js: MIT (`assets/vendor/THREE-LICENSE`).

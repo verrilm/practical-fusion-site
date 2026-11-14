@@ -3,767 +3,220 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Practical Fusion Solutions — Harness the Unknown</title>
-<meta name="description" content="Practical Fusion Solutions is a consultancy and venture studio building companies at the intersection of semiconductors, AI, energy, quantum and biotech.">
-<meta name="theme-color" content="#07021A">
+<title>Practical Fusion Solutions — We build companies whose vision will change the world</title>
+<meta name="description" content="Practical Fusion Solutions is a consultancy and venture studio turning high-tech ideas into revenue-generating products and sustainable businesses.">
+<meta name="theme-color" content="#030419">
+<link rel="icon" href="assets/img/logo-atom.webp">
 <link rel="preload" href="assets/fonts/Nohemi-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<style>
-@font-face{font-family:"Nohemi";src:url("assets/fonts/Nohemi-Regular.woff2") format("woff2");font-weight:300 400;font-display:swap}
-@font-face{font-family:"Nohemi";src:url("assets/fonts/Nohemi-Medium.woff2") format("woff2");font-weight:500 700;font-display:swap}
-:root{
-  --void:#07021A; --deep:#0E0533; --indigo:#180552; --violet:#2A1478; --haze:#4B32A8;
-  --line:#CBC2FF; --moon:#EEE9FF; --mute:#9D93D6; --ember:#FFB38A; --rose:#F08BB0;
-  --pad:clamp(20px,5vw,72px);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;background:var(--void)}
-body{font-family:"Nohemi",system-ui,sans-serif;font-weight:400;color:var(--moon);background:var(--void);overflow-x:hidden;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-::selection{background:var(--ember);color:var(--void)}
-@media (hover:hover) and (pointer:fine){body,a,button,input,textarea{cursor:none}}
-
-/* ---------- paper-mâché texture: one shared sheet over the whole site ---------- */
-.paper{position:fixed;inset:0;z-index:90;pointer-events:none;background:url("assets/paper.webp") 0 0/384px 384px repeat;mix-blend-mode:hard-light;opacity:.28}
-.paper.tone{mix-blend-mode:soft-light;opacity:.55;background-size:1536px 1536px;background-position:211px 97px}
-
-/* ---------- starfield + cursor ---------- */
-#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-.cursor{position:fixed;left:0;top:0;z-index:100;pointer-events:none;mix-blend-mode:difference}
-.cursor .ring{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border:1px solid var(--moon);border-radius:50%;transition:width .3s,height .3s,margin .3s,opacity .3s}
-.cursor .dot{position:absolute;width:4px;height:4px;margin:-2px 0 0 -2px;background:var(--moon);border-radius:50%}
-.cursor.hover .ring{width:64px;height:64px;margin:-32px 0 0 -32px}
-@media (hover:none),(pointer:coarse){.cursor{display:none}}
-
-/* ---------- nav ---------- */
-.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px var(--pad);transition:background .4s,backdrop-filter .4s}
-.nav.solid{background:rgba(7,2,26,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.brand{display:flex;align-items:center;gap:12px;font-weight:500;font-size:15px;letter-spacing:.01em}
-.brand svg{width:34px;height:34px;flex:none}
-.brand small{display:block;font-weight:400;color:var(--mute);font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
-.nav ul{display:flex;gap:34px;list-style:none;font-size:13px;letter-spacing:.06em;color:var(--mute)}
-.nav ul a{transition:color .25s}.nav ul a:hover{color:var(--moon)}
-.btn{display:inline-flex;align-items:center;gap:12px;font:500 13px/1 "Nohemi",sans-serif;letter-spacing:.06em;padding:14px 20px;border-radius:999px;border:1px solid rgba(203,194,255,.35);color:var(--moon);background:rgba(24,5,82,.35);backdrop-filter:blur(6px);transition:background .3s,border-color .3s,transform .3s}
-.btn:hover{background:var(--indigo);border-color:var(--line)}
-.btn.solid{background:var(--moon);color:var(--void);border-color:var(--moon)}
-.btn.solid:hover{background:var(--ember);border-color:var(--ember)}
-.btn .arr{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--void);color:var(--moon);font-size:12px}
-.btn:not(.solid) .arr{background:rgba(203,194,255,.15)}
-@media (max-width:860px){.nav ul{display:none}}
-
-/* ---------- story stage ---------- */
-#story{position:relative;height:720vh;z-index:1}
-.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;perspective:1100px}
-.world{position:absolute;inset:-4%;transform-style:preserve-3d;will-change:transform}
-.scene{position:absolute;inset:0;will-change:transform,opacity;visibility:hidden;transform-origin:50% 55%}
-.dyson{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.scene svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.layer{will-change:transform}
-.scene .ln{fill:none;stroke:var(--line);stroke-width:1.4;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
-.scene .ink{stroke:#0B0326;stroke-width:1.6;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
-.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(7,2,26,.85) 100%),linear-gradient(90deg,rgba(7,2,26,.75) 0%,rgba(7,2,26,0) 48%)}
-
-.chapter{opacity:0;transition:opacity .6s;position:absolute;left:var(--pad);top:50%;transform:translateY(-50%);max-width:min(620px,86vw);z-index:5;pointer-events:none}
-.chapter.center{left:50%;transform:translate(-50%,-50%);text-align:center;max-width:min(900px,92vw);top:63%}
-.chapter.on{pointer-events:auto;opacity:1}
-.kicker{font-weight:500;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ember);display:flex;gap:14px;align-items:center;margin-bottom:26px;opacity:0;transform:translateY(10px);transition:opacity .7s,transform .7s}
-.center .kicker{justify-content:center}
-.kicker::before{content:"";width:28px;height:1px;background:currentColor}
-.chapter h1,.chapter h2{font-weight:400;font-size:clamp(36px,5.2vw,80px);line-height:1;letter-spacing:-.035em}
-.chapter h2{font-size:clamp(34px,5.2vw,78px)}
-.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
-.w>span{display:inline-block;transform:translateY(105%);transition:transform 1s cubic-bezier(.2,.7,.1,1);transition-delay:calc(var(--i)*55ms)}
-.chapter p{margin-top:26px;font-size:clamp(15px,1.3vw,18px);line-height:1.6;color:var(--mute);max-width:460px;opacity:0;transform:translateY(12px);transition:opacity .9s .35s,transform .9s .35s}
-.center p{margin-left:auto;margin-right:auto;max-width:560px}
-.chapter .ctas{margin-top:36px;display:flex;gap:14px;flex-wrap:wrap;opacity:0;transition:opacity .9s .55s}
-.center .ctas{justify-content:center}
-.chapter.on .kicker,.chapter.on p{opacity:1;transform:none}
-.chapter.on .ctas{opacity:1}
-.chapter.on .w>span{transform:none}
-.chapter em{font-style:normal;color:var(--ember)}
-
-.hud{position:absolute;right:var(--pad);top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;gap:18px;font:500 10px/1 "Nohemi";letter-spacing:.2em;color:var(--mute)}
-.hud a{display:flex;align-items:center;gap:12px;justify-content:flex-end;opacity:.45;transition:opacity .4s}
-.hud a i{width:18px;height:1px;background:currentColor;transition:width .4s,background .4s}
-.hud a.on{opacity:1;color:var(--moon)}.hud a.on i{width:40px;background:var(--ember)}
-.hud span{opacity:0;transition:opacity .4s}.hud a.on span,.hud:hover span{opacity:1}
-.scrollhint{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:10px;font:500 10px/1 "Nohemi";letter-spacing:.24em;text-transform:uppercase;color:var(--mute);transition:opacity .5s}
-.scrollhint i{width:1px;height:38px;background:linear-gradient(var(--line),transparent);animation:drip 2s infinite}
-@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-.skip{position:absolute;right:var(--pad);bottom:28px;z-index:6;font:500 11px/1 "Nohemi";letter-spacing:.2em;text-transform:uppercase;color:var(--mute);transition:color .3s}
-.skip:hover{color:var(--moon)}
-@media (max-width:700px){.hud{display:none}.vignette{background:radial-gradient(120% 90% at 50% 40%,transparent 40%,rgba(7,2,26,.9) 100%),linear-gradient(0deg,rgba(7,2,26,.92) 0%,rgba(7,2,26,0) 60%)}.chapter{top:auto;bottom:12vh;transform:none}.chapter.center{top:auto;bottom:12vh;transform:translateX(-50%)}}
-
-/* animated bits in the art */
-.spin{animation:spin 60s linear infinite;transform-box:fill-box;transform-origin:center}
-@keyframes spin{to{transform:rotate(360deg)}}
-.pulse{animation:pulse 3.4s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
-.flow{stroke-dasharray:90 520;animation:flow 5s linear infinite}
-@keyframes flow{from{stroke-dashoffset:610}to{stroke-dashoffset:0}}
-.blink{animation:blink 4s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:.15}50%{opacity:.9}}
-
-/* ---------- briefing sections ---------- */
-main{position:relative;z-index:2;background:linear-gradient(180deg,rgba(7,2,26,0) 0,rgba(7,2,26,.6) 30vh,rgba(7,2,26,.75) 100%)}
-section.brief{padding:clamp(100px,16vh,180px) var(--pad);max-width:1440px;margin:0 auto}
-.label{font-weight:500;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ember);display:flex;align-items:center;gap:14px}
-.label::before{content:"";width:28px;height:1px;background:currentColor}
-.brief h2{font-weight:400;font-size:clamp(34px,4.6vw,68px);line-height:1.02;letter-spacing:-.03em;margin:22px 0 0;max-width:900px}
-.lede{margin-top:22px;color:var(--mute);font-size:clamp(15px,1.25vw,18px);line-height:1.6;max-width:540px}
-.reveal{opacity:0;transform:translateY(30px);transition:opacity 1s,transform 1s cubic-bezier(.2,.7,.1,1)}
-.reveal.in{opacity:1;transform:none}
-
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:70px;perspective:1000px}
-.card{position:relative;padding:34px 30px 36px;border-radius:22px;border:1px solid rgba(203,194,255,.16);background:linear-gradient(160deg,rgba(42,20,120,.35),rgba(14,5,51,.55));transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.1,1),border-color .4s;min-height:380px;display:flex;flex-direction:column}
-.card:hover{border-color:rgba(203,194,255,.45)}
-.card .num{font:500 11px/1 "Nohemi";letter-spacing:.2em;color:var(--mute)}
-.card svg{width:96px;height:96px;margin:30px 0 26px;transform:translateZ(40px)}
-.card h3{font-weight:400;font-size:30px;letter-spacing:-.02em;transform:translateZ(30px)}
-.card .tag{font:500 11px/1 "Nohemi";letter-spacing:.18em;text-transform:uppercase;color:var(--ember);margin-top:12px}
-.card p{color:var(--mute);line-height:1.6;font-size:15px;margin-top:16px;transform:translateZ(20px)}
-.card .glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(400px circle at var(--gx,50%) var(--gy,0%),rgba(203,194,255,.12),transparent 60%)}
-.fraction{margin-top:30px;display:flex;align-items:center;gap:16px;color:var(--mute);font-size:14px}
-.fraction b{font-weight:500;color:var(--moon)}
-@media (max-width:960px){.cards{grid-template-columns:1fr}.card{min-height:0}}
-
-.planets{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:70px}
-.planet{text-align:center;padding:10px 0 20px;transition:transform .5s cubic-bezier(.2,.7,.1,1)}
-.planet:hover{transform:translateY(-10px)}
-.planet svg{width:100%;max-width:170px;aspect-ratio:1;overflow:visible}
-.planet h4{font-weight:400;font-size:20px;letter-spacing:-.01em;margin-top:14px}
-.planet span{display:block;font:500 10px/1 "Nohemi";letter-spacing:.2em;color:var(--mute);margin-top:8px}
-@media (max-width:860px){.planets{grid-template-columns:repeat(2,1fr)}.planet:last-child{grid-column:span 2}}
-
-.log{display:grid;grid-template-columns:repeat(4,1fr);margin-top:70px;border-top:1px solid rgba(203,194,255,.18)}
-.stat{padding:34px 26px 10px 0;border-right:1px solid rgba(203,194,255,.1)}
-.stat:last-child{border-right:0}
-.stat .k{font:500 10px/1 "Nohemi";letter-spacing:.2em;color:var(--mute)}
-.stat .v{white-space:nowrap;font-weight:400;font-size:clamp(46px,5vw,76px);letter-spacing:-.04em;line-height:1;margin:22px 0 16px}
-.stat .v small{font-size:.32em;color:var(--ember);letter-spacing:-.01em}
-.stat p{color:var(--mute);font-size:14px;line-height:1.55;max-width:250px}
-@media (max-width:960px){.log{grid-template-columns:1fr 1fr}.stat{border-right:0;border-bottom:1px solid rgba(203,194,255,.1);padding-right:16px}}
-@media (max-width:520px){.log{grid-template-columns:1fr}}
-
-.transmission{position:relative;border:1px solid rgba(203,194,255,.16);border-radius:28px;padding:clamp(34px,6vw,80px);background:linear-gradient(140deg,rgba(24,5,82,.6),rgba(7,2,26,.4));overflow:hidden}
-.transmission .wave{position:absolute;right:-40px;top:-40px;width:340px;opacity:.5}
-.transmission blockquote{font-weight:400;font-size:clamp(26px,3.4vw,50px);line-height:1.15;letter-spacing:-.025em;margin-top:28px;max-width:1000px;min-height:2.3em}
-.transmission blockquote .caret{display:inline-block;width:.06em;height:.9em;background:var(--ember);margin-left:4px;vertical-align:-.08em;animation:car 1s steps(1) infinite}
-@keyframes car{50%{opacity:0}}
-.who{margin-top:34px;display:flex;align-items:center;gap:16px;color:var(--mute);font-size:14px}
-.who b{display:block;color:var(--moon);font-weight:500;font-size:15px;margin-bottom:4px}
-.who .av{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font:500 13px "Nohemi";color:var(--line)}
-
-.studio{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center}
-.studio svg{width:100%;max-width:520px;justify-self:center}
-@media (max-width:900px){.studio{grid-template-columns:1fr}}
-
-.contact{display:grid;grid-template-columns:1fr 1.1fr;gap:70px;align-items:start}
-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.field{position:relative}
-.field.full{grid-column:span 2}
-.field label{display:block;font:500 10px/1 "Nohemi";letter-spacing:.2em;text-transform:uppercase;color:var(--mute);margin-bottom:10px}
-.field input,.field textarea{width:100%;font:400 16px/1.5 "Nohemi";color:var(--moon);background:rgba(14,5,51,.6);border:1px solid rgba(203,194,255,.18);border-radius:14px;padding:15px 16px;outline:none;transition:border-color .3s,background .3s}
-.field textarea{min-height:150px;resize:vertical}
-.field input:focus,.field textarea:focus{border-color:var(--line);background:rgba(24,5,82,.7)}
-form .btn{grid-column:span 2;justify-self:start;border:0}
-.status{grid-column:span 2;font-size:14px;color:var(--mute);min-height:1.4em}
-.coords{margin-top:40px;display:grid;gap:22px;font-size:15px;line-height:1.55;color:var(--mute)}
-.coords b{display:block;font:500 10px/1 "Nohemi";letter-spacing:.2em;text-transform:uppercase;color:var(--ember);margin-bottom:8px}
-.coords a{color:var(--moon);border-bottom:1px solid rgba(203,194,255,.3)}
-@media (max-width:900px){.contact{grid-template-columns:1fr}form{grid-template-columns:1fr}.field.full,form .btn,.status{grid-column:auto}}
-
-footer{position:relative;z-index:2;padding:40px var(--pad) 50px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;border-top:1px solid rgba(203,194,255,.1);color:var(--mute);font-size:13px;background:var(--void)}
-footer nav{display:flex;gap:26px}
-footer a:hover{color:var(--moon)}
-
-@media (prefers-reduced-motion:reduce){
-  .w>span,.kicker,.chapter p,.reveal{transition:none!important}
-  .spin,.pulse,.flow,.blink,.scrollhint i{animation:none!important}
-  html{scroll-behavior:auto}
-}
-</style>
+<link rel="preload" href="assets/fonts/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
-<body>
+<body class="locked">
 
-<canvas id="stars" aria-hidden="true"></canvas>
-<div class="paper" aria-hidden="true"></div><div class="paper tone" aria-hidden="true"></div>
-<div class="cursor" aria-hidden="true"><div class="ring"></div><div class="dot"></div></div>
+<div class="grain" aria-hidden="true"></div>
 
-<!-- shared art: gradients + the astronaut -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <radialGradient id="gPlanet" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#E9E2FF"/><stop offset=".45" stop-color="#9C86F0"/><stop offset="1" stop-color="#2A1478"/></radialGradient>
-    <radialGradient id="gEarth" cx="35%" cy="35%" r="70%"><stop offset="0" stop-color="#BFE0FF"/><stop offset=".6" stop-color="#6E79E6"/><stop offset="1" stop-color="#2A1478"/></radialGradient>
-    <radialGradient id="gEmber" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFF4EC"/><stop offset=".35" stop-color="#FFB38A"/><stop offset="1" stop-color="#FFB38A" stop-opacity="0"/></radialGradient>
-    <radialGradient id="gGlowV" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4B32A8" stop-opacity=".55"/><stop offset="1" stop-color="#4B32A8" stop-opacity="0"/></radialGradient>
-    <radialGradient id="gGlowR" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F08BB0" stop-opacity=".28"/><stop offset="1" stop-color="#F08BB0" stop-opacity="0"/></radialGradient>
-    <linearGradient id="gVisor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F08BB0"/><stop offset=".45" stop-color="#2A1478"/><stop offset="1" stop-color="#07021A"/></linearGradient>
-    <linearGradient id="gHorizon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB38A" stop-opacity=".0"/><stop offset=".7" stop-color="#F08BB0" stop-opacity=".22"/><stop offset="1" stop-color="#4B32A8" stop-opacity=".5"/></linearGradient>
-    <clipPath id="soleClip"><path d="M-46 -150 Q0 -186 46 -150 Q66 -60 40 0 Q50 80 34 140 Q0 172 -34 140 Q-50 80 -40 0 Q-66 -60 -46 -150Z"/></clipPath>
-
-    <!-- original astronaut, side view, facing left. 120x210 box -->
-    <symbol id="astro" viewBox="0 0 120 210" overflow="visible">
-      <g class="ink" stroke="#0B0326" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-        <line x1="86" y1="46" x2="96" y2="16" fill="none"/><circle cx="96" cy="15" r="2.6" fill="#FFB38A"/>
-        <rect x="60" y="42" width="32" height="64" rx="9" fill="#8F80D9"/>
-        <path d="M66 52 h18 M66 60 h18" fill="none" stroke-width="1.4"/>
-        <path d="M54 118 L60 160 L60 188 L57 197 L79 199 Q80 189 72 186 L72 158 L69 118Z" fill="#B4A8F4"/>
-        <path d="M32 50 Q28 50 28 62 L27 112 Q29 125 46 125 L64 125 Q73 123 72 110 L70 58 Q68 47 57 45Z" fill="#DCD5FF"/>
-        <path d="M58 47 Q68 50 70 58 L72 110 Q72 123 64 125 L60 125 Q66 100 62 60Z" fill="#A99DE8" stroke="none"/>
-        <path d="M31 118 L27 160 L25 187 L20 197 L43 199 Q45 190 41 186 L43 160 L50 120Z" fill="#DCD5FF"/>
-        <path d="M27 104 Q48 111 72 104" fill="none"/>
-        <rect x="35" y="66" width="15" height="11" rx="2" fill="#180552"/>
-        <circle cx="39" cy="71.5" r="1.4" fill="#FFB38A" stroke="none"/><circle cx="45" cy="71.5" r="1.4" fill="#CBC2FF" stroke="none"/>
-        <path d="M36 56 Q20 70 20 92 Q20 104 24 111 L33 110 Q31 96 35 84 L43 68Z" fill="#C9C0FA"/>
-        <circle cx="28" cy="114" r="6" fill="#8F80D9"/>
-        <g transform="rotate(-14 48 30)">
-          <circle cx="48" cy="30" r="22" fill="#EEE9FF"/>
-          <path d="M60 12 Q72 22 69 38 Q64 50 50 52 Q64 40 60 12Z" fill="#B9AEF2" stroke="none"/>
-          <path d="M26 27 Q28 13 43 13 Q53 15 53 28 Q51 41 38 43 Q27 41 26 27Z" fill="url(#gVisor)"/>
-          <path d="M31 22 Q34 16 41 16" fill="none" stroke="#FFF" stroke-width="1.6" opacity=".9"/>
-        </g>
-      </g>
-    </symbol>
-
-    <!-- the Practical Fusion atom (line) -->
-    <symbol id="atom" viewBox="-100 -100 200 200" overflow="visible">
-      <g fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round">
-        <ellipse rx="78" ry="30"/>
-        <ellipse rx="78" ry="30" transform="rotate(60)"/>
-        <ellipse rx="78" ry="30" transform="rotate(-60)"/>
-      </g>
-      <g fill="currentColor">
-        <circle r="17"/>
-        <circle cx="-86" cy="0" r="10"/><circle cx="86" cy="0" r="10"/>
-        <circle cx="-38" cy="-64" r="10"/><circle cx="38" cy="64" r="10"/>
-      </g>
-    </symbol>
-  </defs>
-</svg>
-
+<!-- ================= HEADER ================= -->
 <header class="nav" id="nav">
-  <a class="brand" href="#story" aria-label="Practical Fusion Solutions — home">
-    <svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="18" fill="#180552" stroke="rgba(203,194,255,.35)"/><use href="#atom" x="12" y="12" width="76" height="76" color="#fff"/></svg>
-    <span>Practical Fusion<small>Solutions</small></span>
+  <a class="brand" href="#top" data-home aria-label="Practical Fusion — home">
+    <img src="assets/img/logo-atom.webp" alt="">
+    <span><b>PRACTICAL</b> <span>FUSION</span></span>
   </a>
-  <ul>
-    <li><a href="#story" data-hover>Story</a></li>
-    <li><a href="#crew" data-hover>Crew</a></li>
-    <li><a href="#frontiers" data-hover>Frontiers</a></li>
-    <li><a href="#log" data-hover>Mission log</a></li>
-  </ul>
-  <a class="btn" href="#contact" data-hover>Make contact <span class="arr">→</span></a>
+  <div class="nav-right">
+    <a href="#contact" data-jump>Contact Us</a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><i></i><i></i></button>
+    <nav class="menu" id="menu" aria-label="Sections">
+      <a href="#top" data-home><small>00</small>Mission</a>
+      <a href="#services" data-jump><small>01</small>Our Services</a>
+      <a href="#venture" data-jump><small>02</small>Venture Studio</a>
+      <a href="#stories" data-jump><small>03</small>Success Stories</a>
+      <a href="#contact" data-jump class="menu-cta"><small>04</small>Make Contact</a>
+    </nav>
+  </div>
 </header>
 
-<!-- =================== ACT I : THE STORY =================== -->
-<section id="story" aria-label="The story">
-  <div class="stage" id="stage">
+<!-- ================= HERO (sticky; the stack scrolls over it) ================= -->
+<section class="hero" id="top" aria-label="Introduction">
+  <div class="stage">
     <div class="world" id="world">
-
-      <!-- 0 LAUNCH -->
-      <div class="scene" data-scene="0" data-fx="1210">
-        <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <g class="layer" data-depth="0.08" id="skyGlow0">
-            <ellipse cx="1120" cy="300" rx="620" ry="420" fill="url(#gGlowV)"/>
-            <ellipse cx="1200" cy="420" rx="420" ry="260" fill="url(#gGlowR)"/>
-          </g>
-          <g class="layer" data-depth="0.22" id="planetSvg">
-            <g transform="translate(1110 300)">
-              <circle r="168" fill="url(#gPlanet)"/>
-              <path class="ln" d="M-150 -40 Q0 -10 150 -60 M-160 30 Q0 60 162 10 M-120 100 Q0 120 120 90" opacity=".35"/>
-              <path d="M40 -160 A168 168 0 0 1 40 165 A140 168 0 0 0 40 -160Z" fill="#180552" opacity=".55"/>
-              <g class="spin" style="animation-duration:90s">
-                <ellipse class="ln" rx="330" ry="86" opacity=".7"/>
-                <circle cx="-330" cy="0" r="7" fill="#EEE9FF"/>
-              </g>
-              <g transform="rotate(60)"><g class="spin" style="animation-duration:120s;animation-direction:reverse"><ellipse class="ln" rx="300" ry="70" opacity=".45"/><circle cx="300" cy="0" r="6" fill="#FFB38A"/></g></g>
-              <g transform="rotate(-60)"><g class="spin" style="animation-duration:150s"><ellipse class="ln" rx="300" ry="70" opacity=".45"/><circle cx="0" cy="70" r="5" fill="#CBC2FF"/></g></g>
-            </g>
-          </g>
-          <g class="layer" data-depth="0.4">
-            <path d="M0 720 L120 690 L260 700 L420 650 L560 672 L700 630 L860 660 L1000 640 L1160 668 L1320 630 L1460 650 L1600 620 L1600 900 L0 900Z" fill="#120640"/>
-            <path class="ln" d="M0 720 L120 690 L260 700 L420 650 L560 672 L700 630 L860 660 L1000 640 L1160 668 L1320 630 L1460 650 L1600 620" opacity=".45"/>
-          </g>
-          <g class="layer" data-depth="0.75">
-            <path d="M780 900 L900 790 L1010 760 L1110 712 L1230 700 L1340 668 L1450 680 L1600 640 L1600 900Z" fill="#0B0326"/>
-            <path class="ln" d="M780 900 L900 790 L1010 760 L1110 712 L1230 700 L1340 668 L1450 680 L1600 640" />
-            <path class="ln" d="M960 800 l40 -12 M1080 760 l60 -10 M1260 720 l50 -8 M1400 712 l70 -16 M1180 780 l30 -6" opacity=".5"/>
-            <use href="#astro" x="1250" y="540" width="80" height="140"/>
-          </g>
-        </svg>
+      <div class="frame">
+        <div class="layer sky" data-depth="0.06" data-lift="0.12"><img src="assets/img/hero-sky.webp" alt=""></div>
+        <canvas id="sun3d" aria-hidden="true"></canvas>
+        <div class="layer rocks-l" data-depth="0.32" data-lift="0.5" data-shift="-0.3"><div class="bob b2"><img src="assets/img/rocks-left.webp" alt="" style="position:static;width:100%"></div></div>
+        <div class="layer canyon" data-depth="0.5" data-lift="0.9"><img src="assets/img/canyon.webp" alt=""></div>
+        <div class="layer astro" data-depth="0.56" data-lift="0.9"><img src="assets/img/astronaut.webp" alt="An astronaut standing on the canyon edge"></div>
+        <div class="layer rocks-r" data-depth="0.85" data-lift="1.15"><div class="bob"><img src="assets/img/rocks-right.webp" alt="" style="position:static;width:100%"></div></div>
       </div>
+    </div>
+  </div>
 
-      <!-- 1 MOON 1969 -->
-      <div class="scene" data-scene="1" data-fx="1150">
-        <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <g class="layer" data-depth="0.08"><ellipse cx="1150" cy="260" rx="380" ry="300" fill="url(#gGlowV)"/></g>
-          <g class="layer" data-depth="0.18">
-            <g transform="translate(1150 250)">
-              <circle r="74" fill="url(#gEarth)"/>
-              <path d="M-10 -74 A74 74 0 0 1 -10 74 A52 74 0 0 0 -10 -74Z" fill="#07021A" opacity=".7" transform="rotate(25)"/>
-              <path class="ln" d="M-50 -20 q20 -10 40 4 q14 10 30 -2 M-40 24 q22 10 46 -4" opacity=".55"/>
-            </g>
-          </g>
-          <g class="layer" data-depth="0.35">
-            <path d="M-100 640 Q800 520 1700 650 L1700 900 L-100 900Z" fill="#1B0C52"/>
-            <path class="ln" d="M-100 640 Q800 520 1700 650" opacity=".8"/>
-            <g class="ln" opacity=".45"><ellipse cx="300" cy="660" rx="60" ry="10"/><ellipse cx="1240" cy="640" rx="44" ry="7"/><ellipse cx="900" cy="610" rx="22" ry="4"/></g>
-            <!-- lunar lander -->
-            <g transform="translate(1340 594) scale(.8)" class="ink" fill="#CBC2FF">
-              <path d="M-14 -22 L14 -22 L18 -8 L-18 -8Z"/>
-              <rect x="-22" y="-8" width="44" height="16" fill="#FFB38A"/>
-              <path d="M-20 8 L-32 26 M20 8 L32 26 M-8 8 L-12 26 M8 8 L12 26" fill="none" stroke="#CBC2FF"/>
-            </g>
-          </g>
-          <g class="layer" data-depth="0.6">
-            <path d="M-100 760 Q800 690 1700 770 L1700 900 L-100 900Z" fill="#140842"/>
-            <path class="ln" d="M-100 760 Q800 690 1700 770" opacity=".5"/>
-            <g class="ln" opacity=".35"><ellipse cx="180" cy="800" rx="90" ry="14"/><ellipse cx="1380" cy="800" rx="120" ry="18"/></g>
-          </g>
-          <g class="layer" data-depth="1">
-            <g><g transform="translate(606 880) rotate(-12) scale(1.25)"><ellipse rx="24" ry="8" fill="#0B0326" stroke="#CBC2FF" stroke-width="1.2" vector-effect="non-scaling-stroke" opacity=".85"/><path d="M-14 -3v6M-6 -4v8M2 -4v8M10 -3v6" stroke="#4B32A8" stroke-width="2.2"/></g><g transform="translate(718 835) rotate(-12) scale(1.12)"><ellipse rx="24" ry="8" fill="#0B0326" stroke="#CBC2FF" stroke-width="1.2" vector-effect="non-scaling-stroke" opacity=".85"/><path d="M-14 -3v6M-6 -4v8M2 -4v8M10 -3v6" stroke="#4B32A8" stroke-width="2.2"/></g><g transform="translate(778 801) rotate(-12) scale(1.00)"><ellipse rx="24" ry="8" fill="#0B0326" stroke="#CBC2FF" stroke-width="1.2" vector-effect="non-scaling-stroke" opacity=".85"/><path d="M-14 -3v6M-6 -4v8M2 -4v8M10 -3v6" stroke="#4B32A8" stroke-width="2.2"/></g><g transform="translate(886 770) rotate(-12) scale(0.88)"><ellipse rx="24" ry="8" fill="#0B0326" stroke="#CBC2FF" stroke-width="1.2" vector-effect="non-scaling-stroke" opacity=".85"/><path d="M-14 -3v6M-6 -4v8M2 -4v8M10 -3v6" stroke="#4B32A8" stroke-width="2.2"/></g><g transform="translate(950 742) rotate(-12) scale(0.75)"><ellipse rx="24" ry="8" fill="#0B0326" stroke="#CBC2FF" stroke-width="1.2" vector-effect="non-scaling-stroke" opacity=".85"/><path d="M-14 -3v6M-6 -4v8M2 -4v8M10 -3v6" stroke="#4B32A8" stroke-width="2.2"/></g><g transform="translate(1054 715) rotate(-12) scale(0.62)"><ellipse rx="24" ry="8" fill="#0B0326" stroke="#CBC2FF" stroke-width="1.2" vector-effect="non-scaling-stroke" opacity=".85"/><path d="M-14 -3v6M-6 -4v8M2 -4v8M10 -3v6" stroke="#4B32A8" stroke-width="2.2"/></g><g transform="translate(1122 689) rotate(-12) scale(0.50)"><ellipse rx="24" ry="8" fill="#0B0326" stroke="#CBC2FF" stroke-width="1.2" vector-effect="non-scaling-stroke" opacity=".85"/><path d="M-14 -3v6M-6 -4v8M2 -4v8M10 -3v6" stroke="#4B32A8" stroke-width="2.2"/></g><g transform="translate(1222 664) rotate(-12) scale(0.38)"><ellipse rx="24" ry="8" fill="#0B0326" stroke="#CBC2FF" stroke-width="1.2" vector-effect="non-scaling-stroke" opacity=".85"/><path d="M-14 -3v6M-6 -4v8M2 -4v8M10 -3v6" stroke="#4B32A8" stroke-width="2.2"/></g><g transform="translate(1294 640) rotate(-12) scale(0.25)"><ellipse rx="24" ry="8" fill="#0B0326" stroke="#CBC2FF" stroke-width="1.2" vector-effect="non-scaling-stroke" opacity=".85"/><path d="M-14 -3v6M-6 -4v8M2 -4v8M10 -3v6" stroke="#4B32A8" stroke-width="2.2"/></g></g>
-          </g>
-        </svg>
+  <div class="hero-ui">
+    <div class="hero-title" id="heroTitle">
+      <h1 data-words>We build companies whose vision<br> will change the world.</h1>
+      <div class="begin">
+        <button class="btn boxed" id="beginBtn" type="button">
+          <span class="lbl">Begin your Mission</span>
+          <span class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span>
+        </button>
       </div>
+    </div>
 
-      <!-- 2 NUCLEUS -->
-      <div class="scene" data-scene="2" data-fx="1060">
-        <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <g class="layer" data-depth="0.08">
-            <circle cx="1060" cy="450" r="430" fill="url(#gGlowV)"/>
-            <g class="ln" opacity=".18"><circle cx="1060" cy="450" r="200"/><circle cx="1060" cy="450" r="300"/><circle cx="1060" cy="450" r="420"/></g>
-          </g>
-          <g class="layer" data-depth="0.35" transform="translate(1060 450)">
-            <g transform="rotate(0)"><ellipse class="ln" rx="380" ry="118"/><circle r="9" fill="#EEE9FF"><animateMotion dur="7s" repeatCount="indefinite" path="M-380 0 A380 118 0 1 1 380 0 A380 118 0 1 1 -380 0"/></circle></g>
-            <g transform="rotate(60)"><ellipse class="ln" rx="380" ry="118"/><circle r="9" fill="#FFB38A"><animateMotion dur="9s" repeatCount="indefinite" path="M380 0 A380 118 0 1 1 -380 0 A380 118 0 1 1 380 0"/></circle></g>
-            <g transform="rotate(-60)"><ellipse class="ln" rx="380" ry="118"/><circle r="9" fill="#CBC2FF"><animateMotion dur="11s" repeatCount="indefinite" path="M0 118 A380 118 0 1 1 0 -118 A380 118 0 1 1 0 118"/></circle></g>
-          </g>
-          <g class="layer" data-depth="0.55" transform="translate(1060 450)">
-            <circle r="150" fill="url(#gEmber)" class="pulse"/>
-            <g class="ink" stroke="#0B0326">
-              <circle cx="-16" cy="-12" r="26" fill="#FFB38A"/>
-              <circle cx="18" cy="-14" r="24" fill="#EEE9FF"/>
-              <circle cx="-4" cy="16" r="26" fill="#EEE9FF"/>
-              <circle cx="24" cy="18" r="20" fill="#FFB38A"/>
-              <circle cx="-26" cy="20" r="16" fill="#CBC2FF"/>
-            </g>
-          </g>
-        </svg>
+    <div class="mission" id="mission" aria-live="polite">
+      <div class="kick">The fission moment</div>
+      <p class="analogy">In 1938, scientists split the atom and found a force that had been there all along. <b>AI is that kind of power: already here, waiting to be harnessed.</b> Our mission is to help the people building the future turn it into something real.</p>
+      <h2 class="empower"><span>We</span><span>Empower</span><span>Our</span><span>Partners</span></h2>
+      <p class="statement">to turn high-tech ideas into revenue-generating products and sustainable businesses. We live where <em>semiconductors, AI, energy, quantum, and biotech</em> collide, and where the future gets engineered.</p>
+      <div class="scroll-cue"><i></i>Scroll to explore</div>
+    </div>
+  </div>
+  <div class="hero-shade" id="heroShade"></div>
+</section>
+
+<!-- ================= MAIN STACK ================= -->
+<main class="stack" id="stack">
+
+  <section class="section services" id="services">
+    <div class="svc-head">
+      <h2 class="h-m split">Our Services</h2>
+      <div>
+        <h2 class="h-l split">Getting started can be hard.</h2>
+        <p class="body-l fade">We provide full-time or fractional operational capabilities to support your growing enterprise. Engage our team as much or as little as you want, depending on your needs.</p>
       </div>
+    </div>
 
-      <!-- 3 UNCHARTED -->
-      <div class="scene" data-scene="3" data-fx="980">
-        <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <g class="layer" data-depth="0.08">
-            <ellipse cx="1150" cy="430" rx="560" ry="380" fill="url(#gGlowV)"/>
-            <ellipse cx="1280" cy="560" rx="300" ry="200" fill="url(#gGlowR)"/>
-          </g>
-          <g class="layer" data-depth="0.25" id="net"></g>
-          <g class="layer" data-depth="0.8">
-            <path class="ln" d="M-80 980 C 300 900, 520 720, 790 620" stroke-dasharray="2 8" opacity=".9"/>
-            <g transform="translate(860 560) rotate(-24)"><use href="#astro" x="-80" y="-140" width="160" height="280"/></g>
-          </g>
-        </svg>
+    <div class="cards">
+      <article class="card fade">
+        <div class="card-bar"><span class="n">01</span>Marketing &amp; Communications</div>
+        <div class="card-body">
+          <div class="card-art"><img src="assets/img/card-marketing.webp" alt="Megaphone illustration"></div>
+          <p>We help organizations explain what they're building, why it matters, and how it creates value.</p>
+          <a class="arrow-chip" href="#contact" data-jump aria-label="Ask about marketing and communications"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </article>
+      <article class="card fade" style="transition-delay:.12s">
+        <div class="card-bar"><span class="n">02</span>Engineering &amp; Development</div>
+        <div class="card-body">
+          <div class="card-art"><img class="wide" src="assets/img/card-engineering.svg" alt="Cube illustration: code, AI network and interface wireframe"></div>
+          <p>We design and build AI-enabled tools and digital solutions that you can use or sell.</p>
+          <a class="arrow-chip" href="#contact" data-jump aria-label="Ask about engineering and development"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </article>
+      <article class="card fade" style="transition-delay:.24s">
+        <div class="card-bar"><span class="n">03</span>Go-to-Market</div>
+        <div class="card-body">
+          <div class="card-art"><img src="assets/img/card-gtm.webp" alt="Crystal in orbit illustration"></div>
+          <p>We help organizations move ideas from concept to revenue generation by aligning strategy, funding, partnerships, and execution.</p>
+          <a class="arrow-chip" href="#contact" data-jump aria-label="Ask about go-to-market"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section venture" id="venture">
+    <div class="venture-card">
+      <div>
+        <h2 class="h-l split">We are a consultancy<br> &amp; venture studio.</h2>
+        <p class="body-l fade">We invest in mission-driven organizations and innovators to turn high-tech ideas into revenue generating products and sustainable business.</p>
+        <a class="btn fade" href="#contact" data-jump><span class="lbl">Begin your Mission</span><span class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
       </div>
+      <canvas id="atom3d" aria-hidden="true"></canvas>
+    </div>
+  </section>
 
-      <!-- 4 HARNESS -->
-      <div class="scene" data-scene="4" data-fx="1080">
-        <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <g class="layer" data-depth="0.08"><circle cx="960" cy="430" r="460" fill="url(#gGlowV)"/></g>
-          <g class="layer" data-depth="0.3" fill="none" stroke-linecap="round">
-            <g stroke="#CBC2FF" stroke-width="1.6" opacity=".75">
-              <path class="flow" d="M1700 80 C 1400 160, 1300 260, 1100 330 S 820 470, 960 520 S 1140 400, 1020 360"/>
-              <path class="flow" style="animation-delay:-1.4s" d="M1700 220 C 1450 260, 1300 380, 1140 420 S 860 560, 900 470 S 1060 330, 960 330"/>
-              <path class="flow" style="animation-delay:-2.6s" d="M1650 820 C 1400 700, 1260 560, 1100 520 S 840 380, 930 360 S 1080 470, 980 520"/>
-            </g>
-            <g stroke="#F08BB0" stroke-width="1.6" opacity=".6">
-              <path class="flow" style="animation-delay:-.8s" d="M1720 520 C 1480 500, 1300 470, 1140 460 S 860 420, 960 380"/>
-              <path class="flow" style="animation-delay:-3.3s" d="M1600 -40 C 1360 120, 1220 300, 1060 380 S 900 500, 980 480"/>
-            </g>
-            <ellipse class="ln" cx="960" cy="430" rx="200" ry="66" transform="rotate(-18 960 430)" opacity=".6"/>
-            <ellipse class="ln" cx="960" cy="430" rx="260" ry="86" transform="rotate(24 960 430)" opacity=".35"/>
-          </g>
-          <g class="layer" data-depth="0.45">
-            <circle cx="960" cy="430" r="120" fill="url(#gEmber)" class="pulse"/>
-            <circle cx="960" cy="430" r="26" fill="#FFF4EC" class="ink"/>
-            <path class="ln" id="traj" d="M960 430 Q1150 180 1560 60" stroke-dasharray="3 9" opacity=".8"/>
-            <g>
-              <path d="M-14 -7 L16 0 L-14 7 L-8 0Z" fill="#EEE9FF" class="ink"/>
-              <animateMotion dur="6s" repeatCount="indefinite" rotate="auto" path="M960 430 Q1150 180 1560 60"/>
-            </g>
-          </g>
-          <g class="layer" data-depth="0.8">
-            <path d="M1293 703 C 1200 650, 1080 540, 970 440" fill="none" stroke="#FFB38A" stroke-width="2.4" vector-effect="non-scaling-stroke"/>
-            <g transform="translate(1330 690)"><use href="#astro" x="-70" y="-120" width="140" height="245"/></g>
-          </g>
-        </svg>
+  <section class="section stories" id="stories">
+    <div class="stories-head">
+      <h2 class="h-m split">Success Stories</h2>
+      <p class="body-l fade">We specialize in start-up activities helping our clients go from an idea to steady-state operations in record time. Check out some of our past work.</p>
+    </div>
+    <div class="stories-grid">
+      <article class="story fade">
+        <div class="story-media" data-parallax>
+          <!-- needs separate layers: background, scientist, SMART USA logo -->
+          <img class="ly ly-full" data-speed="0.10" src="assets/img/story-smartusa-cleanroom.webp" alt="Scientist holding a wafer, with the SMART USA logo">
+        </div>
+        <p>Instrumental in winning the federal award behind SMART USA, a $1B total funding package.</p>
+        <a class="arrow-chip" href="#contact" data-jump aria-label="More about SMART USA"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+      </article>
+      <article class="story fade" style="transition-delay:.12s">
+        <div class="story-media" data-parallax>
+          <img class="ly ly-bg"  data-speed="0.05"  src="assets/img/story-bg.webp" alt="">
+          <img class="ly ly-el"  data-speed="0.16"  src="assets/img/story-machine.webp" alt="Precision manufacturing machine">
+          <img class="ly ly-logo" data-speed="-0.10" src="assets/img/logo-cymanii.webp" alt="CyManII">
+        </div>
+        <p>Helped win and stand up a national cybersecurity institute, securing $80M in DOE funding and $200M+ in private investment.</p>
+        <a class="arrow-chip" href="#contact" data-jump aria-label="More about CyManII"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+      </article>
+      <article class="story fade">
+        <div class="story-media" data-parallax>
+          <img class="ly ly-bg"  data-speed="0.05"  src="assets/img/story-bg.webp" alt="">
+          <img class="ly ly-el"  data-speed="0.16"  src="assets/img/story-conference.webp" alt="Two speakers at a conference">
+          <img class="ly ly-logo smart" data-speed="-0.10" src="assets/img/logo-smartusa.webp" alt="SMART USA">
+        </div>
+        <p>Ran a first-of-a-kind semiconductor national conference, bringing together 130+ organizations.</p>
+        <a class="arrow-chip" href="#contact" data-jump aria-label="More about the conference"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+      </article>
+      <article class="story fade" style="transition-delay:.12s">
+        <div class="story-media" data-parallax>
+          <img class="ly ly-bg"  data-speed="0.05"  src="assets/img/story-bg.webp" alt="">
+          <img class="ly ly-el"  data-speed="0.16"  src="assets/img/story-machine.webp" alt="" style="opacity:.55">
+          <span class="ly ph" data-speed="-0.10">LOGO</span>
+        </div>
+        <p>Built and led a public–private research center, securing $18M+ in sustained funding.</p>
+        <a class="arrow-chip" href="#contact" data-jump aria-label="More about the research center"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+      </article>
+    </div>
+  </section>
+
+  <div class="quote-wrap">
+    <div class="quote">
+      <div>
+        <blockquote class="split">Practical Fusion helped us go from zero to steady-state operations in record time! We couldn't have done it without their partnership.</blockquote>
+        <p class="who fade">Dave N. Henshall<span>Semiconductor Research Corporation</span></p>
       </div>
+      <div><div class="quote-art"><img src="assets/img/logo-atom.webp" alt=""></div></div>
+    </div>
+  </div>
+  <div class="stack-end"></div>
+</main>
 
-      <!-- 5 PRACTICAL FUSION -->
-      <div class="scene" data-scene="5" data-fx="800">
-        <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <g class="layer" data-depth="0.08">
-            <ellipse cx="800" cy="900" rx="1100" ry="300" fill="url(#gHorizon)"/>
-            <ellipse cx="800" cy="200" rx="460" ry="320" fill="url(#gGlowV)"/>
-          </g>
-          <g class="layer" data-depth="0.25">
-            <path d="M-100 860 Q800 760 1700 860" class="ln" opacity=".5"/>
-            <g class="ln" opacity=".16"><circle cx="800" cy="170" r="150"/><circle cx="800" cy="170" r="210"/></g>
-          </g>
-          <g class="layer" data-depth="0.4">
-            <circle cx="800" cy="170" r="90" fill="url(#gEmber)" opacity=".55" class="pulse"/>
-            <use href="#atom" x="700" y="70" width="200" height="200" color="#EEE9FF"/>
-          </g>
-        </svg>
+<!-- ================= CONTACT (revealed beneath the stack) ================= -->
+<section class="contact" id="contact">
+  <img class="contact-floor" id="contactFloor" src="assets/img/contact-floor.webp" alt="">
+  <div class="contact-card">
+    <h2 class="h-l split">Make Contact</h2>
+    <p class="lead fade">Have a question or a project? <b>Leave us a message.</b></p>
+    <form class="form" id="form" novalidate>
+      <div class="f"><label for="fn">First Name <i>*</i></label><input id="fn" name="first_name" autocomplete="given-name" required></div>
+      <div class="f"><label for="ln">Last Name <i>*</i></label><input id="ln" name="last_name" autocomplete="family-name" required></div>
+      <div class="f"><label for="em">Email <i>*</i></label><input id="em" name="email" type="email" autocomplete="email" required></div>
+      <div class="f"><label for="ph">Phone <i>*</i></label><div class="phone"><select name="country_code" aria-label="Country code"><option>+1</option><option>+44</option><option>+49</option><option>+33</option><option>+81</option><option>+82</option><option>+91</option></select><input id="ph" name="phone" type="tel" autocomplete="tel-national" required></div></div>
+      <div class="f full"><label for="org">Organization Name <i>*</i><small>Writing as an individual? Enter "Individual".</small></label><input id="org" name="organization" autocomplete="organization" required></div>
+      <div class="f full"><label for="msg">Your project in a few lines <i>*</i></label><span class="hint">Context, goal, deadline: your own words are enough, we'll go through it at our first meeting.</span><textarea id="msg" name="message" required></textarea></div>
+      <div class="form-actions">
+        <button class="btn" type="submit"><span class="lbl">Send Message</span><span class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></button>
+        <p class="status" id="status" role="status"></p>
+        <p class="form-note">Practical Fusion uses this information to respond to your request.<br><br><a href="#">Your rights</a> · <a href="#">Privacy policy</a></p>
       </div>
-
-    </div>
-    <div class="vignette"></div>
-
-    <!-- chapter copy -->
-    <div class="chapter" data-ch="0" style="max-width:min(720px,88vw)">
-      <div class="kicker">Practical Fusion Solutions · Consultancy &amp; venture studio</div>
-      <h1 class="split">We build companies whose innovations will change the world.</h1>
-      <p>We turn high-tech ideas into revenue-generating products and sustainable businesses, from semiconductors and AI to energy, quantum and biotech.</p>
-      <div class="ctas"><a class="btn solid" href="#ch1" data-hover data-go="1">Begin the mission <span class="arr">↓</span></a></div>
-    </div>
-    <div class="chapter" data-ch="1">
-      <div class="kicker">T+00 · July 20, 1969 · Sea of Tranquility</div>
-      <h2 class="split">One small step redrew the map of the possible.</h2>
-      <p>Nobody had charted the Moon. They went anyway, with a crew, a plan, and a great deal of math.</p>
-    </div>
-    <div class="chapter" data-ch="2">
-      <div class="kicker">T+01 · The nucleus</div>
-      <h2 class="split">The power inside the atom was always there.</h2>
-      <p>It sat untouched for billions of years. The breakthrough wasn't finding it. It was learning to <em>harness</em> it.</p>
-    </div>
-    <div class="chapter" data-ch="3">
-      <div class="kicker">T+02 · Uncharted territory</div>
-      <h2 class="split">Today's frontier is intelligence.</h2>
-      <p>AI is power waiting to be harnessed: vast, raw, and mostly unmapped. Most organizations are still looking up at the sky.</p>
-    </div>
-    <div class="chapter" data-ch="4">
-      <div class="kicker">T+03 · Harness</div>
-      <h2 class="split">Raw, it's noise. Harnessed, it's propulsion.</h2>
-      <p>The difference is the tether: strategy, engineering, and a story people can follow. That's the work we do.</p>
-    </div>
-    <div class="chapter center" data-ch="5">
-      <div class="kicker">T+04 · Practical Fusion</div>
-      <h2 class="split">The sky was never the limit.</h2>
-      <p>We learned to harness the nucleus. Now it's AI's turn, and we help mission-driven innovators turn it into products, revenue and companies that last.</p>
-      <div class="ctas"><a class="btn solid" href="#crew" data-hover>Meet the crew <span class="arr">→</span></a><a class="btn" href="#contact" data-hover>Make contact <span class="arr">→</span></a></div>
-    </div>
-
-    <nav class="hud" aria-label="Story chapters">
-      <a href="#" data-go="0" data-hover><span>PRACTICAL FUSION</span><i></i></a>
-      <a href="#" data-go="1" data-hover><span>T+00 · 1969</span><i></i></a>
-      <a href="#" data-go="2" data-hover><span>T+01 · NUCLEUS</span><i></i></a>
-      <a href="#" data-go="3" data-hover><span>T+02 · UNCHARTED</span><i></i></a>
-      <a href="#" data-go="4" data-hover><span>T+03 · HARNESS</span><i></i></a>
-      <a href="#" data-go="5" data-hover><span>T+04 · NO LIMIT</span><i></i></a>
-    </nav>
-    <div class="scrollhint" id="hint"><span>Scroll to fly</span><i></i></div>
-    <a class="skip" href="#crew" data-hover>Skip story →</a>
+    </form>
   </div>
 </section>
 
-<!-- =================== ACT II : BRIEFING =================== -->
-<main>
-  <section class="brief" id="crew">
-    <div class="label reveal">The crew · Services</div>
-    <h2 class="reveal">Every mission needs a crew.</h2>
-    <p class="lede reveal">We turn high-tech ideas into revenue-generating products and sustainable businesses, working right alongside your team.</p>
-    <div class="cards">
-      <article class="card reveal" data-tilt>
-        <div class="glare"></div>
-        <div class="num">01 / COMMUNICATIONS</div>
-        <svg viewBox="0 0 96 96" fill="none" stroke="#CBC2FF" stroke-width="1.5" stroke-linecap="round"><path d="M20 70 L48 42"/><path d="M14 40 A40 40 0 0 0 56 82 Z" fill="rgba(203,194,255,.08)"/><circle cx="50" cy="40" r="3" fill="#FFB38A" stroke="none"/><path d="M60 30 a14 14 0 0 1 8 8 M64 20 a26 26 0 0 1 14 14 M68 10 a38 38 0 0 1 20 20" stroke="#FFB38A"/><path d="M30 82 h20"/></svg>
-        <h3>Tell the story.</h3>
-        <div class="tag">Marketing &amp; Communications</div>
-        <p>Technical reports, graphics, events and marketing that explain what you're building and why it matters.</p>
-      </article>
-      <article class="card reveal" data-tilt style="transition-delay:.1s">
-        <div class="glare"></div>
-        <div class="num">02 / ENGINEERING</div>
-        <svg viewBox="0 0 96 96" fill="none" stroke="#CBC2FF" stroke-width="1.5" stroke-linejoin="round"><path d="M48 8 C62 20 66 40 62 62 H34 C30 40 34 20 48 8Z" fill="rgba(203,194,255,.08)"/><circle cx="48" cy="34" r="7"/><path d="M34 50 L22 66 L34 66 M62 50 L74 66 L62 66"/><path d="M40 70 Q48 92 56 70" stroke="#FFB38A"/></svg>
-        <h3>Build the craft.</h3>
-        <div class="tag">Engineering &amp; Development</div>
-        <p>App development, AI integration and UX design for tools you can use or sell.</p>
-      </article>
-      <article class="card reveal" data-tilt style="transition-delay:.2s">
-        <div class="glare"></div>
-        <div class="num">03 / GO-TO-MARKET</div>
-        <svg viewBox="0 0 96 96" fill="none" stroke="#CBC2FF" stroke-width="1.5" stroke-linecap="round"><circle cx="20" cy="76" r="8" fill="rgba(203,194,255,.08)"/><path d="M26 70 Q50 30 86 14" stroke-dasharray="3 6" stroke="#FFB38A"/><path d="M78 12 L88 13 L84 22"/><circle cx="54" cy="40" r="2.5" fill="#CBC2FF"/><circle cx="70" cy="24" r="2" fill="#CBC2FF"/></svg>
-        <h3>Plot the trajectory.</h3>
-        <div class="tag">Go-to-Market</div>
-        <p>Proposal writing, business plans and product launches that move ideas toward revenue.</p>
-      </article>
-    </div>
-    <div class="fraction reveal"><span class="label" style="color:var(--mute)"></span><span><b>Full-time or fractional.</b> Engage as much or as little as you need.</span></div>
-  </section>
-
-  <section class="brief" id="frontiers">
-    <div class="label reveal">Frontiers · Sectors</div>
-    <h2 class="reveal">Five frontiers. One intersection.</h2>
-    <p class="lede reveal">We work where the hardest, highest-leverage technologies meet, because that's where the next century gets built.</p>
-    <div class="planets">
-      <div class="planet reveal"><svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="44" fill="#180552" stroke="#CBC2FF" stroke-width="1.5"/><g stroke="#CBC2FF" stroke-width="1.2" fill="none"><rect x="62" y="62" width="36" height="36" rx="3"/><path d="M70 62v-10M80 62v-10M90 62v-10M70 98v10M80 98v10M90 98v10M62 70h-10M62 80h-10M62 90h-10M98 70h10M98 80h10M98 90h10"/></g><rect x="72" y="72" width="16" height="16" fill="#FFB38A"/></svg><h4>Semiconductors</h4><span>THE SUBSTRATE</span></div>
-      <div class="planet reveal" style="transition-delay:.08s"><svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="44" fill="#180552" stroke="#CBC2FF" stroke-width="1.5"/><g stroke="#CBC2FF" stroke-width="1.1"><path d="M62 66 L80 58 L98 70 L92 92 L70 98 L62 66 L80 80 L98 70 M80 80 L92 92 M80 80 L70 98 M80 58 L80 80"/></g><g fill="#EEE9FF"><circle cx="62" cy="66" r="3"/><circle cx="80" cy="58" r="3"/><circle cx="98" cy="70" r="3"/><circle cx="92" cy="92" r="3"/><circle cx="70" cy="98" r="3"/></g><circle cx="80" cy="80" r="4.5" fill="#FFB38A"/><ellipse cx="80" cy="80" rx="72" ry="16" fill="none" stroke="#CBC2FF" stroke-width="1" opacity=".5" transform="rotate(-18 80 80)"/></svg><h4>Artificial intelligence</h4><span>THE NEW FRONTIER</span></div>
-      <div class="planet reveal" style="transition-delay:.16s"><svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="50" fill="url(#gEmber)" opacity=".5"/><circle cx="80" cy="80" r="44" fill="#180552" stroke="#CBC2FF" stroke-width="1.5"/><path d="M86 54 L68 84 H82 L74 108 L96 74 H82Z" fill="#FFB38A" stroke="#0B0326"/></svg><h4>Energy</h4><span>THE FUEL</span></div>
-      <div class="planet reveal" style="transition-delay:.24s"><svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="44" fill="#180552" stroke="#CBC2FF" stroke-width="1.5"/><g fill="none" stroke="#CBC2FF" stroke-width="1.2"><ellipse cx="80" cy="80" rx="30" ry="11"/><ellipse cx="80" cy="80" rx="30" ry="11" transform="rotate(60 80 80)"/><ellipse cx="80" cy="80" rx="30" ry="11" transform="rotate(-60 80 80)"/></g><circle cx="80" cy="80" r="5" fill="#FFB38A"/><circle cx="80" cy="80" r="62" fill="none" stroke="#CBC2FF" stroke-dasharray="2 6" opacity=".5"/></svg><h4>Quantum</h4><span>THE UNCERTAIN</span></div>
-      <div class="planet reveal" style="transition-delay:.32s"><svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="44" fill="#180552" stroke="#CBC2FF" stroke-width="1.5"/><g fill="none" stroke-width="1.4"><path d="M66 52 C 96 66, 64 94, 94 108" stroke="#CBC2FF"/><path d="M94 52 C 64 66, 96 94, 66 108" stroke="#FFB38A"/></g><path d="M72 62h16M70 72h20M70 88h20M72 98h16" stroke="#CBC2FF" stroke-width="1" opacity=".7"/></svg><h4>Biotech</h4><span>THE LIVING</span></div>
-    </div>
-  </section>
-
-  <section class="brief" id="log">
-    <div class="label reveal">Mission log · Portfolio</div>
-    <h2 class="reveal">Missions completed.</h2>
-    <div class="log">
-      <div class="stat reveal"><div class="k">LOG 01 · SMART USA</div><div class="v"><span data-count="1" data-pre="$" data-suf="B">$1B</span></div><p>We helped win the federal award behind SMART USA, a $1B total funding package.</p></div>
-      <div class="stat reveal" style="transition-delay:.1s"><div class="k">LOG 02 · CYBERSECURITY</div><div class="v"><span data-count="80" data-pre="$" data-suf="M">$80M</span> <small>+$200M</small></div><p>We helped win and stand up a national cybersecurity institute: $80M in DOE funding and $200M+ in private investment.</p></div>
-      <div class="stat reveal" style="transition-delay:.2s"><div class="k">LOG 03 · CONVENING</div><div class="v"><span data-count="130" data-suf="+">130+</span></div><p>We ran a first-of-its-kind national semiconductor conference that brought together 130+ organizations.</p></div>
-      <div class="stat reveal" style="transition-delay:.3s"><div class="k">LOG 04 · RESEARCH</div><div class="v"><span data-count="18" data-pre="$" data-suf="M+">$18M+</span></div><p>We built and led a public–private research center and secured $18M+ in sustained funding.</p></div>
-    </div>
-  </section>
-
-  <section class="brief" id="transmission">
-    <div class="transmission reveal">
-      <svg class="wave" viewBox="0 0 300 300" fill="none" stroke="#CBC2FF" stroke-width="1"><circle cx="220" cy="80" r="40" opacity=".6"/><circle cx="220" cy="80" r="80" opacity=".4"/><circle cx="220" cy="80" r="120" opacity=".25"/><circle cx="220" cy="80" r="160" opacity=".12"/><circle cx="220" cy="80" r="6" fill="#FFB38A" stroke="none" class="blink"/></svg>
-      <div class="label">Incoming transmission · Word on the street</div>
-      <blockquote id="quote" data-text="“Practical Fusion helped us go from zero to steady-state operations in record time! We couldn’t have done it without their partnership.”"><span class="t"></span><span class="caret"></span></blockquote>
-      <div class="who"><div class="av">DH</div><div><b>David N. Henshall</b>Semiconductor Research Corporation</div></div>
-    </div>
-  </section>
-
-  <section class="brief studio" id="studio">
-    <div>
-      <div class="label reveal">The venture studio</div>
-      <h2 class="reveal">We don't just advise the mission. We fly it with you.</h2>
-      <p class="lede reveal">We invest in mission-driven organizations and innovators to turn high-tech ideas into revenue-generating products and sustainable businesses.</p>
-    </div>
-    <svg class="reveal" viewBox="0 0 520 420" aria-hidden="true">
-      <circle cx="260" cy="210" r="190" fill="url(#gGlowV)"/>
-      <g fill="none" stroke="#CBC2FF" stroke-width="1.2"><ellipse cx="260" cy="210" rx="210" ry="64" opacity=".5"/><ellipse cx="260" cy="210" rx="150" ry="44" opacity=".35" transform="rotate(-20 260 210)"/></g>
-      <circle cx="260" cy="210" r="70" fill="url(#gPlanet)"/>
-      <path d="M268 140 A70 70 0 0 1 268 280 A56 70 0 0 0 268 140Z" fill="#180552" opacity=".55"/>
-      <g transform="translate(120 70) rotate(-18)"><use href="#astro" width="80" height="140"/></g>
-      <path d="M150 170 C 190 200, 200 210, 196 214" fill="none" stroke="#FFB38A" stroke-width="1.6" stroke-dasharray="2 5"/>
-    </svg>
-  </section>
-
-  <section class="brief" id="contact">
-    <div class="contact">
-      <div>
-        <div class="label reveal">Make contact</div>
-        <h2 class="reveal">Open a channel.</h2>
-        <p class="lede reveal">Tell us about the frontier you're facing. We'll tell you how we'd harness it.</p>
-        <div class="coords reveal">
-          <div><b>Base coordinates</b>700 S Rosemary Ave, Suite 204<br>West Palm Beach, FL 33401</div>
-          <div><b>Signals</b><a href="https://www.linkedin.com/company/practical-fusion-solutions" target="_blank" rel="noopener" data-hover>LinkedIn ↗</a> &nbsp; <a href="https://twinlabs.com" target="_blank" rel="noopener" data-hover>TwinLabs ↗</a></div>
-        </div>
-      </div>
-      <form id="form" class="reveal" novalidate>
-        <div class="field"><label for="fn">First name</label><input id="fn" name="first_name" autocomplete="given-name" required></div>
-        <div class="field"><label for="ln">Last name</label><input id="ln" name="last_name" autocomplete="family-name" required></div>
-        <div class="field full"><label for="em">Email</label><input id="em" name="email" type="email" autocomplete="email" required></div>
-        <div class="field full"><label for="msg">Message</label><textarea id="msg" name="message" required></textarea></div>
-        <button class="btn solid" type="submit" data-hover>Transmit <span class="arr">→</span></button>
-        <div class="status" id="status" role="status" aria-live="polite"></div>
-      </form>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <span>© 2026 Practical Fusion Solutions, LLC</span>
-  <nav><a href="#story" data-hover>Back to launch ↑</a><a href="https://www.linkedin.com/company/practical-fusion-solutions" target="_blank" rel="noopener" data-hover>LinkedIn</a></nav>
+<footer class="footer">
+  <p class="tag">Practical AI for growing businesses.</p>
+  <div class="f-grid">
+    <div><h4>Socials</h4><div class="f-col"><a href="https://www.linkedin.com/company/practical-fusion-solutions" target="_blank" rel="noopener">LinkedIn</a></div></div>
+    <div><h4>Company</h4><div class="f-links"><a href="#top" data-home>Home</a><a href="#services" data-jump>Services</a><a href="https://twinlabs.com" target="_blank" rel="noopener">TwinLabs</a><a href="#venture" data-jump>About</a><a href="#stories" data-jump>Portfolio</a></div></div>
+    <div><h4>Services</h4><div class="f-col"><a href="#services" data-jump>Marketing &amp; Communications</a><a href="#services" data-jump>Engineering &amp; Development</a><a href="#services" data-jump>Go-to-Market</a></div></div>
+  </div>
+  <hr>
+  <div class="f-bottom">
+    <img src="assets/img/logo-atom.webp" alt="Practical Fusion">
+    <div><h4>Head Office</h4><p>700 S Rosemary Ave, Suite 204<br>West Palm Beach, FL 33401</p></div>
+    <div><h4>Email</h4><p><a href="mailto:paris.stringfellow@practical-fusion.com">paris.stringfellow@practical-fusion.com</a></p></div>
+  </div>
 </footer>
 
-<script>
-/* ===== Config: paste a Formspree (or similar) endpoint here to receive form messages ===== */
-const FORM_ENDPOINT = ""; // e.g. "https://formspree.io/f/xxxxxxx"
-
-(() => {
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
-  const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
-
-  /* ---------- split headlines into words ---------- */
-  document.querySelectorAll('.split').forEach(el => {
-    el.innerHTML = el.textContent.trim().split(/\s+/).map((w,i) => `<span class="w"><span style="--i:${i}">${w}</span></span>`).join(' ');
-  });
-
-  /* ---------- constellation for scene 3 (seeded) ---------- */
-  (function buildNet(){
-    const g = document.getElementById('net'); if(!g) return;
-    let s = 7; const rnd = () => (s = (s*16807) % 2147483647) / 2147483647;
-    const pts = [];
-    for (let i=0;i<44;i++) pts.push([760 + rnd()*820, 110 + rnd()*680, 1.5 + rnd()*3.5]);
-    let lines = '';
-    pts.forEach((p,i) => {
-      const near = pts.map((q,j)=>[j,(q[0]-p[0])**2+(q[1]-p[1])**2]).filter(a=>a[0]!==i).sort((a,b)=>a[1]-b[1]).slice(0,2);
-      near.forEach(([j]) => { if (j>i) lines += `M${p[0].toFixed(0)} ${p[1].toFixed(0)}L${pts[j][0].toFixed(0)} ${pts[j][1].toFixed(0)}`; });
-    });
-    let html = `<path class="ln" d="${lines}" opacity=".35"/>`;
-    pts.forEach((p,i) => {
-      const c = i%9===0 ? '#FFB38A' : (i%4===0 ? '#F08BB0' : '#EEE9FF');
-      html += `<circle cx="${p[0].toFixed(0)}" cy="${p[1].toFixed(0)}" r="${p[2].toFixed(1)}" fill="${c}" class="blink" style="animation-delay:${(-rnd()*4).toFixed(2)}s"/>`;
-    });
-    g.innerHTML = html;
-  })();
-
-  /* ---------- portrait screens: re-centre each scene on its focal point ---------- */
-  function frameScenes(){
-    const ar = innerWidth/innerHeight;
-    document.querySelectorAll('.scene').forEach(s => {
-      const svg = s.querySelector('svg'), fx = +s.dataset.fx || 800;
-      if (ar < 1.1){ const w = Math.max(560, 900*ar*1.15); svg.setAttribute('viewBox', `${fx - w/2} 0 ${w} 900`); }
-      else svg.setAttribute('viewBox', '0 0 1600 900');
-    });
-  }
-  frameScenes(); addEventListener('resize', frameScenes);
-
-  /* ---------- pointer ---------- */
-  let tx=0, ty=0, mx=0, my=0, cx=innerWidth/2, cy=innerHeight/2, rx=cx, ry=cy;
-  const cursor = document.querySelector('.cursor'), ring = cursor.querySelector('.ring'), dot = cursor.querySelector('.dot');
-  addEventListener('pointermove', e => {
-    tx = e.clientX/innerWidth*2-1; ty = e.clientY/innerHeight*2-1; cx = e.clientX; cy = e.clientY;
-  }, {passive:true});
-  document.addEventListener('pointerover', e => { if (e.target.closest('a,button,[data-hover],input,textarea')) cursor.classList.add('hover'); });
-  document.addEventListener('pointerout', e => { if (e.target.closest('a,button,[data-hover],input,textarea')) cursor.classList.remove('hover'); });
-
-  /* ---------- starfield ---------- */
-  const cv = document.getElementById('stars'), ctx = cv.getContext('2d');
-  let W, H, DPR, stars = [];
-  function resize(){
-    DPR = Math.min(devicePixelRatio||1, 2); W = cv.width = innerWidth*DPR; H = cv.height = innerHeight*DPR;
-    const n = Math.round(Math.min(380, innerWidth*innerHeight/4200));
-    stars = Array.from({length:n}, () => ({x:Math.random()*W, y:Math.random()*H, z:Math.random()**2*0.9+0.1, t:Math.random()*6.28}));
-  }
-  resize(); addEventListener('resize', resize);
-  let lastY = scrollY, vel = 0;
-
-  /* ---------- story ---------- */
-  const story = document.getElementById('story'), world = document.getElementById('world');
-  const scenes = [...document.querySelectorAll('.scene')];
-  const layers = scenes.map(s => [...s.querySelectorAll('.layer')].map(l => ({el:l, d:+l.dataset.depth, base:l.getAttribute('transform')||''})));
-  const chapters = [...document.querySelectorAll('.chapter')];
-  const hudLinks = [...document.querySelectorAll('.hud a')];
-  const hint = document.getElementById('hint'), nav = document.getElementById('nav');
-  const N = scenes.length;
-  let active = -1;
-
-  function progress(){
-    const r = story.getBoundingClientRect(); const total = r.height - innerHeight;
-    return clamp(-r.top/total, 0, 1) * (N-1);
-  }
-  function goTo(i){
-    const total = story.offsetHeight - innerHeight;
-    scrollTo({top: story.offsetTop + total * i/(N-1), behavior: reduce ? 'auto' : 'smooth'});
-  }
-  document.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); goTo(+a.dataset.go); }));
-
-  function frame(t){
-    const k = reduce ? 1 : 0.06;
-    mx += (tx-mx)*k; my += (ty-my)*k;
-    rx += (cx-rx)*0.2; ry += (cy-ry)*0.2;
-    dot.style.transform = `translate(${cx}px,${cy}px)`;
-    ring.parentElement && (ring.style.transform = `translate(${rx}px,${ry}px)`);
-
-    const sy = scrollY; vel += ((sy-lastY) - vel)*0.15; lastY = sy;
-
-    // stars
-    ctx.clearRect(0,0,W,H);
-    const warp = clamp(Math.abs(vel), 0, 80) * DPR;
-    for (const s of stars){
-      s.y -= (vel*0.25*s.z)*DPR; if (s.y < 0) s.y += H; if (s.y > H) s.y -= H;
-      const px = s.x - mx*28*s.z*DPR, py = s.y - my*18*s.z*DPR;
-      const a = 0.35 + 0.65*s.z*(0.6+0.4*Math.sin(t/900+s.t));
-      ctx.strokeStyle = ctx.fillStyle = `rgba(226,220,255,${a})`;
-      if (warp > 3 && !reduce){
-        ctx.lineWidth = Math.max(1, s.z*2*DPR); ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px, py + Math.sign(vel)*warp*s.z*1.6); ctx.stroke();
-      } else { ctx.beginPath(); ctx.arc(px,py,s.z*1.5*DPR,0,6.283); ctx.fill(); }
-    }
-
-    // story stage — only while in view
-    const r = story.getBoundingClientRect();
-    if (r.bottom > 0 && r.top < innerHeight){
-      const p = progress();
-      if (!reduce) world.style.transform = `rotateY(${mx*4.5}deg) rotateX(${-my*3.5}deg) translate3d(${-mx*14}px,${-my*10}px,0)`;
-      scenes.forEach((s,i) => {
-        const d = p - i, o = clamp(1 - Math.abs(d)*1.35, 0, 1);
-        if (o <= 0.001){ if (s.style.visibility !== 'hidden') s.style.visibility = 'hidden'; return; }
-        s.style.visibility = 'visible'; s.style.opacity = o;
-        const sc = reduce ? 1 : (d < 0 ? 1 + d*0.22 : 1 + d*0.7);
-        s.style.transform = `scale(${sc})`;
-        if (!reduce) layers[i].forEach(L => {
-          const dx = -mx*L.d*60, dy = -my*L.d*36 - d*L.d*120;
-          L.el.setAttribute('transform', `translate(${dx.toFixed(2)} ${dy.toFixed(2)}) ${L.base}`);
-        });
-      });
-      window.__pf = {mx, my, p};
-      const idx = Math.round(p), near = Math.abs(p-idx) < 0.36;
-      const now = near ? idx : -1;
-      if (now !== active){
-        active = now;
-        chapters.forEach((c,i) => c.classList.toggle('on', i===now));
-        hudLinks.forEach((a,i) => a.classList.toggle('on', i===idx));
-      }
-      hint.style.opacity = p > 4.6 ? 0 : 1;
-    }
-    nav.classList.toggle('solid', r.bottom < innerHeight*0.6);
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-
-  /* ---------- card tilt ---------- */
-  if (fine && !reduce) document.querySelectorAll('[data-tilt]').forEach(c => {
-    c.addEventListener('pointermove', e => {
-      const b = c.getBoundingClientRect(), x = (e.clientX-b.left)/b.width, y = (e.clientY-b.top)/b.height;
-      c.style.transform = `rotateY(${(x-.5)*12}deg) rotateX(${(.5-y)*10}deg) translateZ(10px)`;
-      c.style.setProperty('--gx', x*100+'%'); c.style.setProperty('--gy', y*100+'%');
-    });
-    c.addEventListener('pointerleave', () => { c.style.transform = ''; });
-  });
-
-  /* ---------- reveals, counters, typed quote ---------- */
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (!e.isIntersecting) return; const el = e.target; el.classList.add('in'); io.unobserve(el);
-    el.querySelectorAll('[data-count]').forEach(countUp);
-    if (el.querySelector('#quote')) typeQuote();
-  }), {threshold:.18});
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-  function countUp(el){
-    const end = +el.dataset.count, pre = el.dataset.pre||'', suf = el.dataset.suf||'';
-    if (reduce) return; const t0 = performance.now(), dur = 1600;
-    (function step(t){ const k = clamp((t-t0)/dur,0,1), e = 1-Math.pow(1-k,3);
-      el.textContent = pre + Math.round(end*e) + suf; if (k<1) requestAnimationFrame(step); })(t0);
-  }
-  let typed = false;
-  function typeQuote(){
-    if (typed) return; typed = true;
-    const q = document.getElementById('quote'), out = q.querySelector('.t'), txt = q.dataset.text;
-    if (reduce){ out.textContent = txt; return; }
-    let i = 0; (function tick(){ out.textContent = txt.slice(0, ++i); if (i < txt.length) setTimeout(tick, 22 + Math.random()*30); })();
-  }
-
-  /* ---------- contact form ---------- */
-  const form = document.getElementById('form'), status = document.getElementById('status');
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    if (!form.checkValidity()){ status.textContent = 'Signal incomplete. Please fill in every field with a valid email.'; return; }
-    if (!FORM_ENDPOINT){ status.textContent = 'Channel not configured yet. Add a form endpoint in index.html (see README).'; return; }
-    status.textContent = 'Transmitting…';
-    try {
-      const res = await fetch(FORM_ENDPOINT, {method:'POST', body:new FormData(form), headers:{Accept:'application/json'}});
-      if (!res.ok) throw 0;
-      form.reset(); status.textContent = 'Transmission received. We’ll be in touch.';
-    } catch { status.textContent = 'Transmission failed. Please try again, or reach us on LinkedIn.'; }
-  });
-})();
-</script>
 <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
-<script type="module" src="assets/dyson.js"></script>
+<script src="assets/js/site.js"></script>
+<script type="module" src="assets/js/three-scenes.js"></script>
 </body>
 </html>
