@@ -200,6 +200,15 @@ const FORM_ENDPOINT = "";
   /* ---------- header links ---------- */
   const nav = $('#nav');
   const setMenu = () => {};
+  // touch screens have no hover: unfold the button once its card is well in view
+  if (matchMedia('(hover: none)').matches) {
+    const io3 = new IntersectionObserver(es => es.forEach(e => {
+      const t = e.target; clearTimeout(t._iv);
+      if (e.isIntersecting) t._iv = setTimeout(() => t.classList.add('inview'), 500);
+      else t.classList.remove('inview');
+    }), { rootMargin: '0px 0px -25% 0px', threshold: 0.6 });
+    $$('.card, .story').forEach(c => { if (c.querySelector('.more')) io3.observe(c); });
+  }
   // each "learn more" label unfolds to its own width
   const sizeMore = () => $$('.more-lbl').forEach(l => l.style.setProperty('--w', Math.ceil(l.firstElementChild.scrollWidth) + 'px'));
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizeMore); addEventListener('resize', sizeMore);

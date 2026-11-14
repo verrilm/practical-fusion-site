@@ -62,10 +62,10 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .more-lbl{width:0;margin-right:0;overflow:hidden;background:#fff;border-radius:2px;display:flex;align-items:center;
   clip-path:inset(55% 0 0 0);transition:width .45s var(--ease) .05s,margin .45s var(--ease) .05s,clip-path .35s var(--ease) .05s}
 .more-lbl span{display:block;padding:0 14px;white-space:nowrap;font-family:"Nohemi";font-weight:500;font-size:13px;transform:translateY(120%);transition:transform .4s var(--ease) .12s}
-.card:hover .more-lbl,.story:hover .more-lbl,.more:focus-visible .more-lbl{width:var(--w,140px);margin-right:3px;clip-path:inset(0 0 0 0)}
-.card:hover .more-lbl span,.story:hover .more-lbl span,.more:focus-visible .more-lbl span{transform:none}
-.card:not(:hover) .more:not(:focus-visible) .more-lbl span,.story:not(:hover) .more:not(:focus-visible) .more-lbl span{transition-delay:0s}
-.card:not(:hover) .more:not(:focus-visible) .more-lbl,.story:not(:hover) .more:not(:focus-visible) .more-lbl{transition-delay:.12s}
+.card:hover .more-lbl,.story:hover .more-lbl,.more:focus-visible .more-lbl,.inview .more-lbl{width:var(--w,140px);margin-right:3px;clip-path:inset(0 0 0 0)}
+.card:hover .more-lbl span,.story:hover .more-lbl span,.more:focus-visible .more-lbl span,.inview .more-lbl span{transform:none}
+.card:not(:hover):not(.inview) .more:not(:focus-visible) .more-lbl span,.story:not(:hover):not(.inview) .more:not(:focus-visible) .more-lbl span{transition-delay:0s}
+.card:not(:hover):not(.inview) .more:not(:focus-visible) .more-lbl,.story:not(:hover):not(.inview) .more:not(:focus-visible) .more-lbl{transition-delay:.12s}
 
 /* ---------- header ---------- */
 .nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:23px 36px;pointer-events:none}
