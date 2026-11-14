@@ -122,12 +122,9 @@ const FORM_ENDPOINT = "";
     if (Math.abs(d) > 24) { gesture(Math.sign(d), e); touchY = null; }
   }, { passive: false });
 
-  /* ---------- menu ---------- */
-  const menuBtn = $('#menuBtn'), nav = $('#nav');
-  const setMenu = open => { nav.classList.toggle('menu-open', open); menuBtn.setAttribute('aria-expanded', open); menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); };
-  menuBtn.addEventListener('click', e => { e.stopPropagation(); setMenu(!nav.classList.contains('menu-open')); });
-  document.addEventListener('click', e => { if (!e.target.closest('.menu')) setMenu(false); });
-  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+  /* ---------- header links ---------- */
+  const nav = $('#nav');
+  const setMenu = () => {};
 
   // in-page links: make sure the mission state is on, then glide to the section
   $$('[data-jump]').forEach(a => a.addEventListener('click', e => {
@@ -200,10 +197,8 @@ const FORM_ENDPOINT = "";
     // the stack is cropped into a smaller rounded window as the contact section is revealed
     const sb = stack.getBoundingClientRect().bottom;
     const p2 = clamp((H - sb) / (H * 0.6), 0, 1);
-    if (p2 > 0) {
-      const sx = (W * 0.03 * p2).toFixed(1), sy = (H * 0.04 * p2).toFixed(1);
-      stack.style.clipPath = `inset(0 ${sx}px ${sy}px ${sx}px round 28px 28px ${(28 * p2 + 1).toFixed(1)}px ${(28 * p2 + 1).toFixed(1)}px)`;
-    } else stack.style.clipPath = '';
+    // no shrinking: the bottom corners just round off as the contact section shows
+    stack.style.borderRadius = `28px 28px ${(28 * Math.min(1, p2 * 3)).toFixed(1)}px ${(28 * Math.min(1, p2 * 3)).toFixed(1)}px`;
     if (contactFloor) {
       const cr = contactFloor.parentElement.getBoundingClientRect();
       if (cr.top < H && cr.bottom > 0) contactFloor.style.transform = `translate3d(calc(-50% + ${(-mx * 18).toFixed(1)}px), 0, 0)`;
@@ -218,9 +213,12 @@ const FORM_ENDPOINT = "";
         L.l.style.transform = L.ph ? `translate(${x}px, calc(-50% + ${y}px))` : `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)${L.bg ? ' scale(1.04)' : ''}`;
       }
     }
-    nav.classList.toggle('solid', scrollY > 40);
     requestAnimationFrame(frame);
   }
+
+  const contactEl = $('#contact');
+  const pinContact = () => { contactEl.style.top = `${Math.min(0, innerHeight - contactEl.offsetHeight)}px`; };
+  addEventListener('resize', pinContact); addEventListener('load', pinContact); pinContact();
 
   // start the intro once the fonts are in, so the headline doesn't jump
   const go = () => { body.classList.add('intro-go'); PF.ready = true; };
