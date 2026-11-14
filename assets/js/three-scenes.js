@@ -279,15 +279,15 @@ function sectionGems() {
     });
     spin.add(new THREE.Mesh(geo, fillMat));
     const eg = new LineSegmentsGeometry(); eg.setPositions(edgePos);
-    const lineMat = new LineMaterial({ color: '#FFFFFF', linewidth: 1.4 }); lineMat.resolution.set(200 * dpr, 200 * dpr);
+    const lineMat = new LineMaterial({ color: '#FFFFFF', linewidth: 0.9 }); lineMat.resolution.set(200 * dpr, 200 * dpr);
     spin.add(new LineSegments2(eg, lineMat));
 
     // orbit: a flat dashed circle around the gem, turning slowly
     const orbit = new THREE.Group(); scene.add(orbit);
-    const dash = []; const ND = 34, R = 0.34;
-    for (let i = 0; i < ND; i++) { const a0 = i / ND * Math.PI * 2, a1 = a0 + Math.PI * 2 / ND * 0.55; dash.push(R * Math.cos(a0), R * Math.sin(a0), 0, R * Math.cos(a1), R * Math.sin(a1), 0); }
+    const dash = []; const ND = 30, R = 0.34;
+    for (let i = 0; i < ND; i++) { const a0 = i / ND * Math.PI * 2, a1 = a0 + Math.PI * 2 / ND * 0.34; dash.push(R * Math.cos(a0), R * Math.sin(a0), 0, R * Math.cos(a1), R * Math.sin(a1), 0); }
     const dg = new LineSegmentsGeometry(); dg.setPositions(dash);
-    const dotMat = new LineMaterial({ color: '#CFC8EE', linewidth: 1.1, transparent: true, opacity: 0, depthTest: false }); dotMat.resolution.set(200 * dpr, 200 * dpr);
+    const dotMat = new LineMaterial({ color: '#FFFFFF', linewidth: 0.8, transparent: true, opacity: 0, depthTest: false }); dotMat.resolution.set(200 * dpr, 200 * dpr);
     const dots = new LineSegments2(dg, dotMat); dots.renderOrder = -1; orbit.add(dots);
 
     let visible = false, start = -1;
@@ -308,7 +308,7 @@ function sectionGems() {
       fillMat.uniforms.uFill.value = easeIO((k - 1.25) / 1.1);           // once the gem has landed
       const r = easeOut((k - 1.7) / 1.6);
       orbit.scale.setScalar(0.35 + 0.65 * r);
-      dotMat.opacity = Math.min(1, r * 1.8) * 0.8;
+      dotMat.opacity = Math.min(1, r * 1.8) * 0.8;   // settles at 80%
       renderer.render(scene, camera);
     })();
   });
