@@ -259,7 +259,7 @@ function sectionGems() {
     const camera = new THREE.OrthographicCamera(-1.25, 1.25, 1.25, -1.25, -10, 10); camera.position.z = 5;
 
     const tilt = new THREE.Group(); tilt.rotation.set(0.3, 0, 0.22); scene.add(tilt);
-    const spin = new THREE.Group(); spin.scale.setScalar(0.92); tilt.add(spin);
+    const spin = new THREE.Group(); spin.scale.setScalar(0.74); tilt.add(spin);
 
     const fillMat = new THREE.ShaderMaterial({
       uniforms: { uFill: { value: 0 }, uBg: { value: new THREE.Color('#030419') }, uPurple: { value: new THREE.Color('#8A78D8') } },
@@ -279,12 +279,12 @@ function sectionGems() {
     });
     spin.add(new THREE.Mesh(geo, fillMat));
     const eg = new LineSegmentsGeometry(); eg.setPositions(edgePos);
-    const lineMat = new LineMaterial({ color: '#FFFFFF', linewidth: 0.9 }); lineMat.resolution.set(200 * dpr, 200 * dpr);
+    const lineMat = new LineMaterial({ color: '#FFFFFF', linewidth: 0.65 }); lineMat.resolution.set(200 * dpr, 200 * dpr);
     spin.add(new LineSegments2(eg, lineMat));
 
     // orbit: a flat dashed circle around the gem, turning slowly
     const orbit = new THREE.Group(); scene.add(orbit);
-    const dash = []; const ND = 30, R = 0.34;
+    const dash = []; const ND = 30, R = 0.3;
     for (let i = 0; i < ND; i++) { const a0 = i / ND * Math.PI * 2, a1 = a0 + Math.PI * 2 / ND * 0.34; dash.push(R * Math.cos(a0), R * Math.sin(a0), 0, R * Math.cos(a1), R * Math.sin(a1), 0); }
     const dg = new LineSegmentsGeometry(); dg.setPositions(dash);
     const dotMat = new LineMaterial({ color: '#FFFFFF', linewidth: 0.8, transparent: true, opacity: 0, depthTest: false }); dotMat.resolution.set(200 * dpr, 200 * dpr);
@@ -299,14 +299,19 @@ function sectionGems() {
     }, { rootMargin: '0px 0px -18% 0px', threshold: 1 }).observe(slot);
 
     spin.rotation.y = idx * 1.3;
+    let mx = 0, my = 0;
     (function tick() {
       requestAnimationFrame(tick);
       const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
       if (!visible || start < 0) return;
       const k = reduce ? 99 : t - start;
       if (!reduce) { spin.rotation.y += dt * 0.35; dots.rotation.z -= dt * 0.12; }
+      // 3D perspective follows the cursor: the gem leans toward it and the circle tips with it
+      mx += ((PF.mx || 0) - mx) * 0.06; my += ((PF.my || 0) - my) * 0.06;
+      tilt.rotation.x = 0.3 + my * 0.45; tilt.rotation.y = mx * 0.6;
+      orbit.rotation.x = my * 0.55; orbit.rotation.y = mx * 0.55;
       fillMat.uniforms.uFill.value = easeIO((k - 1.25) / 1.1);           // once the gem has landed
-      const r = easeOut((k - 1.7) / 1.6);
+      const r = easeOut((k - 0.85) / 1.0);
       orbit.scale.setScalar(0.35 + 0.65 * r);
       dotMat.opacity = Math.min(1, r * 1.8) * 0.8;   // settles at 80%
       renderer.render(scene, camera);
