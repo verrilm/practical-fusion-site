@@ -42,29 +42,25 @@ function dysonSun() {
   const rim = new THREE.DirectionalLight('#9C86F0', 0.55); rim.position.set(-0.6, 1, 0.8); scene.add(rim);
   const anchor = new THREE.Group(); scene.add(anchor);        // position + scale only
   const root = new THREE.Group(); anchor.add(root);            // the sun + rings (tilts with the cursor)
-  const sunLight = new THREE.PointLight('#FFF1E6', 4.2, 0, 0); root.add(sunLight);
+  const sunLight = new THREE.PointLight('#FFF1E6', 3.6, 0, 0); root.add(sunLight);
 
-  // very soft glow that starts at the disc's edge, so the edge stays readable
-  const glow = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 2.6), new THREE.ShaderMaterial({
+  // a small bright sun with a wide, very diffuse glow (no visible edge to the glow)
+  const SUN_R = 0.2;
+  const glowMat = new THREE.ShaderMaterial({
     transparent: true, depthWrite: false, depthTest: false,
-    uniforms: { uColor: { value: new THREE.Color('#E4DCFF') }, uIn: { value: 0.44 }, uOut: { value: 1.25 }, uA: { value: 0.16 } },
+    uniforms: { uColor: { value: new THREE.Color('#EFE6FF') }, uR: { value: SUN_R }, uSpread: { value: 0.55 }, uA: { value: 0.5 } },
     vertexShader: 'varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-    fragmentShader: 'uniform vec3 uColor; uniform float uIn, uOut, uA; varying vec2 vP; void main(){ float d = length(vP); if (d < uIn) discard; float t = clamp((d - uIn) / (uOut - uIn), 0.0, 1.0); gl_FragColor = vec4(uColor, uA * pow(1.0 - t, 2.2)); }'
-  }));
+    // gaussian falloff from the disc edge, plus a fade to zero well before the plane's border
+    fragmentShader: 'uniform vec3 uColor; uniform float uR, uSpread, uA; varying vec2 vP; void main(){ float d = max(length(vP) - uR, 0.0); float g = exp(-(d*d)/(uSpread*uSpread)) * 0.75 + exp(-d/(uSpread*0.35)) * 0.25; g *= 1.0 - smoothstep(2.2, 3.0, length(vP)); gl_FragColor = vec4(uColor, uA * g); }'
+  });
+  const glow = new THREE.Mesh(new THREE.PlaneGeometry(6.2, 6.2), glowMat);
   glow.renderOrder = -5; anchor.add(glow);
 
-  // the sun disc: flat fill + ink edge (it always faces the camera)
-  const SUN_R = 0.44;
-  const disc = new THREE.Mesh(new THREE.CircleGeometry(SUN_R, 96), new THREE.MeshBasicMaterial({ color: '#F6F0FF', toneMapped: false }));
+  // the sun disc: a clean warm-white circle, always facing the camera
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(SUN_R, 96), new THREE.MeshBasicMaterial({ color: '#FFFBF2', toneMapped: false }));
   root.add(disc);
-  const discShade = new THREE.Mesh(new THREE.CircleGeometry(SUN_R, 96, -0.2, Math.PI * 0.9), new THREE.MeshBasicMaterial({ color: '#E2D9FB', toneMapped: false }));
-  discShade.position.z = 0.001; root.add(discShade);
-  const edgeGeo = new LineSegmentsGeometry(); edgeGeo.setPositions(circlePts(SUN_R, 128));
-  const edgeMat = new LineMaterial({ color: '#0B0326', linewidth: 2 });
-  const edge = new LineSegments2(edgeGeo, edgeMat); edge.position.z = 0.002; root.add(edge);
-  const lineMats = [edgeMat];
-  // keep the disc facing the camera even when the rings tilt
-  const faceCam = [disc, discShade, edge];
+  const lineMats = [];
+  const faceCam = [disc];
 
   const RINGS = [
     { r: 1.00, h: 0.10, tilt: 22, roll:   0, spin:  0.16, segs: 4 },
@@ -138,6 +134,9 @@ function dysonSun() {
     const grow = 0.55 + 0.45 * (1 - Math.pow(1 - e, 3));
     solid.scale.setScalar(grow); dotted.scale.setScalar(0.65 + 0.35 * (1 - Math.pow(1 - e, 3)));
     solidMat.opacity = 0.55 * e; dotMat.opacity = 0.9 * e;
+    // on the mission the glow gets a little brighter and spreads wider
+    glowMat.uniforms.uA.value = 0.5 + 0.18 * m;
+    glowMat.uniforms.uSpread.value = 0.55 + 0.3 * m;
     halos.visible = e > 0.001;
     if (!reduce) dotted.rotation.z -= dt * 0.12;
     renderer.render(scene, camera);

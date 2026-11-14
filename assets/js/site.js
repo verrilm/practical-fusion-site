@@ -193,10 +193,8 @@ const FORM_ENDPOINT = "";
       PF.sun.x = lerp(x0, x1, m) - mx * 0.15 * 46; PF.sun.y = lerp(y0, y1, m) - my * 0.15 * 28;
       PF.sun.r = lerp(r0, r1, m);
 
-      // the scene is cropped into a smaller rounded window as the stack slides over it
-      const ins = (Math.min(W, H) * 0.035 * p1).toFixed(1);
-      hero.style.clipPath = p1 > 0 ? `inset(${ins}px ${ins}px ${ins}px ${ins}px round ${(26 * p1).toFixed(1)}px)` : '';
-      shade.style.opacity = (0.45 * p1).toFixed(3);
+      // the scene keeps its size; only its corners round off as the stack slides over it
+      hero.style.clipPath = p1 > 0 ? `inset(0 round ${(28 * Math.min(1, p1 * 2.5)).toFixed(1)}px)` : '';
     }
 
     // the stack is cropped into a smaller rounded window as the contact section is revealed

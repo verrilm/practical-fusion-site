@@ -20,9 +20,9 @@ assets/vendor/                three.js (stored locally, no CDN)
 ## How the page flows
 1. **Intro:** a straight zoom out (no tilt). The headline words sharpen one by one, the header fades in, and the button grows from a dark pill.
 2. **Cursor:** every hero layer (sky, sun, rocks, canyon, astronaut) shifts by its depth. The astronaut sits behind the canyon.
-3. **Sun:** large, sitting in the bottom-right corner behind the canyon and rocks, with a very soft glow so its edge stays visible.
+3. **Sun:** a small bright disc with a wide, very diffuse glow, sitting in the bottom-right corner behind the canyon and floating rocks.
 4. **Begin your Mission:** hovering zooms in slightly. Clicking (or the first scroll) moves the camera up, the sun moves to the left, and two circles grow out of it (one dotted and spinning, one solid). A header and two lines appear on the right. Scrolling up from here returns to the landing.
-5. **Scroll:** the scene is cropped into a smaller rounded window while the services slide over it.
+5. **Scroll:** the services slide up over the scene; its corners round off, with no shrinking or dimming.
 6. **Venture card:** a hollow wireframe atom (three logo-style orbits with white dots), half visible on the right, follows the cursor.
 7. **Success stories:** each card's background, main image and logo move at different speeds.
 8. **Contact:** the main stack is cropped into a smaller rounded window, revealing the contact section. The canyon floor sits in front of the form card.
