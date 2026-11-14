@@ -163,10 +163,6 @@ const FORM_ENDPOINT = "";
   /* ---------- header links ---------- */
   const nav = $('#nav');
   const setMenu = () => {};
-  $$('.nav-item').forEach(it => {
-    it.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { it.classList.add('shut'); document.activeElement && document.activeElement.blur(); }));
-    it.addEventListener('mouseleave', () => it.classList.remove('shut'));
-  });
   // each "learn more" label unfolds to its own width
   const sizeMore = () => $$('.more-lbl').forEach(l => l.style.setProperty('--w', Math.ceil(l.firstElementChild.scrollWidth) + 'px'));
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizeMore); addEventListener('resize', sizeMore);

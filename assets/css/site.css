@@ -75,21 +75,22 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .brand b{font-weight:600}.brand span{font-weight:300}
 .nav-right{display:flex;align-items:center;gap:30px;font-weight:300;font-size:16px}
 .nav-top{display:inline-flex;align-items:center;gap:6px;font:300 16px/1 "Geist";color:#fff;padding:9px 10px;margin:0 -10px;border-radius:3px;position:relative;transition:background .35s}
-.nav-top:hover,.nav-item:hover .nav-top{background:rgba(255,255,255,.07)}
+.nav-top:hover,.nav-item.open .nav-top{background:rgba(255,255,255,.07)}
 /* text roll: the label slides up and out while a copy rises in from below */
 .roll{position:relative;display:inline-block;overflow:hidden;line-height:1.15}
 .roll > span{display:block;transition:transform .5s var(--ease)}
 .roll::after{content:attr(data-t);position:absolute;left:0;top:100%;white-space:nowrap;transition:transform .5s var(--ease)}
-.nav-top:hover .roll > span,.nav-item:hover .roll > span,.nav-cta:hover .roll > span{transform:translateY(-100%)}
-.nav-top:hover .roll::after,.nav-item:hover .roll::after,.nav-cta:hover .roll::after{transform:translateY(-100%)}
+.nav-top:hover .roll > span,.nav-item.open .roll > span,.nav-cta:hover .roll > span{transform:translateY(-100%)}
+.nav-top:hover .roll::after,.nav-item.open .roll::after,.nav-cta:hover .roll::after{transform:translateY(-100%)}
 .nav-top .chev{width:12px;height:12px;transition:transform .4s var(--ease)}
 .nav-item{position:static}
-.nav-item:hover .chev,.nav-item:focus-within .chev{transform:rotate(180deg)}
+.nav-item .nav-top::before{content:"";position:absolute;left:-14px;right:-14px;top:100%;height:34px}
+.nav-item.open .chev,.nav-item:focus-within .chev{transform:rotate(180deg)}
 .dd{position:absolute;top:calc(100% - 22px);right:36px;padding-top:30px;pointer-events:none}
 .dd-panel{width:min(760px,92vw);display:grid;grid-template-columns:1fr 1.25fr;gap:40px;background:#16172A;border:1px solid var(--line-soft);border-radius:18px;padding:34px 34px 30px;
   box-shadow:0 30px 80px rgba(0,0,0,.45);opacity:0;transform:translateY(-8px);clip-path:inset(0 0 100% 0 round 18px);transition:opacity .3s,transform .5s var(--ease),clip-path .55s var(--ease)}
-.nav-item:hover .dd,.nav-item:focus-within .dd{pointer-events:auto}
-.nav-item:hover .dd-panel,.nav-item:focus-within .dd-panel{opacity:1;transform:none;clip-path:inset(0 0 0 0 round 18px)}
+.nav-item.open .dd,.nav-item:focus-within .dd{pointer-events:auto}
+.nav-item.open .dd-panel,.nav-item:focus-within .dd-panel{opacity:1;transform:none;clip-path:inset(0 0 0 0 round 18px)}
 .nav-item.shut .dd{pointer-events:none}.nav-item.shut .dd-panel{opacity:0;clip-path:inset(0 0 100% 0 round 18px)}
 .dd-left{display:flex;flex-direction:column;justify-content:space-between;gap:40px;border-right:1px solid var(--line-soft);padding-right:30px}
 .dd-title{font-family:"Nohemi";font-size:32px;line-height:1.08;letter-spacing:-.015em}
