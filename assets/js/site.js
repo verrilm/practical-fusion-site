@@ -97,6 +97,32 @@ const FORM_ENDPOINT = "";
     tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1;
   }, { passive: true });
 
+  /* ---------- phone tilt drives the same perspective as the cursor ---------- */
+  let gyroOn = false, base = null;
+  const onTilt = e => {
+    if (e.beta == null || e.gamma == null) return;
+    const ang = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+    let x = e.gamma, y = e.beta;                       // portrait: gamma = left/right, beta = front/back
+    if (ang === 90) { x = e.beta; y = -e.gamma; } else if (ang === -90 || ang === 270) { x = -e.beta; y = e.gamma; }
+    if (!base) base = { x, y };                        // whatever angle the phone is held at counts as centre
+    base.y += (y - base.y) * 0.004;                    // slowly re-centre if they change how they hold it
+    base.x += (x - base.x) * 0.004;
+    tx = clamp((x - base.x) / 20, -1, 1); ty = clamp((y - base.y) / 20, -1, 1);
+    gyroOn = true;
+  };
+  function enableTilt() {
+    if (finePointer || reduce || gyroOn || !('DeviceOrientationEvent' in window)) return;
+    const D = window.DeviceOrientationEvent;
+    if (typeof D.requestPermission === 'function') {        // iOS asks once, after a tap
+      D.requestPermission().then(r => { if (r === 'granted') addEventListener('deviceorientation', onTilt); }).catch(() => {});
+    } else addEventListener('deviceorientation', onTilt);
+  }
+  if (!finePointer && !reduce) {
+    if (!(window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function')) enableTilt();
+    addEventListener('touchend', enableTilt, { once: true, passive: true });
+    addEventListener('click', enableTilt, { once: true });
+  }
+
   /* ---------- intro + hover + mission state ---------- */
   let introStart = null, introT = reduce ? 1 : 0;
   let hoverTarget = 0, hz = 0;
@@ -205,7 +231,7 @@ const FORM_ENDPOINT = "";
     if (goingHome && scrollY <= 2) { goingHome = false; endMission(); }
 
     // cursor smoothing (touch devices get a slow drift instead)
-    if (!finePointer && !reduce) { tx = Math.sin(now / 4200) * .35; ty = Math.cos(now / 5200) * .2; }
+    if (!finePointer && !reduce && !gyroOn) { tx = Math.sin(now / 4200) * .35; ty = Math.cos(now / 5200) * .2; }
     const k = reduce ? 0 : 0.06;
     mx += ((reduce ? 0 : tx) - mx) * k; my += ((reduce ? 0 : ty) - my) * k;
     hz += (hoverTarget - hz) * 0.08;
