@@ -305,7 +305,7 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
   .f-grid,.f-bottom{grid-template-columns:1fr}.footer hr{margin-left:0}
 }
 @media (max-width:640px){
-  .nav{padding:16px 18px}.nav-right > :not(.nav-cta){display:none}
+  .nav{padding:16px 18px}
   .form{grid-template-columns:1fr}.f.full,.form-actions{grid-column:auto}
   .contact-card{padding:28px 20px 130px}
 }
@@ -330,8 +330,63 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .in-story .story-bars{opacity:1}
 .story-bars i{display:block;width:56px;height:2px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden}
 .story-bars b{display:block;height:100%;background:#fff;transform-origin:0 50%;transform:scaleX(0)}
-@media (max-width:1100px){.beats,.story-bars{display:none}}
-@media (min-width:1101px){.mission{display:none}}
+.mission{display:none!important}
+/* story on tablets/phones: scene 2 text under the sun, scene 3 headline above and line below */
+@media (max-width:1100px){
+  .b2{left:var(--pad);right:var(--pad);top:56%;transform:none}
+  .b2 h2{white-space:normal}
+  .b3 h2{left:var(--pad);right:var(--pad);top:17%;transform:none;text-align:center;white-space:normal}
+  .b3 p{left:var(--pad);right:var(--pad);top:auto;bottom:17%;transform:none;text-align:center;white-space:normal;max-width:330px;margin:0 auto}
+  .b3 p br{display:none}
+  .story-bars{bottom:30px}.story-bars i{width:44px}
+}
+@media (max-aspect-ratio:1/1){.b1{top:22%}}
+
+
+/* ---------- mobile menu ---------- */
+.m-btn{display:none;align-items:stretch;gap:3px;height:44px;color:#fff;font-family:"Geist";font-weight:500;font-size:13px;letter-spacing:.16em;text-transform:uppercase}
+.m-lbl,.m-ic{background:#14152B;border-radius:2px;transition:background .3s}
+.m-lbl{position:relative;display:grid;place-items:center;padding:0 18px;overflow:hidden}
+.m-lbl > span{grid-area:1/1;transition:transform .45s var(--ease),opacity .3s}
+.m-lbl > span:last-child{transform:translateY(110%);opacity:0}
+.menu-open .m-lbl > span:first-child{transform:translateY(-110%);opacity:0}
+.menu-open .m-lbl > span:last-child{transform:none;opacity:1}
+.m-ic{width:44px;position:relative}
+.m-ic i{position:absolute;left:14px;right:14px;height:1.5px;background:#fff;top:50%;transition:transform .45s var(--ease)}
+.m-ic i:first-child{transform:translateY(-3.5px)}.m-ic i:last-child{transform:translateY(3.5px)}
+.menu-open .m-ic i:first-child{transform:rotate(45deg)}.menu-open .m-ic i:last-child{transform:rotate(-45deg)}
+.m-menu{position:fixed;inset:0;z-index:55;display:none;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;padding-top:84px;
+  background:linear-gradient(180deg,#030419 0%,#06072A 38%,#1C1A52 70%,#463D8C 92%,#6B5FB0 100%);
+  opacity:0;visibility:hidden;transition:opacity .45s var(--ease),visibility 0s .45s}
+.menu-open .m-menu{opacity:1;visibility:visible;transition:opacity .45s var(--ease),visibility 0s}
+.menu-open{overflow:hidden}
+.m-list{border-bottom:1px dashed rgba(255,255,255,.16)}
+.m-row{display:flex;width:100%;align-items:center;justify-content:space-between;padding:24px 22px;border-top:1px dashed rgba(255,255,255,.16);
+  font-family:"Nohemi";font-weight:400;font-size:32px;line-height:1;letter-spacing:-.01em;color:#fff;text-align:left;
+  transform:translateY(14px);opacity:0;transition:transform .6s var(--ease),opacity .5s}
+.menu-open .m-row{transform:none;opacity:1}
+.m-list > :nth-child(2) .m-row,.m-list > :nth-child(2).m-row{transition-delay:.04s}
+.m-list > :nth-child(3) .m-row{transition-delay:.08s}.m-list > :nth-child(4) .m-row{transition-delay:.12s}
+.m-chev{width:22px;height:22px;opacity:.8;transition:transform .45s var(--ease)}
+.m-group.open .m-chev{transform:rotate(180deg)}
+.m-sub{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease)}
+.m-group.open .m-sub{grid-template-rows:1fr}
+.m-sub-in{overflow:hidden;margin:0 22px 0 24px;border-left:1px solid rgba(255,255,255,.28);padding-left:18px}
+.m-group.open .m-sub-in{margin-bottom:22px}
+.m-link{display:block;padding:9px 0;font-size:17px;font-weight:300;color:rgba(255,255,255,.72)}
+.m-link:first-child{padding-top:2px}
+.m-link:active,.m-link:hover{color:#fff}
+.m-all{color:#fff;font-weight:400}
+.m-foot{margin-top:auto;padding:44px 22px 40px}
+.m-cta{display:inline-flex;align-items:center;gap:12px;background:#fff;color:var(--ink);font-family:"Nohemi";font-weight:500;font-size:15px;padding:13px 16px;border-radius:3px}
+.m-cta svg{width:16px;height:16px}
+.m-small{margin-top:30px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;line-height:1.7;color:rgba(255,255,255,.55)}
+.m-small b{font-weight:500;color:#fff}
+@media (max-width:640px){
+  .nav-right{display:none!important}
+  .m-btn{display:inline-flex}
+  .m-menu{display:flex}
+}
 
 /* gem stays desktop-only until it's finalised */
 @media (max-width:640px){.gem{display:none}}
@@ -351,3 +406,4 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .tilt-ask p{line-height:1.3}
 .tilt-ask #tiltYes{flex:none;background:#fff;color:var(--ink);font:500 13px/1 "Nohemi";padding:10px 12px;border-radius:3px}
 .tilt-ask .x{flex:none;width:26px;height:26px;display:grid;place-items:center;opacity:.7}.tilt-ask .x svg{width:12px;height:12px}
+.menu-open .tilt-ask{opacity:0!important;pointer-events:none!important}

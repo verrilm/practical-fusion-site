@@ -150,7 +150,7 @@ const FORM_ENDPOINT = "";
   beginBtn.addEventListener('click', () => startMission());
 
   /* ---------- desktop story: scene 1 (zoom) → 2 (lift) → 3 (centre), 8s each ---------- */
-  const storyCapable = () => innerWidth > 1100 && !reduce;
+  const storyCapable = () => !reduce;
   let story = false, scene = 0, sceneAt = 0;
   const SCENE_MS = 8000;
   const tw = v => ({ v, from: v, to: v, t0: null, dur: 1 });
@@ -201,6 +201,7 @@ const FORM_ENDPOINT = "";
   addEventListener('scroll', () => { if (scrollY > 2) lastAwayFromTop = performance.now(); }, { passive: true });
   const atTopSettled = () => scrollY <= 2 && performance.now() - lastAwayFromTop > 450;
   function gesture(dir, e) {
+    if (body.classList.contains('menu-open')) return;
     const now = performance.now();
     if (!missionOn) {
       if (e && e.cancelable) e.preventDefault();
@@ -313,7 +314,7 @@ const FORM_ENDPOINT = "";
       const x1 = narrow ? 0.5 * W : 0.27 * W, y1 = narrow ? (W < H ? 0.3 * H : 0.34 * H) : 0.5 * H, r1 = narrow ? 0.22 * Math.min(W, H) : 0.34 * H;
       if (storyOn) {
         // scene 2: left and a little higher than before; scene 3: the centre, between the two lines of text
-        const x2 = 0.27 * W, y2 = 0.5 * H, x3 = 0.5 * W, y3 = 0.5 * H, r3 = 0.17 * H;
+        const x2 = narrow ? 0.5 * W : 0.27 * W, y2 = narrow ? 0.3 * H : 0.5 * H, x3 = 0.5 * W, y3 = 0.5 * H, r3 = narrow ? 0.2 * Math.min(W, H) : 0.17 * H;
         PF.sun.x = lerp(lerp(x0, x2, LIFT.v), x3, CENTRE.v) - mx * 0.15 * 46;
         PF.sun.y = lerp(lerp(y0, y2, LIFT.v), y3, CENTRE.v) - my * 0.15 * 28;
         PF.sun.r = lerp(lerp(r0, r1, LIFT.v), r3, CENTRE.v);
