@@ -221,17 +221,22 @@ function wireAtom() {
       turns into a purple gradient and a dotted orbit grows out of it.
    ============================================================ */
 function gemGeometry() {
-  // elongated hexagonal crystal: short crown, long pavilion, a slightly uneven girdle
-  const N = 6, top = [0, 0.25, 0], bot = [0, -0.37, 0], ring = [];
+  // a squat, slightly irregular crystal: short crown, shorter pavilion than before,
+  // uneven girdle radii/heights and an off-centre crown point so it reads like a real stone
+  const N = 7;
+  const radJ = [1.00, 0.86, 0.97, 0.90, 1.04, 0.84, 0.95];
+  const yJ   = [0.010, -0.018, 0.022, -0.006, 0.015, -0.020, 0.004];
+  const angJ = [0.00, 0.10, -0.06, 0.08, -0.04, 0.07, -0.09];
+  const top = [0.025, 0.21, -0.015], bot = [-0.02, -0.27, 0.02], ring = [];
   for (let i = 0; i < N; i++) {
-    const a = i / N * Math.PI * 2 + 0.3, r = 0.15 * (i % 2 ? 0.92 : 1);
-    ring.push([r * Math.cos(a), 0.04 + (i % 2 ? 0.012 : -0.012), r * Math.sin(a)]);
+    const a = (i + angJ[i]) / N * Math.PI * 2, r = 0.165 * radJ[i];
+    ring.push([r * Math.cos(a), 0.03 + yJ[i], r * Math.sin(a)]);
   }
   const p = [];
   for (let i = 0; i < N; i++) {
     const a = ring[i], b = ring[(i + 1) % N];
-    p.push(...top, ...b, ...a);   // crown facet
-    p.push(...bot, ...a, ...b);   // pavilion facet
+    p.push(...top, ...b, ...a);
+    p.push(...bot, ...a, ...b);
   }
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3)); g.computeVertexNormals();
   return g;
@@ -253,8 +258,8 @@ function sectionGems() {
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1.25, 1.25, 1.25, -1.25, -10, 10); camera.position.z = 5;
 
-    const tilt = new THREE.Group(); tilt.rotation.set(0.22, 0, 0.26); scene.add(tilt);
-    const spin = new THREE.Group(); spin.scale.setScalar(0.62); tilt.add(spin);
+    const tilt = new THREE.Group(); tilt.rotation.set(0.3, 0, 0.22); scene.add(tilt);
+    const spin = new THREE.Group(); spin.scale.setScalar(0.92); tilt.add(spin);
 
     const fillMat = new THREE.ShaderMaterial({
       uniforms: { uFill: { value: 0 }, uBg: { value: new THREE.Color('#030419') }, uPurple: { value: new THREE.Color('#8A78D8') } },
@@ -264,7 +269,7 @@ function sectionGems() {
         void main(){
           vec3 n = normalize(vN);
           float lit = clamp(dot(n, normalize(vec3(-0.6,0.65,0.55))), 0.0, 1.0);
-          float g = smoothstep(-0.40, 0.25, vY);
+          float g = smoothstep(-0.27, 0.21, vY);
           vec3 deep = vec3(0.30,0.23,0.55), mid = vec3(0.52,0.44,0.78), light = vec3(0.80,0.75,0.96);
           float k = clamp(lit * 0.75 + g * 0.35, 0.0, 1.0);
           vec3 c = k < 0.5 ? mix(deep, mid, k * 2.0) : mix(mid, light, (k - 0.5) * 2.0);
@@ -279,7 +284,7 @@ function sectionGems() {
 
     // orbit: a flat dashed circle around the gem, turning slowly
     const orbit = new THREE.Group(); scene.add(orbit);
-    const dash = []; const ND = 26, R = 0.27;
+    const dash = []; const ND = 34, R = 0.34;
     for (let i = 0; i < ND; i++) { const a0 = i / ND * Math.PI * 2, a1 = a0 + Math.PI * 2 / ND * 0.55; dash.push(R * Math.cos(a0), R * Math.sin(a0), 0, R * Math.cos(a1), R * Math.sin(a1), 0); }
     const dg = new LineSegmentsGeometry(); dg.setPositions(dash);
     const dotMat = new LineMaterial({ color: '#CFC8EE', linewidth: 1.1, transparent: true, opacity: 0, depthTest: false }); dotMat.resolution.set(200 * dpr, 200 * dpr);
