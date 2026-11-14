@@ -44,13 +44,51 @@ const FORM_ENDPOINT = "";
     };
     walk(el);
   }
-  $$('[data-words], .split').forEach(el => splitWords(el));
+  $$('[data-words]').forEach(el => splitWords(el));
 
-  /* ---------- reveals ---------- */
+  // land on the first section on every load / refresh
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  const startHash = location.hash;
+  if (startHash) history.replaceState(null, '', location.pathname + location.search);
+  scrollTo(0, 0);
+
+  /* ---------- reveals (verrilm.com style) ---------- */
+  // text: wrap every word in a mask; words on the same line share a delay, lines follow 80ms apart
+  function splitLines(el) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(n => {
+      const f = document.createDocumentFragment();
+      n.textContent.split(/(\s+)/).forEach(w => {
+        if (!w) return;
+        if (/^\s+$/.test(w)) { f.appendChild(document.createTextNode(' ')); return; }
+        const m = document.createElement('span'); m.className = 'lm';
+        const x = document.createElement('span'); x.className = 'lw'; x.textContent = w;
+        m.appendChild(x); f.appendChild(m);
+      });
+      n.parentNode.replaceChild(f, n);
+    });
+  }
+  const setLineDelays = el => {
+    let line = -1, last = null;
+    $$('.lw', el).forEach(w => {
+      const t = w.parentElement.getBoundingClientRect().top;
+      if (last === null || Math.abs(t - last) > 4) { line++; last = t; }
+      w.style.setProperty('--d', `${(line * 0.08).toFixed(2)}s`);
+    });
+  };
+  const lineEls = $$('.lines'); lineEls.forEach(splitLines);
+  const relayout = () => lineEls.forEach(setLineDelays);
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(relayout); addEventListener('resize', relayout);
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-  }), { threshold: .2, rootMargin: '0px 0px -8% 0px' });
-  $$('.split, .fade').forEach(el => io.observe(el));
+  }), { threshold: .15 });
+  $$('.lines, .fade').forEach(el => io.observe(el));
+  // fully clipped blocks never report as visible, so watch their container
+  const io2 = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { $$(':scope > .slide-in', e.target).forEach(x => x.classList.add('in')); io2.unobserve(e.target); }
+  }), { threshold: .2 });
+  [...new Set($$('.slide-in').map(el => el.parentElement))].forEach(p => io2.observe(p));
 
   /* ---------- pointer ---------- */
   let tx = 0, ty = 0, mx = 0, my = 0;
@@ -227,7 +265,8 @@ const FORM_ENDPOINT = "";
   requestAnimationFrame(frame);
 
   // someone arriving at a section link (e.g. /#contact) skips the intro gate
-  if (location.hash && location.hash !== '#top' && $(location.hash)) { const t = $(location.hash); startMission(true); requestAnimationFrame(() => t.scrollIntoView({ block: 'start' })); }
+  // arriving from another page with a section link (e.g. about.html → index.html#services)
+  if (startHash && startHash !== '#top' && $(startHash) && document.referrer && new URL(document.referrer).pathname !== location.pathname) { const t = $(startHash); startMission(true); requestAnimationFrame(() => t.scrollIntoView({ block: 'start' })); }
 
   /* ---------- contact form ---------- */
   const form = $('#form'), status = $('#status');
