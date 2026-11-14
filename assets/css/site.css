@@ -222,7 +222,8 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .quote > div:last-child{border-right:0;position:relative;overflow:hidden}
 .quote blockquote{font-family:"Nohemi";font-size:clamp(22px,2.1vw,30px);line-height:1.2;max-width:600px}
 .quote .who{margin-top:40px;font-size:15px;line-height:1.2}
-.quote .who span{display:block;color:var(--mute)}
+.quote .who{color:#fff}
+.quote .who .org{display:block;margin-top:6px;color:var(--mute)}
 .quote-art{position:absolute;inset:0;background:
   repeating-linear-gradient(90deg,var(--line-soft) 0 1px,transparent 1px 48px),
   repeating-linear-gradient(0deg,var(--line-soft) 0 1px,transparent 1px 48px);opacity:.5;mask-image:radial-gradient(circle at 50% 50%,#000,transparent 70%)}
