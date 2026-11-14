@@ -20,9 +20,41 @@
     <span><b>PRACTICAL</b> <span>FUSION</span></span>
   </a>
   <nav class="nav-right" aria-label="Sections">
-    <a href="#top" data-home>Home</a>
-    <a href="#services" data-jump>Services</a>
-    <a href="#stories" data-jump>Work</a>
+    <a class="nav-top" href="#top" data-home>Home</a>
+    <div class="nav-item">
+      <button class="nav-top" type="button" aria-haspopup="true">Services<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <div class="dd"><div class="dd-panel">
+        <div class="dd-left"><p class="dd-title">Three disciplines,<br>one team.</p><a class="dd-all" href="#services" data-jump>All our services<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
+        <div class="dd-list">
+          <a class="dd-item" href="#services" data-jump><b><i></i>Marketing &amp; Communications</b><span>Build your brand awareness</span></a>
+          <a class="dd-item" href="#services" data-jump><b><i></i>Engineering &amp; Development</b><span>Build tools you can use or sell</span></a>
+          <a class="dd-item" href="#services" data-jump><b><i></i>Go-to-Market</b><span>Reach your market</span></a>
+        </div>
+      </div></div>
+    </div>
+    <div class="nav-item">
+      <button class="nav-top" type="button" aria-haspopup="true">Work<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <div class="dd"><div class="dd-panel">
+        <div class="dd-left"><p class="dd-title">From idea to<br>steady state.</p><a class="dd-all" href="#stories" data-jump>View case studies<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
+        <div class="dd-list">
+          <a class="dd-item" href="#stories" data-jump><b><i></i>SMART USA</b><span>A $1B federal funding package</span></a>
+          <a class="dd-item" href="#stories" data-jump><b><i></i>CyManII</b><span>$80M DOE funding, $200M+ private investment</span></a>
+          <a class="dd-item" href="#stories" data-jump><b><i></i>National semiconductor conference</b><span>130+ organizations in one room</span></a>
+          <a class="dd-item" href="#stories" data-jump><b><i></i>Public–private research center</b><span>$18M+ in sustained funding</span></a>
+        </div>
+      </div></div>
+    </div>
+    <div class="nav-item">
+      <button class="nav-top" type="button" aria-haspopup="true">About<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <div class="dd"><div class="dd-panel">
+        <div class="dd-left"><p class="dd-title">Consultancy &amp;<br>venture studio.</p><a class="dd-all" href="#about" data-jump>About us<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
+        <div class="dd-list">
+          <a class="dd-item" href="#about" data-jump><b><i></i>Who we are</b><span>The team behind Practical Fusion</span></a>
+          <a class="dd-item" href="#venture" data-jump><b><i></i>Venture studio</b><span>How we invest in founders</span></a>
+          <a class="dd-item" href="#contact" data-jump><b><i></i>Get in touch</b><span>Tell us about your project</span></a>
+        </div>
+      </div></div>
+    </div>
     <a href="#contact" data-jump class="nav-cta">Contact Us</a>
   </nav>
 </header>
@@ -77,8 +109,8 @@
 <main class="stack" id="stack">
 
   <section class="section services" id="services">
-    <div class="svc-head">
-      <h2 class="h-m split">Our Services</h2>
+    <div class="sec-head">
+      <p class="label split">Our Services</p>
       <div>
         <h2 class="h-l split">Getting started can be hard.</h2>
         <p class="body-l fade">We provide full-time or fractional operational capabilities to support your growing enterprise. Engage our team as much or as little as you want, depending on your needs.</p>
@@ -89,25 +121,25 @@
       <article class="card fade">
         <div class="card-bar"><span class="n">01</span>Marketing &amp; Communications</div>
         <div class="card-body">
-          <div class="card-art noise"><img src="assets/img/card-marketing.webp" alt="Megaphone illustration"></div>
+          <div class="card-art"><img src="assets/img/card-marketing.webp" alt="Megaphone illustration"></div>
           <p>We help organizations explain what they're building, why it matters, and how it creates value.</p>
-          <a class="more" href="#contact" data-jump aria-label="Ask about marketing and communications"><span class="more-lbl"><span>Learn more</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
+          <a class="more" href="#contact" data-jump aria-label="Ask about marketing and communications"><span class="more-lbl"><span>Build your brand awareness</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
         </div>
       </article>
       <article class="card fade" style="transition-delay:.12s">
         <div class="card-bar"><span class="n">02</span>Engineering &amp; Development</div>
         <div class="card-body">
-          <div class="card-art noise"><img class="wide" src="assets/img/card-engineering.svg" alt="Cube illustration: code, AI network and interface wireframe"></div>
+          <div class="card-art"><img class="wide" src="assets/img/card-engineering.webp" alt="Rough stones refined into a finished crystal"></div>
           <p>We design and build AI-enabled tools and digital solutions that you can use or sell.</p>
-          <a class="more" href="#contact" data-jump aria-label="Ask about engineering and development"><span class="more-lbl"><span>Learn more</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
+          <a class="more" href="#contact" data-jump aria-label="Ask about engineering and development"><span class="more-lbl"><span>Build what you’ll sell</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
         </div>
       </article>
       <article class="card fade" style="transition-delay:.24s">
         <div class="card-bar"><span class="n">03</span>Go-to-Market</div>
         <div class="card-body">
-          <div class="card-art noise"><img src="assets/img/card-gtm.webp" alt="Crystal in orbit illustration"></div>
+          <div class="card-art"><img src="assets/img/card-gtm.webp" alt="Crystal in orbit"></div>
           <p>We help organizations move ideas from concept to revenue generation by aligning strategy, funding, partnerships, and execution.</p>
-          <a class="more" href="#contact" data-jump aria-label="Ask about go-to-market"><span class="more-lbl"><span>Learn more</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
+          <a class="more" href="#contact" data-jump aria-label="Ask about go-to-market"><span class="more-lbl"><span>Reach your market</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
         </div>
       </article>
     </div>
@@ -124,46 +156,64 @@
     </div>
   </section>
 
+  <section class="section about" id="about">
+    <div class="sec-head">
+      <p class="label split">About Us</p>
+      <div>
+        <h2 class="h-l split">Operators, engineers and storytellers for deep tech.</h2>
+        <p class="body-l fade">We've stood up institutes, won federal awards and launched products from a blank page. Now we bring that playbook to founders and organizations building what comes next.</p>
+      </div>
+    </div>
+    <div class="facts">
+      <div class="fact fade"><span>Where we work</span><p>Semiconductors, AI, energy, quantum and biotech</p></div>
+      <div class="fact fade" style="transition-delay:.1s"><span>How we engage</span><p>Full-time or fractional, as much or as little as you need</p></div>
+      <div class="fact fade" style="transition-delay:.2s"><span>Where we're based</span><p>West Palm Beach, Florida</p></div>
+    </div>
+  </section>
+
   <section class="section stories" id="stories">
-    <div class="stories-head">
-      <h2 class="h-m split">Success Stories</h2>
-      <p class="body-l fade">We specialize in start-up activities helping our clients go from an idea to steady-state operations in record time. Check out some of our past work.</p>
+    <div class="sec-head">
+      <p class="label split">Success Stories</p>
+      <div>
+        <h2 class="h-l split">From an idea to steady state, in record time.</h2>
+        <p class="body-l fade">We specialize in start-up activities, helping our clients go from an idea to steady-state operations. Here is some of our past work.</p>
+      </div>
     </div>
     <div class="stories-grid">
       <article class="story fade">
-        <div class="story-media noise" data-parallax>
+        <div class="story-media">
           <!-- needs separate layers: background, scientist, SMART USA logo -->
           <img class="ly ly-full" data-speed="0.10" src="assets/img/story-smartusa-cleanroom.webp" alt="Scientist holding a wafer, with the SMART USA logo">
         </div>
         <p>Instrumental in winning the federal award behind SMART USA, a $1B total funding package.</p>
-        <a class="more" href="#contact" data-jump aria-label="More about SMART USA"><span class="more-lbl"><span>Learn more</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
+        <a class="more" href="#contact" data-jump aria-label="More about SMART USA"><span class="more-lbl"><span>View case studies</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
       </article>
       <article class="story fade" style="transition-delay:.12s">
-        <div class="story-media noise" data-parallax>
+        <div class="story-media">
           <img class="ly ly-bg"  data-speed="0.05"  src="assets/img/story-bg.webp" alt="">
           <img class="ly ly-el"  data-speed="0.16"  src="assets/img/story-machine.webp" alt="Precision manufacturing machine">
           <img class="ly ly-logo" data-speed="-0.10" src="assets/img/logo-cymanii.webp" alt="CyManII">
         </div>
         <p>Helped win and stand up a national cybersecurity institute, securing $80M in DOE funding and $200M+ in private investment.</p>
-        <a class="more" href="#contact" data-jump aria-label="More about CyManII"><span class="more-lbl"><span>Learn more</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
+        <a class="more" href="#contact" data-jump aria-label="More about CyManII"><span class="more-lbl"><span>View case studies</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
       </article>
       <article class="story fade">
-        <div class="story-media noise" data-parallax>
+        <div class="story-media">
           <img class="ly ly-bg"  data-speed="0.05"  src="assets/img/story-bg.webp" alt="">
           <img class="ly ly-el"  data-speed="0.16"  src="assets/img/story-conference.webp" alt="Two speakers at a conference">
           <img class="ly ly-logo smart" data-speed="-0.10" src="assets/img/logo-smartusa.webp" alt="SMART USA">
         </div>
         <p>Ran a first-of-a-kind semiconductor national conference, bringing together 130+ organizations.</p>
-        <a class="more" href="#contact" data-jump aria-label="More about the conference"><span class="more-lbl"><span>Learn more</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
+        <a class="more" href="#contact" data-jump aria-label="More about the conference"><span class="more-lbl"><span>View case studies</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
       </article>
       <article class="story fade" style="transition-delay:.12s">
-        <div class="story-media noise" data-parallax>
+        <div class="story-media">
           <img class="ly ly-bg"  data-speed="0.05"  src="assets/img/story-bg.webp" alt="">
           <img class="ly ly-el"  data-speed="0.16"  src="assets/img/story-machine.webp" alt="" style="opacity:.55">
           <span class="ly ph" data-speed="-0.10">LOGO</span>
         </div>
         <p>Built and led a public–private research center, securing $18M+ in sustained funding.</p>
-        <a class="more" href="#contact" data-jump aria-label="More about the research center"><span class="more-lbl"><span>Learn more</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
+        <a class="more" href="#contact" data-jump aria-label="More about the research center"><span class="more-lbl"><span>View case studies</span></span><span class="more-arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span></a>
       </article>
     </div>
   </section>
@@ -182,6 +232,7 @@
 
 <!-- ================= CONTACT (revealed beneath the stack) ================= -->
 <section class="contact" id="contact">
+  <div class="contact-bg" id="contactBg"></div>
   <div class="contact-card">
     <h2 class="h-l split">Make Contact</h2>
     <p class="lead fade">Have a question or a project? <b>Leave us a message.</b></p>

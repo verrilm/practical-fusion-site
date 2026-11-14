@@ -19,7 +19,7 @@ const FORM_ENDPOINT = "";
 
   const body = document.body;
   const hero = $('.hero'), world = $('#world'), shade = $('#heroShade');
-  const stack = $('#stack'), contactFloor = $('#contactFloor');
+  const stack = $('#stack'), contactFloor = $('#contactFloor'), contactBg = $('#contactBg'), contactCard = $('.contact-card'), contactEl = $('#contact');
   const layers = $$('.hero .layer').map(el => ({ el, d: +el.dataset.depth, lift: +el.dataset.lift, shift: +(el.dataset.shift || 0) }));
 
   // shared with the three.js scenes (three-scenes.js)
@@ -125,6 +125,13 @@ const FORM_ENDPOINT = "";
   /* ---------- header links ---------- */
   const nav = $('#nav');
   const setMenu = () => {};
+  $$('.nav-item').forEach(it => {
+    it.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { it.classList.add('shut'); document.activeElement && document.activeElement.blur(); }));
+    it.addEventListener('mouseleave', () => it.classList.remove('shut'));
+  });
+  // each "learn more" label unfolds to its own width
+  const sizeMore = () => $$('.more-lbl').forEach(l => l.style.setProperty('--w', Math.ceil(l.firstElementChild.scrollWidth) + 'px'));
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizeMore); addEventListener('resize', sizeMore);
 
   // in-page links: make sure the mission state is on, then glide to the section
   $$('[data-jump]').forEach(a => a.addEventListener('click', e => {
@@ -142,7 +149,6 @@ const FORM_ENDPOINT = "";
   }));
 
   /* ---------- story parallax targets ---------- */
-  const stories = $$('[data-parallax]').map(el => ({ el, ly: $$('.ly', el).map(l => ({ l, s: +l.dataset.speed, ph: l.classList.contains('ph'), bg: l.classList.contains('ly-bg') })) }));
 
   /* ---------- the frame loop ---------- */
   const FRAME_AR = 2847 / 1618;
@@ -190,33 +196,27 @@ const FORM_ENDPOINT = "";
       PF.sun.x = lerp(x0, x1, m) - mx * 0.15 * 46; PF.sun.y = lerp(y0, y1, m) - my * 0.15 * 28;
       PF.sun.r = lerp(r0, r1, m);
 
-      // the scene keeps its size; only its corners round off as the stack slides over it
-      hero.style.clipPath = p1 > 0 ? `inset(0 round ${(28 * Math.min(1, p1 * 2.5)).toFixed(1)}px)` : '';
+
     }
 
     // the stack is cropped into a smaller rounded window as the contact section is revealed
     const sb = stack.getBoundingClientRect().bottom;
     const p2 = clamp((H - sb) / (H * 0.6), 0, 1);
-    // no shrinking: the bottom corners just round off as the contact section shows
-    stack.style.borderRadius = `28px 28px ${(28 * Math.min(1, p2 * 3)).toFixed(1)}px ${(28 * Math.min(1, p2 * 3)).toFixed(1)}px`;
-    if (contactFloor) {
-      const cr = contactFloor.parentElement.getBoundingClientRect();
-      if (cr.top < H && cr.bottom > 0) contactFloor.style.transform = `translate3d(calc(-50% + ${(-mx * 18).toFixed(1)}px), 0, 0)`;
-    }
 
-    // success stories: background, piece and logo move at different speeds
-    if (!reduce) for (const st of stories) {
-      const r = st.el.getBoundingClientRect(); if (r.bottom < -100 || r.top > H + 100) continue;
-      const c = (r.top + r.height / 2 - H / 2) / H;
-      for (const L of st.ly) {
-        const y = c * L.s * r.height * 1.6, x = -mx * L.s * 30;
-        L.l.style.transform = L.ph ? `translate(${x}px, calc(-50% + ${y}px))` : `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)${L.bg ? ' scale(1.04)' : ''}`;
+    // contact: background, card and landscape move at different speeds as it comes in
+    if (contactEl) {
+      const cr = contactEl.getBoundingClientRect();
+      if (cr.top < H && cr.bottom > 0) {
+        const d = Math.max(0, cr.top + contactEl.offsetHeight - H);   // distance left until it is fully shown
+        contactBg.style.transform = `translate3d(0, ${(d * 0.25).toFixed(1)}px, 0)`;
+        contactCard.style.transform = `translate3d(0, ${(d * 0.12).toFixed(1)}px, 0)`;
+        contactFloor.style.transform = `translate3d(calc(-50% + ${(-mx * 18).toFixed(1)}px), ${(-d * 0.1).toFixed(1)}px, 0)`;
       }
     }
+
     requestAnimationFrame(frame);
   }
 
-  const contactEl = $('#contact');
   const pinContact = () => { contactEl.style.top = `${Math.min(0, innerHeight - contactEl.offsetHeight)}px`; };
   addEventListener('resize', pinContact); addEventListener('load', pinContact); pinContact();
 

@@ -18,16 +18,15 @@ assets/vendor/                three.js (stored locally, no CDN)
 ```
 
 ## How the page flows
-1. **Intro:** a straight zoom out (no tilt). The headline words sharpen one by one, the header fades in, and the button grows from a dark pill.
-2. **Cursor:** every hero layer (sky, sun, rocks, canyon, astronaut) shifts by its depth. The astronaut sits behind the canyon.
-3. **Sun:** a small bright disc with a wide, very diffuse glow, sitting in the bottom-right corner behind the canyon and floating rocks.
-4. **Begin your Mission:** hovering zooms in slightly. Clicking (or the first scroll) moves the camera up, the sun moves to the left, and two circles grow out of it (one dotted and spinning, one solid). A header and two lines appear on the right. Scrolling up from here returns to the landing.
-5. **Scroll:** the services slide up over the scene; its corners round off, with no shrinking or dimming.
-6. **Venture card:** a hollow wireframe atom (three logo-style orbits with white dots), half visible on the right, follows the cursor.
-7. **Success stories:** each card's background, main image and logo move at different speeds.
-8. **Contact:** the main stack is cropped into a smaller rounded window, revealing the contact section. The canyon floor sits in front of the form card.
-
-Static paper noise is applied only to the line-art scenes (hero, contact) and line-art images (service cards, stories).
+1. **Intro:** a straight zoom out. The headline sharpens word by word; the header and button fade in.
+2. **Header:** Home, Services, Work and About, each with a dropdown (title + "all" link on the left, items on the right), plus Contact Us.
+3. **Cursor:** every hero layer shifts by its depth; the rocks float. The astronaut sits behind the canyon.
+4. **Begin your Mission:** hover zooms in slightly; clicking (or the first scroll) moves up, the sun moves left and two circles grow out of it. Scrolling up returns to the landing.
+5. **Scroll:** sections slide over the scene with no rounding, shrinking or dimming.
+6. **Services:** each card's button unfolds its own label when the card is hovered.
+7. **Venture card:** the top half of a hollow wireframe atom in the right ~40% of the card, following the cursor.
+8. **About, Success Stories (static images), testimonial.**
+9. **Contact:** background, form card and landscape move at different speeds as it comes in; then it holds and the footer slides over it.
 
 ## Contact form
 GitHub Pages can't receive form submissions. Create a form at formspree.io and paste its URL into `FORM_ENDPOINT` at the top of `assets/js/site.js`.

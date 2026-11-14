@@ -195,8 +195,9 @@ function wireAtom() {
     const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h || (w === W && h === H)) return;
     W = w; H = h; renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderer.setSize(W, H, false);
     camera.aspect = W / H;
-    // the whole atom (orbits included) fits the card height; the canvas centre sits near the card's right edge
-    const vis = 3.7;
+    // the canvas is twice the card's height and centred on its bottom edge, so only the top half shows;
+    // fit the orbits' full width into the canvas width
+    const vis = Math.max(4.2 / camera.aspect, 2.6);
     camera.fov = 2 * Math.atan(vis / 2 / DIST) * 180 / Math.PI;
     camera.updateProjectionMatrix();
   }
