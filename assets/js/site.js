@@ -117,10 +117,21 @@ const FORM_ENDPOINT = "";
       D.requestPermission().then(r => { if (r === 'granted') addEventListener('deviceorientation', onTilt); }).catch(() => {});
     } else addEventListener('deviceorientation', onTilt);
   }
+  const needsAsk = !!(window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function');
   if (!finePointer && !reduce) {
-    if (!(window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function')) enableTilt();
-    addEventListener('touchend', enableTilt, { once: true, passive: true });
-    addEventListener('click', enableTilt, { once: true });
+    if (!needsAsk) enableTilt();
+    else {
+      // iPhone: Safari only allows the permission request from a tap, so offer it right after the intro
+      const ask = $('#tiltAsk'), store = (() => { try { return localStorage; } catch { return null; } })();
+      const answered = store && store.getItem('pf-tilt');
+      const hide = v => { ask.classList.remove('show'); if (v && store) try { store.setItem('pf-tilt', v); } catch {} };
+      if (ask) {
+        $('#tiltYes').addEventListener('click', () => { enableTilt(); hide('yes'); });
+        $('#tiltNo').addEventListener('click', () => hide('no'));
+        if (answered === 'yes') addEventListener('touchend', enableTilt, { once: true, passive: true });   // already allowed: re-grant silently on first tap
+        else if (answered !== 'no') setTimeout(() => ask.classList.add('show'), 2600);
+      }
+    }
   }
 
   /* ---------- intro + hover + mission state ---------- */
