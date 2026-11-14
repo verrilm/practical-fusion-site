@@ -304,15 +304,16 @@ const FORM_ENDPOINT = "";
         const lm = storyOn ? LIFT.v : m, lift = storyOn ? L.lift2 : L.lift;
         const x = -mx * L.d * 46 * L.cur + lm * L.shift * W, y = -my * L.d * 28 * L.cur + lm * lift * H;
         L.el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
+        if (L.cur > 1) L.el.style.opacity = storyOn ? (1 - clamp(LIFT.v * 1.8, 0, 1)).toFixed(3) : '';
       }
       // sun: big, bottom-right of the landing composition → left side on the mission
-      const Fw = Math.max(W, H * FRAME_AR), Fh = Fw / FRAME_AR, fx = W < H ? 0.32 * W - 0.268 * Fw : (W - Fw) / 2, fy = H - Fh;
       const narrow = W < 1100;
-      const x0 = W < H ? 0.95 * W : fx + 0.875 * Fw, y0 = fy + 0.78 * Fh, r0 = W < H ? 0.26 * Fh : 0.46 * Fh;
+      const Fw = Math.max(W, H * FRAME_AR), Fh = Fw / FRAME_AR, fx = W < H ? 0.32 * W - 0.268 * Fw : (W - Fw) / 2, fy = H - Fh;
+      const x0 = W < H ? 0.95 * W : fx + (narrow ? 0.875 : 0.905) * Fw, y0 = fy + (W < H || narrow ? 0.78 : 0.86) * Fh, r0 = W < H ? 0.26 * Fh : 0.46 * Fh;
       const x1 = narrow ? 0.5 * W : 0.27 * W, y1 = narrow ? (W < H ? 0.3 * H : 0.34 * H) : 0.5 * H, r1 = narrow ? 0.22 * Math.min(W, H) : 0.34 * H;
       if (storyOn) {
         // scene 2: left and a little higher than before; scene 3: the centre, between the two lines of text
-        const x2 = 0.27 * W, y2 = 0.4 * H, x3 = 0.5 * W, y3 = 0.5 * H, r3 = 0.17 * H;
+        const x2 = 0.27 * W, y2 = 0.5 * H, x3 = 0.5 * W, y3 = 0.5 * H, r3 = 0.17 * H;
         PF.sun.x = lerp(lerp(x0, x2, LIFT.v), x3, CENTRE.v) - mx * 0.15 * 46;
         PF.sun.y = lerp(lerp(y0, y2, LIFT.v), y3, CENTRE.v) - my * 0.15 * 28;
         PF.sun.r = lerp(lerp(r0, r1, LIFT.v), r3, CENTRE.v);
