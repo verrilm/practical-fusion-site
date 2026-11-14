@@ -23,8 +23,12 @@ function makeRenderer(canvas) {
 }
 
 /* ============================================================
-   1. Dyson sun
+   1. Dyson sun: a clean sun disc (edge kept visible, very soft glow)
+      wrapped in toon-shaded ring segments with ink outlines.
+      On the mission, two circles grow out of it: one dotted & spinning, one solid.
    ============================================================ */
+function circlePts(r, n) { const a = []; for (let i = 0; i < n; i++) { const t0 = i / n * Math.PI * 2, t1 = (i + 1) / n * Math.PI * 2; a.push(r * Math.cos(t0), r * Math.sin(t0), 0, r * Math.cos(t1), r * Math.sin(t1), 0); } return a; }
+
 function dysonSun() {
   const canvas = document.getElementById('sun3d'); if (!canvas) return;
   const renderer = makeRenderer(canvas); if (!renderer) return;
@@ -36,28 +40,41 @@ function dysonSun() {
 
   scene.add(new THREE.AmbientLight('#4B32A8', 0.8));
   const rim = new THREE.DirectionalLight('#9C86F0', 0.55); rim.position.set(-0.6, 1, 0.8); scene.add(rim);
-  const root = new THREE.Group(); scene.add(root);
-  const sunLight = new THREE.PointLight('#FFE6D2', 5.5, 0, 0); root.add(sunLight);
+  const anchor = new THREE.Group(); scene.add(anchor);        // position + scale only
+  const root = new THREE.Group(); anchor.add(root);            // the sun + rings (tilts with the cursor)
+  const sunLight = new THREE.PointLight('#FFF1E6', 4.2, 0, 0); root.add(sunLight);
 
-  const neb = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture([[0,'rgba(140,100,230,.5)'],[.5,'rgba(110,70,190,.2)'],[1,'rgba(75,50,168,0)']]), depthTest: false, depthWrite: false, transparent: true }));
-  neb.renderOrder = -10; neb.scale.set(6.4, 4.6, 1); root.add(neb);
+  // very soft glow that starts at the disc's edge, so the edge stays readable
+  const glow = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 2.6), new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, depthTest: false,
+    uniforms: { uColor: { value: new THREE.Color('#E4DCFF') }, uIn: { value: 0.44 }, uOut: { value: 1.25 }, uA: { value: 0.16 } },
+    vertexShader: 'varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader: 'uniform vec3 uColor; uniform float uIn, uOut, uA; varying vec2 vP; void main(){ float d = length(vP); if (d < uIn) discard; float t = clamp((d - uIn) / (uOut - uIn), 0.0, 1.0); gl_FragColor = vec4(uColor, uA * pow(1.0 - t, 2.2)); }'
+  }));
+  glow.renderOrder = -5; anchor.add(glow);
 
-  root.add(new THREE.Mesh(new THREE.SphereGeometry(0.17, 48, 32), new THREE.MeshBasicMaterial({ color: '#FFF6EE', toneMapped: false })));
-  const gTex = glowTexture([[0,'rgba(255,255,255,1)'],[.18,'rgba(255,236,220,.9)'],[.45,'rgba(255,179,138,.35)'],[1,'rgba(255,179,138,0)']]);
-  const gMat = o => new THREE.SpriteMaterial({ map: gTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: o });
-  const glowBig = new THREE.Sprite(gMat(1)); glowBig.scale.setScalar(2.1); root.add(glowBig);
-  const halo = new THREE.Sprite(gMat(0.32)); halo.material.depthTest = false; halo.renderOrder = 10; halo.scale.setScalar(1.5); root.add(halo);
-  const glowHot = new THREE.Sprite(gMat(1)); glowHot.scale.setScalar(0.85); glowHot.position.z = 0.22; root.add(glowHot);
+  // the sun disc: flat fill + ink edge (it always faces the camera)
+  const SUN_R = 0.44;
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(SUN_R, 96), new THREE.MeshBasicMaterial({ color: '#F6F0FF', toneMapped: false }));
+  root.add(disc);
+  const discShade = new THREE.Mesh(new THREE.CircleGeometry(SUN_R, 96, -0.2, Math.PI * 0.9), new THREE.MeshBasicMaterial({ color: '#E2D9FB', toneMapped: false }));
+  discShade.position.z = 0.001; root.add(discShade);
+  const edgeGeo = new LineSegmentsGeometry(); edgeGeo.setPositions(circlePts(SUN_R, 128));
+  const edgeMat = new LineMaterial({ color: '#0B0326', linewidth: 2 });
+  const edge = new LineSegments2(edgeGeo, edgeMat); edge.position.z = 0.002; root.add(edge);
+  const lineMats = [edgeMat];
+  // keep the disc facing the camera even when the rings tilt
+  const faceCam = [disc, discShade, edge];
 
   const RINGS = [
-    { r: 1.00, h: 0.11, tilt: 22, roll:   0, spin:  0.16, segs: 4 },
-    { r: 0.95, h: 0.10, tilt: 22, roll:  60, spin: -0.13, segs: 3 },
-    { r: 0.90, h: 0.10, tilt: 22, roll: -60, spin:  0.20, segs: 4 },
-    { r: 0.80, h: 0.06, tilt: 76, roll:  18, spin:  0.28, segs: 5 },
-    { r: 0.72, h: 0.05, tilt: 48, roll: 112, spin: -0.24, segs: 3 },
+    { r: 1.00, h: 0.10, tilt: 22, roll:   0, spin:  0.16, segs: 4 },
+    { r: 0.94, h: 0.09, tilt: 22, roll:  60, spin: -0.13, segs: 3 },
+    { r: 0.88, h: 0.09, tilt: 22, roll: -60, spin:  0.20, segs: 4 },
+    { r: 0.74, h: 0.06, tilt: 76, roll:  18, spin:  0.28, segs: 5 },
+    { r: 0.62, h: 0.05, tilt: 48, roll: 112, spin: -0.24, segs: 3 },
   ];
   const bandMat = new THREE.MeshToonMaterial({ color: '#D8CCFF', gradientMap: grad, side: THREE.DoubleSide });
-  const lineMats = [], spinners = [];
+  const spinners = [];
   for (const cfg of RINGS) {
     const roll = new THREE.Group(); roll.rotation.z = deg(cfg.roll);
     const tilt = new THREE.Group(); tilt.rotation.x = deg(cfg.tilt);
@@ -75,9 +92,21 @@ function dysonSun() {
       for (const f of [0, 1/3, 2/3, 1]) { const a = t0 + segLen * f; pos.push(...P(a, y), ...P(a, -y)); }
     }
     const lg = new LineSegmentsGeometry(); lg.setPositions(pos);
-    const lm = new LineMaterial({ color: '#0B0326', linewidth: 2.1 }); lineMats.push(lm);
+    const lm = new LineMaterial({ color: '#0B0326', linewidth: 2 }); lineMats.push(lm);
     spin.add(new LineSegments2(lg, lm));
   }
+
+  // mission circles (flat, in the screen plane)
+  const halos = new THREE.Group(); anchor.add(halos);
+  const solidGeo = new LineSegmentsGeometry(); solidGeo.setPositions(circlePts(1.48, 256));
+  const solidMat = new LineMaterial({ color: '#CBC2FF', linewidth: 1.3, transparent: true, opacity: 0 }); lineMats.push(solidMat);
+  const solid = new LineSegments2(solidGeo, solidMat); halos.add(solid);
+  const dotTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d'); g.fillStyle = '#fff'; g.beginPath(); g.arc(16, 16, 14, 0, Math.PI * 2); g.fill(); const t = new THREE.CanvasTexture(c); return t; })();
+  const N = 140, dp = [];
+  for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2; dp.push(1.2 * Math.cos(a), 1.2 * Math.sin(a), 0); }
+  const dotGeo = new THREE.BufferGeometry(); dotGeo.setAttribute('position', new THREE.Float32BufferAttribute(dp, 3));
+  const dotMat = new THREE.PointsMaterial({ color: '#E4DEFF', size: 3.2, sizeAttenuation: false, map: dotTex, transparent: true, opacity: 0, depthWrite: false, alphaTest: 0.01 });
+  const dotted = new THREE.Points(dotGeo, dotMat); halos.add(dotted);
 
   let W = 0, H = 0;
   function size() {
@@ -88,72 +117,75 @@ function dysonSun() {
     lineMats.forEach(m => m.resolution.set(W, H));
   }
   const clock = new THREE.Clock(); let mx = 0, my = 0;
+  const q = new THREE.Quaternion();
   (function tick() {
     requestAnimationFrame(tick);
     if (!PF.heroVisible) return;
     size();
     const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
     mx += (PF.mx - mx) * 0.08; my += (PF.my - my) * 0.08;
-    root.position.set(PF.sun.x - W / 2, H / 2 - PF.sun.y, 0);
-    root.scale.setScalar(PF.sun.r);
+    anchor.position.set(PF.sun.x - W / 2, H / 2 - PF.sun.y, 0);
+    anchor.scale.setScalar(PF.sun.r);
     root.rotation.x = my * 0.35 + (reduce ? 0 : Math.sin(t * 0.21) * 0.05);
     root.rotation.y = mx * 0.45 + (reduce ? 0 : Math.sin(t * 0.17) * 0.07);
-    if (!reduce) {
-      spinners.forEach(s => { s.rotation.y += s.userData.speed * dt; });
-      const pulse = 1 + Math.sin(t * 1.4) * 0.035;
-      glowBig.scale.setScalar(2.1 * pulse); glowHot.scale.setScalar(0.85 * (2 - pulse));
-    }
+    root.updateMatrixWorld();
+    q.copy(root.quaternion).invert();
+    faceCam.forEach(o => o.quaternion.copy(q));
+    if (!reduce) spinners.forEach(s => { s.rotation.y += s.userData.speed * dt; });
+
+    // circles grow out of the sun with the mission
+    const m = PF.m || 0, e = Math.max(0, Math.min(1, (m - 0.25) / 0.75));
+    const grow = 0.55 + 0.45 * (1 - Math.pow(1 - e, 3));
+    solid.scale.setScalar(grow); dotted.scale.setScalar(0.65 + 0.35 * (1 - Math.pow(1 - e, 3)));
+    solidMat.opacity = 0.55 * e; dotMat.opacity = 0.9 * e;
+    halos.visible = e > 0.001;
+    if (!reduce) dotted.rotation.z -= dt * 0.12;
     renderer.render(scene, camera);
   })();
 }
 
 /* ============================================================
-   2. Wireframe atom on the venture card
+   2. Wireframe atom on the venture card: a hollow see-through sphere and
+      three long orbits at the logo's angles, each with a white dot travelling it.
+      Only the left half shows, from the right edge of the card.
    ============================================================ */
 function wireAtom() {
   const canvas = document.getElementById('atom3d'); if (!canvas) return;
   const renderer = makeRenderer(canvas); if (!renderer) return;
-  const CARD = '#1D1E31', LILAC = '#CBC2FF';
+  const CARD = '#1D1E31', LINE = '#CBC2FF';
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(CARD, 5.0, 8.4);              // back lines fade into the card
-  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50); camera.position.set(0, 0, 6.6);
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+  const DIST = 9; camera.position.set(0, 0, DIST);
+  scene.fog = new THREE.Fog(CARD, DIST - 0.2, DIST + 4.5);       // back lines dim a little, for depth
 
-  const tiltGroup = new THREE.Group(); tiltGroup.rotation.z = deg(24); scene.add(tiltGroup);   // leaning left
+  const tiltGroup = new THREE.Group(); tiltGroup.rotation.z = deg(-18); scene.add(tiltGroup);
   const mouseGroup = new THREE.Group(); tiltGroup.add(mouseGroup);
 
-  // see-through sphere: a few meridians and latitudes
-  const circlePts = (r, n, map) => { const a = []; for (let i = 0; i < n; i++) { const t0 = i / n * Math.PI * 2, t1 = (i + 1) / n * Math.PI * 2; a.push(...map(r, t0), ...map(r, t1)); } return a; };
+  const ring = (r, n, map) => { const a = []; for (let i = 0; i < n; i++) { const t0 = i / n * Math.PI * 2, t1 = (i + 1) / n * Math.PI * 2; a.push(...map(r, t0), ...map(r, t1)); } return a; };
   const pts = [];
   for (let k = 0; k < 6; k++) {               // meridians every 30°
     const phi = k * Math.PI / 6;
-    pts.push(...circlePts(1, 96, (r, t) => [r * Math.sin(t) * Math.cos(phi), r * Math.cos(t), r * Math.sin(t) * Math.sin(phi)]));
+    pts.push(...ring(1, 96, (r, t) => [r * Math.sin(t) * Math.cos(phi), r * Math.cos(t), r * Math.sin(t) * Math.sin(phi)]));
   }
-  for (const lat of [-40, 0, 40]) {            // three latitudes
+  for (const lat of [-45, 0, 45]) {            // three latitudes
     const y = Math.sin(deg(lat)), rr = Math.cos(deg(lat));
-    pts.push(...circlePts(rr, 96, (r, t) => [r * Math.cos(t), y, r * Math.sin(t)]));
+    pts.push(...ring(rr, 96, (r, t) => [r * Math.cos(t), y, r * Math.sin(t)]));
   }
   const sphereGeo = new THREE.BufferGeometry(); sphereGeo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
-  const sphere = new THREE.LineSegments(sphereGeo, new THREE.LineBasicMaterial({ color: LILAC, transparent: true, opacity: 0.55, fog: true }));
+  const sphere = new THREE.LineSegments(sphereGeo, new THREE.LineBasicMaterial({ color: LINE, transparent: true, opacity: 0.5, fog: true }));
   mouseGroup.add(sphere);
 
-  // nucleus
-  const coreTex = glowTexture([[0,'rgba(255,246,238,1)'],[.25,'rgba(255,179,138,.75)'],[1,'rgba(255,179,138,0)']]);
-  const core = new THREE.Sprite(new THREE.SpriteMaterial({ map: coreTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-  core.scale.setScalar(0.55); mouseGroup.add(core);
-
-  // three orbits at the logo's angles, each carrying a sphere
-  const eTex = glowTexture([[0,'rgba(255,255,255,1)'],[.3,'rgba(203,194,255,.8)'],[1,'rgba(203,194,255,0)']]);
+  // three long elliptical orbits like the logo: 0°, 60°, 120°, each about 0.36 as tall as wide
+  const R = 2.0, FLAT = deg(23);
   const orbits = [];
-  [[0, '#FFFFFF', 0.55], [60, '#FFB38A', -0.42], [-60, '#CBC2FF', 0.35]].forEach(([roll, col, speed], i) => {
-    const g = new THREE.Group(); g.rotation.z = deg(roll); const t = new THREE.Group(); t.rotation.x = deg(72); g.add(t);
-    const R = 1.5;
-    const oGeo = new THREE.BufferGeometry(); oGeo.setAttribute('position', new THREE.Float32BufferAttribute(circlePts(R, 160, (r, a) => [r * Math.cos(a), 0, r * Math.sin(a)]), 3));
-    t.add(new THREE.LineSegments(oGeo, new THREE.LineBasicMaterial({ color: LILAC, transparent: true, opacity: 0.85, fog: true })));
-    const e = new THREE.Mesh(new THREE.SphereGeometry(0.055, 20, 14), new THREE.MeshBasicMaterial({ color: col, fog: false }));
-    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: eTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: .7 }));
-    halo.scale.setScalar(0.32); e.add(halo);
-    t.add(e); orbits.push({ e, R, speed, phase: i * 2.1 });
+  [[0, 0.5], [60, -0.38], [120, 0.3]].forEach(([roll, speed], i) => {
+    const g = new THREE.Group(); g.rotation.z = deg(roll);
+    const t = new THREE.Group(); t.rotation.x = FLAT; g.add(t);
+    const oGeo = new THREE.BufferGeometry(); oGeo.setAttribute('position', new THREE.Float32BufferAttribute(ring(R, 200, (r, a) => [r * Math.cos(a), 0, r * Math.sin(a)]), 3));
+    t.add(new THREE.LineSegments(oGeo, new THREE.LineBasicMaterial({ color: LINE, transparent: true, opacity: 0.85, fog: true })));
+    const e = new THREE.Mesh(new THREE.SphereGeometry(0.032, 16, 12), new THREE.MeshBasicMaterial({ color: '#FFFFFF', fog: false }));
+    t.add(e); orbits.push({ e, speed, phase: i * 2.1 });
     mouseGroup.add(g);
   });
 
@@ -163,7 +195,11 @@ function wireAtom() {
   function size() {
     const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h || (w === W && h === H)) return;
     W = w; H = h; renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderer.setSize(W, H, false);
-    camera.aspect = W / H; camera.updateProjectionMatrix();
+    camera.aspect = W / H;
+    // the whole atom (orbits included) fits the card height; the canvas centre sits near the card's right edge
+    const vis = 3.7;
+    camera.fov = 2 * Math.atan(vis / 2 / DIST) * 180 / Math.PI;
+    camera.updateProjectionMatrix();
   }
   const clock = new THREE.Clock(); let mx = 0, my = 0;
   (function tick() {
@@ -172,10 +208,9 @@ function wireAtom() {
     if (!visible) return;
     size();
     mx += (PF.mx - mx) * 0.06; my += (PF.my - my) * 0.06;
-    mouseGroup.rotation.y = mx * 0.6; mouseGroup.rotation.x = my * 0.4;
+    mouseGroup.rotation.y = mx * 0.4; mouseGroup.rotation.x = my * 0.12;
     if (!reduce) sphere.rotation.y += dt * 0.12;
-    for (const o of orbits) { const a = o.phase + (reduce ? 0 : t * o.speed * 1.6); o.e.position.set(o.R * Math.cos(a), 0, o.R * Math.sin(a)); }
-    core.scale.setScalar(0.55 * (1 + Math.sin(t * 1.6) * 0.06));
+    for (const o of orbits) { const a = o.phase + (reduce ? 0 : t * o.speed * 1.6); o.e.position.set(R * Math.cos(a), 0, R * Math.sin(a)); }
     renderer.render(scene, camera);
   })();
 }

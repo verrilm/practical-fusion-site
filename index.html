@@ -13,8 +13,6 @@
 </head>
 <body class="locked">
 
-<div class="grain" aria-hidden="true"></div>
-
 <!-- ================= HEADER ================= -->
 <header class="nav" id="nav">
   <a class="brand" href="#top" data-home aria-label="Practical Fusion — home">
@@ -23,28 +21,38 @@
   </a>
   <div class="nav-right">
     <a href="#contact" data-jump>Contact Us</a>
-    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><i></i><i></i></button>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu" aria-label="Open menu"></button>
     <nav class="menu" id="menu" aria-label="Sections">
-      <a href="#top" data-home><small>00</small>Mission</a>
-      <a href="#services" data-jump><small>01</small>Our Services</a>
-      <a href="#venture" data-jump><small>02</small>Venture Studio</a>
-      <a href="#stories" data-jump><small>03</small>Success Stories</a>
-      <a href="#contact" data-jump class="menu-cta"><small>04</small>Make Contact</a>
+      <a href="#top" data-home>Home</a>
+      <a href="#services" data-jump>Services</a>
+      <a href="#stories" data-jump>Work</a>
     </nav>
   </div>
 </header>
 
 <!-- ================= HERO (sticky; the stack scrolls over it) ================= -->
-<section class="hero" id="top" aria-label="Introduction">
+<section class="hero noise" id="top" aria-label="Introduction">
   <div class="stage">
     <div class="world" id="world">
+      <div class="layer sky" data-depth="0.04" data-lift="0.04"><img src="assets/img/hero-sky.webp" alt=""></div>
+      <canvas id="sun3d" aria-hidden="true"></canvas>
+      <!-- 16:9-ish design frame, anchored to the bottom of the screen; art is placed in % of it -->
       <div class="frame">
-        <div class="layer sky" data-depth="0.06" data-lift="0.12"><img src="assets/img/hero-sky.webp" alt=""></div>
-        <canvas id="sun3d" aria-hidden="true"></canvas>
-        <div class="layer rocks-l" data-depth="0.32" data-lift="0.5" data-shift="-0.3"><div class="bob b2"><img src="assets/img/rocks-left.webp" alt="" style="position:static;width:100%"></div></div>
-        <div class="layer canyon" data-depth="0.5" data-lift="0.9"><img src="assets/img/canyon.webp" alt=""></div>
-        <div class="layer astro" data-depth="0.56" data-lift="0.9"><img src="assets/img/astronaut.webp" alt="An astronaut standing on the canyon edge"></div>
-        <div class="layer rocks-r" data-depth="0.85" data-lift="1.15"><div class="bob"><img src="assets/img/rocks-right.webp" alt="" style="position:static;width:100%"></div></div>
+        <div class="layer rocks-far" data-depth="0.22" data-lift="0.30">
+          <img class="bob b3" style="left:52%;top:-17%;width:11.3%" src="assets/img/rock-cluster-5.webp" alt="">
+          <img class="bob b2" style="left:84%;top:-11%;width:7.6%" src="assets/img/rock-7.webp" alt="">
+        </div>
+        <div class="layer rocks-l" data-depth="0.36" data-lift="0.1" data-shift="-0.08">
+          <img class="bob" style="left:0.9%;top:48.9%;width:14.4%" src="assets/img/rock-2.webp" alt="">
+          <img class="bob b2" style="left:7.9%;top:62.8%;width:10.3%" src="assets/img/rock-cluster-3.webp" alt="">
+        </div>
+        <div class="layer astro" data-depth="0.52" data-lift="0.12"><img style="left:24.8%;top:67.7%;width:4.03%" src="assets/img/astronaut.webp" alt="An astronaut standing on the canyon edge"></div>
+        <div class="layer canyon" data-depth="0.52" data-lift="0.12"><img style="left:-3.93%;top:75.4%;width:107.6%" src="assets/img/canyon.webp" alt=""></div>
+        <div class="layer rocks-r" data-depth="0.8" data-lift="0.2" data-shift="0.04">
+          <img class="bob b2" style="left:72.7%;top:78.4%;width:9.24%" src="assets/img/rock-4.webp" alt="">
+          <img class="bob b3" style="left:82%;top:91.5%;width:2.8%" src="assets/img/rock-1.webp" alt="">
+          <img class="bob" style="left:95.9%;top:81.6%;width:7.2%" src="assets/img/rock-8.webp" alt="">
+        </div>
       </div>
     </div>
   </div>
@@ -61,11 +69,8 @@
     </div>
 
     <div class="mission" id="mission" aria-live="polite">
-      <div class="kick">The fission moment</div>
-      <p class="analogy">In 1938, scientists split the atom and found a force that had been there all along. <b>AI is that kind of power: already here, waiting to be harnessed.</b> Our mission is to help the people building the future turn it into something real.</p>
-      <h2 class="empower"><span>We</span><span>Empower</span><span>Our</span><span>Partners</span></h2>
-      <p class="statement">to turn high-tech ideas into revenue-generating products and sustainable businesses. We live where <em>semiconductors, AI, energy, quantum, and biotech</em> collide, and where the future gets engineered.</p>
-      <div class="scroll-cue"><i></i>Scroll to explore</div>
+      <h2>We empower our partners</h2>
+      <p>to turn high-tech ideas into revenue-generating products<br> and sustainable businesses.</p>
     </div>
   </div>
   <div class="hero-shade" id="heroShade"></div>
@@ -87,7 +92,7 @@
       <article class="card fade">
         <div class="card-bar"><span class="n">01</span>Marketing &amp; Communications</div>
         <div class="card-body">
-          <div class="card-art"><img src="assets/img/card-marketing.webp" alt="Megaphone illustration"></div>
+          <div class="card-art noise"><img src="assets/img/card-marketing.webp" alt="Megaphone illustration"></div>
           <p>We help organizations explain what they're building, why it matters, and how it creates value.</p>
           <a class="arrow-chip" href="#contact" data-jump aria-label="Ask about marketing and communications"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
         </div>
@@ -95,7 +100,7 @@
       <article class="card fade" style="transition-delay:.12s">
         <div class="card-bar"><span class="n">02</span>Engineering &amp; Development</div>
         <div class="card-body">
-          <div class="card-art"><img class="wide" src="assets/img/card-engineering.svg" alt="Cube illustration: code, AI network and interface wireframe"></div>
+          <div class="card-art noise"><img class="wide" src="assets/img/card-engineering.svg" alt="Cube illustration: code, AI network and interface wireframe"></div>
           <p>We design and build AI-enabled tools and digital solutions that you can use or sell.</p>
           <a class="arrow-chip" href="#contact" data-jump aria-label="Ask about engineering and development"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
         </div>
@@ -103,7 +108,7 @@
       <article class="card fade" style="transition-delay:.24s">
         <div class="card-bar"><span class="n">03</span>Go-to-Market</div>
         <div class="card-body">
-          <div class="card-art"><img src="assets/img/card-gtm.webp" alt="Crystal in orbit illustration"></div>
+          <div class="card-art noise"><img src="assets/img/card-gtm.webp" alt="Crystal in orbit illustration"></div>
           <p>We help organizations move ideas from concept to revenue generation by aligning strategy, funding, partnerships, and execution.</p>
           <a class="arrow-chip" href="#contact" data-jump aria-label="Ask about go-to-market"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
         </div>
@@ -129,7 +134,7 @@
     </div>
     <div class="stories-grid">
       <article class="story fade">
-        <div class="story-media" data-parallax>
+        <div class="story-media noise" data-parallax>
           <!-- needs separate layers: background, scientist, SMART USA logo -->
           <img class="ly ly-full" data-speed="0.10" src="assets/img/story-smartusa-cleanroom.webp" alt="Scientist holding a wafer, with the SMART USA logo">
         </div>
@@ -137,7 +142,7 @@
         <a class="arrow-chip" href="#contact" data-jump aria-label="More about SMART USA"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
       </article>
       <article class="story fade" style="transition-delay:.12s">
-        <div class="story-media" data-parallax>
+        <div class="story-media noise" data-parallax>
           <img class="ly ly-bg"  data-speed="0.05"  src="assets/img/story-bg.webp" alt="">
           <img class="ly ly-el"  data-speed="0.16"  src="assets/img/story-machine.webp" alt="Precision manufacturing machine">
           <img class="ly ly-logo" data-speed="-0.10" src="assets/img/logo-cymanii.webp" alt="CyManII">
@@ -146,7 +151,7 @@
         <a class="arrow-chip" href="#contact" data-jump aria-label="More about CyManII"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
       </article>
       <article class="story fade">
-        <div class="story-media" data-parallax>
+        <div class="story-media noise" data-parallax>
           <img class="ly ly-bg"  data-speed="0.05"  src="assets/img/story-bg.webp" alt="">
           <img class="ly ly-el"  data-speed="0.16"  src="assets/img/story-conference.webp" alt="Two speakers at a conference">
           <img class="ly ly-logo smart" data-speed="-0.10" src="assets/img/logo-smartusa.webp" alt="SMART USA">
@@ -155,7 +160,7 @@
         <a class="arrow-chip" href="#contact" data-jump aria-label="More about the conference"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
       </article>
       <article class="story fade" style="transition-delay:.12s">
-        <div class="story-media" data-parallax>
+        <div class="story-media noise" data-parallax>
           <img class="ly ly-bg"  data-speed="0.05"  src="assets/img/story-bg.webp" alt="">
           <img class="ly ly-el"  data-speed="0.16"  src="assets/img/story-machine.webp" alt="" style="opacity:.55">
           <span class="ly ph" data-speed="-0.10">LOGO</span>
@@ -179,8 +184,7 @@
 </main>
 
 <!-- ================= CONTACT (revealed beneath the stack) ================= -->
-<section class="contact" id="contact">
-  <img class="contact-floor" id="contactFloor" src="assets/img/contact-floor.webp" alt="">
+<section class="contact noise" id="contact">
   <div class="contact-card">
     <h2 class="h-l split">Make Contact</h2>
     <p class="lead fade">Have a question or a project? <b>Leave us a message.</b></p>
@@ -198,6 +202,7 @@
       </div>
     </form>
   </div>
+  <img class="contact-floor" id="contactFloor" src="assets/img/contact-floor.webp" alt="">
 </section>
 
 <footer class="footer">

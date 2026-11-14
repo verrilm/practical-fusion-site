@@ -23,7 +23,7 @@ const FORM_ENDPOINT = "";
   const layers = $$('.hero .layer').map(el => ({ el, d: +el.dataset.depth, lift: +el.dataset.lift, shift: +(el.dataset.shift || 0) }));
 
   // shared with the three.js scenes (three-scenes.js)
-  const PF = window.PF = { mx: 0, my: 0, sun: { x: 0, y: 0, r: 1 }, heroVisible: true, ready: false };
+  const PF = window.PF = { mx: 0, my: 0, m: 0, sun: { x: 0, y: 0, r: 1 }, heroVisible: true, ready: false };
 
   /* ---------- split text into words ---------- */
   function splitWords(el, startIndex = 0) {
@@ -62,7 +62,9 @@ const FORM_ENDPOINT = "";
   /* ---------- intro + hover + mission state ---------- */
   let introStart = null, introT = reduce ? 1 : 0;
   let hoverTarget = 0, hz = 0;
-  let missionStart = null, m = 0, missionOn = false;
+  // m: 0 = landing, 1 = mission. Tweened either way so scrolling back up returns to the landing.
+  let m = 0, mFrom = 0, mTo = 0, mStart = null, missionOn = false, busyUntil = 0;
+  const MISSION_MS = 1700;
 
   const beginBtn = $('#beginBtn');
   beginBtn.addEventListener('pointerenter', () => hoverTarget = 1);
@@ -71,31 +73,53 @@ const FORM_ENDPOINT = "";
   beginBtn.addEventListener('blur', () => hoverTarget = 0);
   beginBtn.addEventListener('click', () => startMission());
 
+  function tweenTo(target, instant) {
+    mFrom = m; mTo = target;
+    if (instant || reduce) { m = target; mStart = null; } else mStart = performance.now();
+    busyUntil = performance.now() + (instant ? 0 : 1500);
+  }
   function startMission(instant = false) {
     if (missionOn) return;
     missionOn = true; hoverTarget = 0;
     body.classList.add('on-mission');
-    if (instant || reduce) { m = 1; missionStart = -1; unlock(); return; }
-    missionStart = performance.now();
-    setTimeout(unlock, 1500);
+    tweenTo(1, instant);
+    if (instant) unlock(); else setTimeout(() => { if (missionOn) unlock(); }, 1500);
+  }
+  function endMission() {
+    if (!missionOn) return;
+    missionOn = false;
+    body.classList.remove('on-mission');
+    body.classList.add('locked');
+    tweenTo(0, false);
   }
   function unlock() { body.classList.remove('locked'); }
 
-  // Before the mission starts, the first scroll gesture plays the transition instead of scrolling.
-  const wantsScroll = e => {
-    if (missionOn) return;
-    if (e.type === 'keydown' && !['ArrowDown', 'PageDown', ' ', 'Spacebar'].includes(e.key)) return;
-    if (e.type === 'wheel' && e.deltaY <= 0) return;
-    if (e.cancelable) e.preventDefault();
-    startMission();
-  };
-  addEventListener('wheel', wantsScroll, { passive: false });
-  addEventListener('keydown', wantsScroll);
+  // Landing: the first scroll down plays the mission transition instead of scrolling.
+  // Mission (at the very top): scrolling up goes back to the landing.
+  let lastAwayFromTop = 0;
+  addEventListener('scroll', () => { if (scrollY > 2) lastAwayFromTop = performance.now(); }, { passive: true });
+  const atTopSettled = () => scrollY <= 2 && performance.now() - lastAwayFromTop > 450;
+  function gesture(dir, e) {
+    const now = performance.now();
+    if (!missionOn) {
+      if (e && e.cancelable) e.preventDefault();
+      if (dir > 0 && now > busyUntil) startMission();
+    } else if (dir < 0 && atTopSettled() && now > busyUntil) {
+      if (e && e.cancelable) e.preventDefault();
+      endMission();
+    } else if (now < busyUntil && e && e.cancelable && scrollY <= 2) e.preventDefault();
+  }
+  addEventListener('wheel', e => { if (Math.abs(e.deltaY) > 2) gesture(Math.sign(e.deltaY), e); }, { passive: false });
+  addEventListener('keydown', e => {
+    if (['ArrowDown', 'PageDown', ' ', 'Spacebar'].includes(e.key)) gesture(1, missionOn ? null : e);
+    else if (['ArrowUp', 'PageUp', 'Home'].includes(e.key)) gesture(-1, null);
+  });
   let touchY = null;
   addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
   addEventListener('touchmove', e => {
-    if (missionOn || touchY == null) return;
-    if (touchY - e.touches[0].clientY > 24) { if (e.cancelable) e.preventDefault(); startMission(); }
+    if (touchY == null) return;
+    const d = touchY - e.touches[0].clientY;
+    if (Math.abs(d) > 24) { gesture(Math.sign(d), e); touchY = null; }
   }, { passive: false });
 
   /* ---------- menu ---------- */
@@ -112,27 +136,36 @@ const FORM_ENDPOINT = "";
     const go = () => target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     if (!missionOn) { startMission(true); requestAnimationFrame(go); } else go();
   }));
+  // Home: back to the top, then back to the landing scene
+  let goingHome = false;
   $$('[data-home]').forEach(a => a.addEventListener('click', e => {
     e.preventDefault(); setMenu(false);
-    scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    if (scrollY <= 2) { endMission(); return; }
+    goingHome = true; scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   }));
 
   /* ---------- story parallax targets ---------- */
   const stories = $$('[data-parallax]').map(el => ({ el, ly: $$('.ly', el).map(l => ({ l, s: +l.dataset.speed, ph: l.classList.contains('ph'), bg: l.classList.contains('ly-bg') })) }));
 
   /* ---------- the frame loop ---------- */
+  const FRAME_AR = 2847 / 1618;
   function frame(now) {
     const W = innerWidth, H = innerHeight;
 
-    // intro camera: starts zoomed in & tilted, settles
+    // intro camera: a straight zoom out, no tilt
     if (!reduce && PF.ready) {
       if (introStart == null) introStart = now;
-      introT = clamp((now - introStart) / 2000, 0, 1);
+      introT = clamp((now - introStart) / 2200, 0, 1);
     }
     const ie = reduce ? 1 : easeOutQuart(introT);
 
-    // mission tween
-    if (missionStart != null && missionStart > 0) m = easeInOutCubic(clamp((now - missionStart) / 1700, 0, 1));
+    if (mStart != null) {
+      const t = clamp((now - mStart) / MISSION_MS, 0, 1);
+      m = lerp(mFrom, mTo, easeInOutCubic(t));
+      if (t >= 1) mStart = null;
+    }
+    PF.m = m;
+    if (goingHome && scrollY <= 2) { goingHome = false; endMission(); }
 
     // cursor smoothing (touch devices get a slow drift instead)
     if (!finePointer && !reduce) { tx = Math.sin(now / 4200) * .35; ty = Math.cos(now / 5200) * .2; }
@@ -141,41 +174,41 @@ const FORM_ENDPOINT = "";
     hz += (hoverTarget - hz) * 0.08;
     PF.mx = mx; PF.my = my;
 
-    const heroRect = hero.getBoundingClientRect();
     const stackTop = stack.getBoundingClientRect().top;
     const p1 = clamp(1 - stackTop / H, 0, 1);         // how far the stack has covered the hero
     PF.heroVisible = p1 < 0.999;
 
     if (PF.heroVisible) {
-      const s = lerp(1.55, 1, ie) * (1 + 0.04 * hz);
-      const rz = lerp(-7, 0, ie), rx = lerp(14, 0, ie), tyPct = lerp(-14, 0, ie);
-      world.style.transform =
-        `translate3d(0, ${tyPct}%, 0) rotateZ(${rz}deg) rotateX(${rx - my * 2.4}deg) rotateY(${mx * 3.4}deg) scale(${s})`;
+      const s = lerp(1.32, 1, ie) * (1 + 0.045 * hz);
+      world.style.transform = `rotateX(${(-my * 2.2).toFixed(3)}deg) rotateY(${(mx * 3).toFixed(3)}deg) scale(${s.toFixed(4)})`;
       for (const L of layers) {
-        const x = -mx * L.d * 46 + m * L.shift * W, y = -my * L.d * 28 + m * L.lift * H * 0.32;
+        const x = -mx * L.d * 46 + m * L.shift * W, y = -my * L.d * 28 + m * L.lift * H;
         L.el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
       }
-      // sun position in frame pixels (the canvas fills the 16:10 frame)
-      const Fw = Math.max(W, H * 1.6), Fh = Fw * 0.625, ox = (Fw - W) / 2, oy = (Fh - H) / 2;
+      // sun: big, bottom-right of the landing composition → left side on the mission
+      const Fw = Math.max(W, H * FRAME_AR), Fh = Fw / FRAME_AR, fx = (W - Fw) / 2, fy = H - Fh;
       const narrow = W < 1100;
-      const sx = lerp(0.70, narrow ? 0.5 : 0.27, m) * W, sy = lerp(0.74, narrow ? 0.28 : 0.47, m) * H;
-      PF.sun.x = ox + sx - mx * 0.15 * 46; PF.sun.y = oy + sy - my * 0.15 * 28;
-      PF.sun.r = Math.min(W, H * 1.6) * lerp(0.115, narrow ? 0.16 : 0.17, m);
+      const x0 = fx + 0.875 * Fw, y0 = fy + 0.78 * Fh, r0 = 0.46 * Fh;
+      const x1 = narrow ? 0.5 * W : 0.27 * W, y1 = narrow ? 0.34 * H : 0.5 * H, r1 = narrow ? 0.22 * Math.min(W, H) : 0.34 * H;
+      PF.sun.x = lerp(x0, x1, m) - mx * 0.15 * 46; PF.sun.y = lerp(y0, y1, m) - my * 0.15 * 28;
+      PF.sun.r = lerp(r0, r1, m);
 
-      // the hero becomes a rounded card as the stack slides over it
-      hero.style.transform = `scale(${1 - 0.08 * p1})`;
-      hero.style.borderRadius = `${28 * p1}px`;
-      shade.style.opacity = (0.6 * p1).toFixed(3);
+      // the scene is cropped into a smaller rounded window as the stack slides over it
+      const ins = (Math.min(W, H) * 0.035 * p1).toFixed(1);
+      hero.style.clipPath = p1 > 0 ? `inset(${ins}px ${ins}px ${ins}px ${ins}px round ${(26 * p1).toFixed(1)}px)` : '';
+      shade.style.opacity = (0.45 * p1).toFixed(3);
     }
 
-    // the stack becomes a rounded card as the contact section is revealed
+    // the stack is cropped into a smaller rounded window as the contact section is revealed
     const sb = stack.getBoundingClientRect().bottom;
-    const p2 = clamp((H - sb) / (H * 0.7), 0, 1);
-    stack.style.transform = p2 > 0 ? `scale(${1 - 0.06 * p2})` : '';
-    stack.style.borderRadius = `28px 28px ${(32 * p2).toFixed(1)}px ${(32 * p2).toFixed(1)}px`;
+    const p2 = clamp((H - sb) / (H * 0.6), 0, 1);
+    if (p2 > 0) {
+      const sx = (W * 0.03 * p2).toFixed(1), sy = (H * 0.04 * p2).toFixed(1);
+      stack.style.clipPath = `inset(0 ${sx}px ${sy}px ${sx}px round 28px 28px ${(28 * p2 + 1).toFixed(1)}px ${(28 * p2 + 1).toFixed(1)}px)`;
+    } else stack.style.clipPath = '';
     if (contactFloor) {
       const cr = contactFloor.parentElement.getBoundingClientRect();
-      if (cr.top < H && cr.bottom > 0) contactFloor.style.transform = `translate3d(calc(-50% + ${(-mx * 20).toFixed(1)}px), ${((cr.bottom - H) * 0.12).toFixed(1)}px, 0)`;
+      if (cr.top < H && cr.bottom > 0) contactFloor.style.transform = `translate3d(calc(-50% + ${(-mx * 18).toFixed(1)}px), 0, 0)`;
     }
 
     // success stories: background, piece and logo move at different speeds
