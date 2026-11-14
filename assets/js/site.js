@@ -20,7 +20,8 @@ const FORM_ENDPOINT = "";
   const body = document.body;
   const hero = $('.hero'), world = $('#world'), shade = $('#heroShade');
   const stack = $('#stack'), contactFloor = $('#contactFloor'), contactBg = $('#contactBg'), contactCard = $('.contact-card'), contactEl = $('#contact');
-  const layers = $$('.hero .layer').map(el => ({ el, d: +el.dataset.depth, lift: +el.dataset.lift, shift: +(el.dataset.shift || 0) }));
+  const layers = $$('.hero .layer').map(el => ({ el, d: +el.dataset.depth, lift: +el.dataset.lift, lift2: +(el.dataset.lift2 || el.dataset.lift), shift: +(el.dataset.shift || 0),
+    cur: /rocks/.test(el.className) ? 2 : 1 }));   // rocks react more strongly to the cursor
 
   // shared with the three.js scenes (three-scenes.js)
   const PF = window.PF = { mx: 0, my: 0, m: 0, sun: { x: 0, y: 0, r: 1 }, heroVisible: true, ready: false };
@@ -148,6 +149,29 @@ const FORM_ENDPOINT = "";
   beginBtn.addEventListener('blur', () => hoverTarget = 0);
   beginBtn.addEventListener('click', () => startMission());
 
+  /* ---------- desktop story: scene 1 (zoom) → 2 (lift) → 3 (centre), 8s each ---------- */
+  const storyCapable = () => innerWidth > 1100 && !reduce;
+  let story = false, scene = 0, sceneAt = 0;
+  const SCENE_MS = 8000;
+  const tw = v => ({ v, from: v, to: v, t0: null, dur: 1 });
+  const ZOOM = tw(0), LIFT = tw(0), CENTRE = tw(0), HALO = tw(0), HALO_A = tw(1);
+  const tweenV = (o, to, dur, instant) => { o.from = o.v; o.to = to; o.dur = dur; if (instant) { o.v = to; o.t0 = null; } else o.t0 = performance.now(); };
+  const stepV = (o, now) => { if (o.t0 == null) return; const t = clamp((now - o.t0) / o.dur, 0, 1); o.v = lerp(o.from, o.to, easeInOutCubic(t)); if (t >= 1) o.t0 = null; };
+  const beats = $$('.beat'), bars = $$('.story-bars b');
+  function setScene(n, instant = false) {
+    scene = n; sceneAt = performance.now();
+    body.classList.toggle('in-story', n > 0);
+    beats.forEach((b, i) => b.classList.toggle('show', i === n - 1));
+    if (n === 0 && HALO_A.v < 0.5) { HALO.v = 0; HALO.t0 = null; }   // circles were already faded: reset them unseen
+    tweenV(ZOOM, n >= 1 ? 1 : 0, 2000, instant);
+    tweenV(LIFT, n >= 2 ? 1 : 0, 2600, instant);
+    tweenV(CENTRE, n >= 3 ? 1 : 0, 2400, instant);
+    tweenV(HALO, n >= 2 ? 1 : 0, n >= 2 ? 2800 : 1200, instant);
+    tweenV(HALO_A, n >= 3 ? 0 : 1, n >= 3 ? 1400 : 10, instant || n < 3);
+    busyUntil = performance.now() + (instant ? 0 : 1600);
+    if (n === 3) { if (instant) unlock(); else setTimeout(() => { if (scene === 3) unlock(); }, 1800); }
+  }
+
   function tweenTo(target, instant) {
     mFrom = m; mTo = target;
     if (instant || reduce) { m = target; mStart = null; } else mStart = performance.now();
@@ -157,6 +181,7 @@ const FORM_ENDPOINT = "";
     if (missionOn) return;
     missionOn = true; hoverTarget = 0;
     body.classList.add('on-mission');
+    if (storyCapable()) { story = true; setScene(instant ? 3 : 1, instant); return; }
     tweenTo(1, instant);
     if (instant) unlock(); else setTimeout(() => { if (missionOn) unlock(); }, 1500);
   }
@@ -165,6 +190,7 @@ const FORM_ENDPOINT = "";
     missionOn = false;
     body.classList.remove('on-mission');
     body.classList.add('locked');
+    if (story) { setScene(0); story = false; return; }
     tweenTo(0, false);
   }
   function unlock() { body.classList.remove('locked'); }
@@ -179,6 +205,9 @@ const FORM_ENDPOINT = "";
     if (!missionOn) {
       if (e && e.cancelable) e.preventDefault();
       if (dir > 0 && now > busyUntil) startMission();
+    } else if (story && scene < 3 && dir > 0) {
+      if (e && e.cancelable) e.preventDefault();
+      if (now > busyUntil) setScene(scene + 1);
     } else if (dir < 0 && atTopSettled() && now > busyUntil) {
       if (e && e.cancelable) e.preventDefault();
       endMission();
@@ -247,7 +276,14 @@ const FORM_ENDPOINT = "";
       m = lerp(mFrom, mTo, easeInOutCubic(t));
       if (t >= 1) mStart = null;
     }
-    PF.m = m;
+    if (story || ZOOM.t0 != null || ZOOM.v > 0) {
+      [ZOOM, LIFT, CENTRE, HALO, HALO_A].forEach(o => stepV(o, now));
+      if (story && (scene === 1 || scene === 2) && now - sceneAt > SCENE_MS) setScene(scene + 1);
+      bars.forEach((b, i) => { const f = scene > i + 1 ? 1 : scene === i + 1 ? clamp((now - sceneAt) / SCENE_MS, 0, 1) : 0; b.style.transform = `scaleX(${f.toFixed(4)})`; });
+    }
+    const storyOn = story || ZOOM.v > 0.0001 || LIFT.v > 0.0001;
+    PF.m = storyOn ? LIFT.v : m;
+    PF.halo = storyOn ? HALO.v : null; PF.haloA = storyOn ? HALO_A.v : null;
     if (goingHome && scrollY <= 2) { goingHome = false; endMission(); }
 
     // cursor smoothing (touch devices get a slow drift instead)
@@ -262,10 +298,11 @@ const FORM_ENDPOINT = "";
     PF.heroVisible = p1 < 0.999;
 
     if (PF.heroVisible) {
-      const s = lerp(1.32, 1, ie) * (1 + 0.045 * hz);
+      const s = lerp(1.32, 1, ie) * (1 + 0.045 * hz) * (1 + 0.07 * ZOOM.v);
       world.style.transform = `rotateX(${(-my * 2.2).toFixed(3)}deg) rotateY(${(mx * 3).toFixed(3)}deg) scale(${s.toFixed(4)})`;
       for (const L of layers) {
-        const x = -mx * L.d * 46 + m * L.shift * W, y = -my * L.d * 28 + m * L.lift * H;
+        const lm = storyOn ? LIFT.v : m, lift = storyOn ? L.lift2 : L.lift;
+        const x = -mx * L.d * 46 * L.cur + lm * L.shift * W, y = -my * L.d * 28 * L.cur + lm * lift * H;
         L.el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
       }
       // sun: big, bottom-right of the landing composition → left side on the mission
@@ -273,8 +310,16 @@ const FORM_ENDPOINT = "";
       const narrow = W < 1100;
       const x0 = W < H ? 0.95 * W : fx + 0.875 * Fw, y0 = fy + 0.78 * Fh, r0 = W < H ? 0.26 * Fh : 0.46 * Fh;
       const x1 = narrow ? 0.5 * W : 0.27 * W, y1 = narrow ? (W < H ? 0.3 * H : 0.34 * H) : 0.5 * H, r1 = narrow ? 0.22 * Math.min(W, H) : 0.34 * H;
-      PF.sun.x = lerp(x0, x1, m) - mx * 0.15 * 46; PF.sun.y = lerp(y0, y1, m) - my * 0.15 * 28;
-      PF.sun.r = lerp(r0, r1, m);
+      if (storyOn) {
+        // scene 2: left and a little higher than before; scene 3: the centre, between the two lines of text
+        const x2 = 0.27 * W, y2 = 0.4 * H, x3 = 0.5 * W, y3 = 0.5 * H, r3 = 0.17 * H;
+        PF.sun.x = lerp(lerp(x0, x2, LIFT.v), x3, CENTRE.v) - mx * 0.15 * 46;
+        PF.sun.y = lerp(lerp(y0, y2, LIFT.v), y3, CENTRE.v) - my * 0.15 * 28;
+        PF.sun.r = lerp(lerp(r0, r1, LIFT.v), r3, CENTRE.v);
+      } else {
+        PF.sun.x = lerp(x0, x1, m) - mx * 0.15 * 46; PF.sun.y = lerp(y0, y1, m) - my * 0.15 * 28;
+        PF.sun.r = lerp(r0, r1, m);
+      }
 
 
     }

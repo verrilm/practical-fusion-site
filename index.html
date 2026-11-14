@@ -72,21 +72,21 @@
 <section class="hero noise" id="top" aria-label="Introduction">
   <div class="stage">
     <div class="world" id="world">
-      <div class="layer sky" data-depth="0.04" data-lift="0.04"><img src="assets/img/hero-sky.webp" alt=""></div>
+      <div class="layer sky" data-depth="0.04" data-lift="0.04" data-lift2="0.07"><img src="assets/img/hero-sky.webp" alt=""></div>
       <canvas id="sun3d" aria-hidden="true"></canvas>
       <!-- 16:9-ish design frame, anchored to the bottom of the screen; art is placed in % of it -->
       <div class="frame">
-        <div class="layer rocks-far" data-depth="0.22" data-lift="0.30">
+        <div class="layer rocks-far" data-depth="0.22" data-lift="0.30" data-lift2="0.46">
           <img class="bob b3" style="left:52%;top:-17%;width:11.3%" src="assets/img/rock-cluster-5.webp" alt="">
           <img class="bob b2" style="left:84%;top:-11%;width:7.6%" src="assets/img/rock-7.webp" alt="">
         </div>
-        <div class="layer rocks-l" data-depth="0.36" data-lift="0.1" data-shift="-0.08">
+        <div class="layer rocks-l" data-depth="0.36" data-lift="0.1" data-shift="-0.08" data-lift2="0.34">
           <img class="bob" style="left:0.9%;top:48.9%;width:14.4%" src="assets/img/rock-2.webp" alt="">
           <img class="bob b2" style="left:7.9%;top:62.8%;width:10.3%" src="assets/img/rock-cluster-3.webp" alt="">
         </div>
-        <div class="layer astro" data-depth="0.52" data-lift="0.12"><img style="left:24.8%;top:67.7%;width:4.03%" src="assets/img/astronaut.webp" alt="An astronaut standing on the canyon edge"></div>
-        <div class="layer canyon" data-depth="0.52" data-lift="0.12"><img style="left:-3.93%;top:75.4%;width:107.6%" src="assets/img/canyon.webp" alt=""></div>
-        <div class="layer rocks-r" data-depth="0.8" data-lift="0.2" data-shift="0.04">
+        <div class="layer astro" data-depth="0.52" data-lift="0.12" data-lift2="0.8"><img style="left:24.8%;top:67.7%;width:4.03%" src="assets/img/astronaut.webp" alt="An astronaut standing on the canyon edge"></div>
+        <div class="layer canyon" data-depth="0.52" data-lift="0.12" data-lift2="0.8"><img style="left:-3.93%;top:75.4%;width:107.6%" src="assets/img/canyon.webp" alt=""></div>
+        <div class="layer rocks-r" data-depth="0.8" data-lift="0.2" data-shift="0.04" data-lift2="0.42">
           <img class="bob b2" style="left:72.7%;top:78.4%;width:9.24%" src="assets/img/rock-4.webp" alt="">
           <img class="bob b3" style="left:82%;top:91.5%;width:2.8%" src="assets/img/rock-1.webp" alt="">
           <img class="bob" style="left:95.9%;top:81.6%;width:7.2%" src="assets/img/rock-8.webp" alt="">
@@ -105,6 +105,14 @@
         </button>
       </div>
     </div>
+
+    <!-- desktop story: three scenes, 8s each (mobile keeps the single mission scene below) -->
+    <div class="beats" aria-live="polite">
+      <div class="beat b1"><h2 data-words>Great technology doesn’t launch itself.</h2><p data-words>Most high-tech ideas never leave the lab. The gap between a breakthrough and a business is where they get lost.</p></div>
+      <div class="beat b2"><h2 data-words>The path from idea to orbit is uncharted.</h2><p data-words>Funding, partners, markets, and operations all have to line up before liftoff.</p></div>
+      <div class="beat b3"><h2 data-words>We empower our partners</h2><p data-words>to turn high-tech ideas into revenue-generating products and sustainable businesses.</p></div>
+    </div>
+    <div class="story-bars" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i></div>
 
     <div class="mission" id="mission" aria-live="polite">
       <h2 data-words>We empower our partners</h2>

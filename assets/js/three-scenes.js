@@ -130,14 +130,14 @@ function dysonSun() {
     if (!reduce) spinners.forEach(s => { s.rotation.y += s.userData.speed * dt; });
 
     // circles grow out of the sun with the mission
-    const m = PF.m || 0, e = Math.max(0, Math.min(1, (m - 0.25) / 0.75));
+    const m = PF.m || 0, hv = PF.halo != null ? PF.halo : m, e = Math.max(0, Math.min(1, (hv - 0.25) / 0.75)), ha = PF.haloA != null ? PF.haloA : 1;
     const grow = 0.55 + 0.45 * (1 - Math.pow(1 - e, 3));
     solid.scale.setScalar(grow); dotted.scale.setScalar(0.65 + 0.35 * (1 - Math.pow(1 - e, 3)));
-    solidMat.opacity = 0.55 * e; dotMat.opacity = 0.9 * e;
+    solidMat.opacity = 0.55 * e * ha; dotMat.opacity = 0.9 * e * ha;
     // on the mission the glow gets a little brighter and spreads wider
     glowMat.uniforms.uA.value = 0.5 + 0.18 * m;
     glowMat.uniforms.uSpread.value = 0.55 + 0.3 * m;
-    halos.visible = e > 0.001;
+    halos.visible = e * ha > 0.001;
     if (!reduce) dotted.rotation.z -= dt * 0.12;
     renderer.render(scene, camera);
   })();

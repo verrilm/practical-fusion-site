@@ -134,7 +134,7 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .hero-title .w{display:inline-block;opacity:.18;filter:blur(6px);transform:translateY(8px);transition:opacity .7s,filter .7s,transform .9s var(--ease);transition-delay:calc(.35s + var(--i)*70ms)}
 .intro-go .hero-title .w{opacity:1;filter:none;transform:none}
 .begin{margin-top:clamp(36px,8.4vh,72px);display:inline-flex;pointer-events:auto;position:relative}
-.begin .btn.boxed{width:221px;height:57px;justify-content:space-between;padding:0 9px 0 13px;transform-origin:50% 50%;
+.begin .btn.boxed{height:57px;justify-content:flex-start;gap:16px;padding:0 9px 0 18px;transform-origin:50% 50%;
   clip-path:inset(0 50% 0 50% round 3px);background:var(--ink);transition:clip-path .8s var(--ease) 1.25s,background .5s 1.6s,transform .5s var(--ease)}
 .begin .lbl,.begin .arr{opacity:0;transition:opacity .5s 1.85s, transform .4s var(--ease)}
 .begin .arr{width:39px;height:39px;transform:scale(.4);transition:opacity .4s 2s,transform .6s var(--ease) 2s;background:var(--ink)}
@@ -309,6 +309,29 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
   .form{grid-template-columns:1fr}.f.full,.form-actions{grid-column:auto}
   .contact-card{padding:28px 20px 130px}
 }
+
+/* ---------- desktop story: 3 scenes with progress bars ---------- */
+.beats{position:absolute;inset:0;pointer-events:none}
+.beat{position:absolute}
+.beat h2{font-family:"Nohemi";font-weight:400;font-size:clamp(30px,3.2vw,44px);line-height:1.08;letter-spacing:-.015em}
+.beat p{margin-top:18px;font-family:"Geist";font-weight:300;font-size:clamp(15px,1.15vw,18px);line-height:1.5;color:var(--mute)}
+.beat .w{display:inline-block;opacity:0;filter:blur(6px);transform:translateY(8px);transition:opacity .4s,filter .4s,transform .5s var(--ease)}
+.beat.show .w{opacity:1;filter:none;transform:none;transition:opacity .8s,filter .8s,transform 1s var(--ease);transition-delay:calc(.5s + var(--i)*60ms)}
+.beat.show p .w{transition-delay:calc(1s + var(--i)*22ms)}
+.b1{left:50%;top:41.3%;transform:translateX(-50%);width:min(900px,90vw);text-align:center}
+.b1 p{max-width:600px;margin-left:auto;margin-right:auto}
+.b2{left:56%;right:var(--pad);top:30%}
+.b2 p{max-width:470px}
+.b3{inset:0}
+.b3 h2{font-size:clamp(28px,2.5vw,40px);position:absolute;right:calc(50% + 22vh);top:50%;transform:translateY(-50%);text-align:right;white-space:nowrap}
+.b3 p{position:absolute;left:calc(50% + 22vh);top:50%;transform:translateY(-50%);margin:0;max-width:340px}
+.story-bars{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);display:flex;gap:8px;z-index:11;pointer-events:none;opacity:0;transition:opacity .6s}
+.in-story .story-bars{opacity:1}
+.story-bars i{display:block;width:56px;height:2px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden}
+.story-bars b{display:block;height:100%;background:#fff;transform-origin:0 50%;transform:scaleX(0)}
+@media (max-width:1100px){.beats,.story-bars{display:none}}
+@media (min-width:1101px){.mission{display:none}}
+
 /* gem stays desktop-only until it's finalised */
 @media (max-width:640px){.gem{display:none}}
 @media (prefers-reduced-motion:reduce){
