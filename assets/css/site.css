@@ -302,3 +302,4 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
   .lw{transform:none}.slide-in{opacity:1;transform:none}
 }
 @media (max-aspect-ratio:1/1){.hero-title{top:22%}}
+@media (max-aspect-ratio:1/1){.mission{top:54%;bottom:auto;transform:none}.mission h2{white-space:normal}}
