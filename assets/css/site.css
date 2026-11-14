@@ -309,6 +309,8 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
   .form{grid-template-columns:1fr}.f.full,.form-actions{grid-column:auto}
   .contact-card{padding:28px 20px 130px}
 }
+/* gem stays desktop-only until it's finalised */
+@media (max-width:640px){.gem{display:none}}
 @media (prefers-reduced-motion:reduce){
   .bob{animation:none}
   .lw,.slide-in,.fade,.hero-title .w,.mission .w,.begin *{transition:none!important}

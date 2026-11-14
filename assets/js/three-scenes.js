@@ -238,6 +238,7 @@ function gemGeometry() {
 }
 
 function sectionGems() {
+  if (matchMedia('(max-width:640px)').matches) return;   // desktop-only for now
   const slots = [...document.querySelectorAll('.gem')]; if (!slots.length) return;
   const geo = gemGeometry();
   const edgePos = new THREE.EdgesGeometry(geo, 1).attributes.position.array;
