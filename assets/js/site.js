@@ -158,9 +158,12 @@ const FORM_ENDPOINT = "";
   const tweenV = (o, to, dur, instant) => { o.from = o.v; o.to = to; o.dur = dur; if (instant) { o.v = to; o.t0 = null; } else o.t0 = performance.now(); };
   const stepV = (o, now) => { if (o.t0 == null) return; const t = clamp((now - o.t0) / o.dur, 0, 1); o.v = lerp(o.from, o.to, easeInOutCubic(t)); if (t >= 1) o.t0 = null; };
   const beats = $$('.beat'), bars = $$('.story-bars b');
+  const skipBtn = $('#storySkip');
+  if (skipBtn) skipBtn.addEventListener('click', () => { if (story && scene > 0 && scene < 3) setScene(3); skipBtn.blur(); });
   function setScene(n, instant = false) {
     scene = n; sceneAt = performance.now();
     body.classList.toggle('in-story', n > 0);
+    body.classList.toggle('can-skip', n === 1 || n === 2);
     beats.forEach((b, i) => b.classList.toggle('show', i === n - 1));
     if (n === 0 && HALO_A.v < 0.5) { HALO.v = 0; HALO.t0 = null; }   // circles were already faded: reset them unseen
     tweenV(ZOOM, n >= 1 ? 1 : 0, 2000, instant);
