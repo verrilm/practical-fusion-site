@@ -286,16 +286,37 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 
 /* footer */
 .footer{position:relative;z-index:4;background:var(--bg);padding:56px 30px 50px;font-size:12px;box-shadow:0 -30px 80px rgba(0,0,0,.45)}
-.footer .tag{font-family:"Nohemi";font-size:12px;width:127px;line-height:1.2}
-.f-grid{display:grid;grid-template-columns:250px 390px 1fr;margin-top:40px;row-gap:46px}
+.footer .tag{font-family:"Nohemi";font-size:13px;line-height:1.2}
+.f-row{display:grid;grid-template-columns:230px 1fr;column-gap:32px;align-items:start}
+.f-rule{margin:26px 0}
+.f-rule span{height:0;border-top:1px dotted rgba(255,255,255,.22)}
+.f-rule span.f-gap{border:0}
+.f-rule.f-full{border-top:1px dotted rgba(255,255,255,.22);margin:44px 0 26px}
 .footer h4{font-family:"Nohemi";font-weight:400;font-size:12px;margin-bottom:10px}
-.f-links{display:grid;grid-template-columns:repeat(3,106px);row-gap:10px}
-.f-links a,.f-col a{opacity:.85;transition:opacity .2s}.f-links a:hover,.f-col a:hover{opacity:1}
-.f-col{display:flex;flex-direction:column;gap:10px}
-.footer hr{border:0;border-top:1px dashed var(--line);margin:40px 0 0 250px}
-.f-bottom{display:grid;grid-template-columns:250px 258px 1fr;margin-top:24px;align-items:start}
-.f-bottom img{width:69px}
-.f-bottom p{line-height:1.2}
+.f-label{font-family:"Nohemi";font-size:12px}
+.f-label b{font-weight:500}
+.f-stack{display:grid;grid-template-columns:repeat(2,minmax(0,394px));gap:10px}
+.f-card{display:flex;flex-direction:column;background:var(--panel);padding:20px 15px 15px;min-height:190px}
+.f-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.f-wm{font-family:"Nohemi";font-size:15px;letter-spacing:.01em;white-space:nowrap}
+.f-wm b{font-weight:600}
+.f-wm.tl{display:inline-flex;align-items:center;gap:6px;font-family:"Geist";font-weight:700;font-size:14px;letter-spacing:.02em;transform:scaleX(.88);transform-origin:left center}
+.tl-mark{width:34px;height:14px}
+.f-badge{background:#06071A;padding:7px 8px;font-family:"Nohemi";font-weight:500;font-size:9.5px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+.f-card p{margin-top:24px;max-width:330px;font-size:11.5px;line-height:1.25;color:var(--mute)}
+.f-btn{margin-top:auto;padding-top:28px;align-self:flex-start;display:inline-flex;align-items:center;gap:5px;font-family:"Nohemi";font-size:11px;color:var(--ink)}
+.f-btn .lbl{background:#fff;padding:6px 10px}
+.f-btn .arr{width:20px;height:20px;display:grid;place-items:center;background:var(--ink);color:#fff;transition:transform .4s var(--ease)}
+.f-btn .arr svg{width:12px;height:12px}
+.f-btn:hover .arr{transform:translateX(3px)}
+.f-logo{width:64px;margin-top:12px}
+.f-info{display:grid;grid-template-columns:380px 253px 1fr;column-gap:0}
+.f-links{display:grid;grid-template-columns:repeat(3,104px);row-gap:10px}
+.f-links a,.f-info p a,.f-legal a{opacity:.85;transition:opacity .2s}.f-links a:hover,.f-info p a:hover,.f-legal a:hover{opacity:1}
+.f-info p{line-height:1.2}
+.f-soc{margin-top:12px}
+.f-legal{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.f-legal nav{display:flex;gap:35px;flex-wrap:wrap}
 
 /* ---------- responsive ---------- */
 @media (max-width:1100px){
@@ -312,7 +333,7 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
   .quote{grid-template-columns:1fr;gap:0}.quote > div{min-height:0}.quote > div:first-child{border-right:0}.quote-side{border-left:0;border-top:1px dotted var(--line);justify-content:flex-start}
   .mission{left:var(--pad);right:var(--pad);top:auto;bottom:10vh;transform:none}
   .mission p br{display:none}
-  .f-grid,.f-bottom{grid-template-columns:1fr}.footer hr{margin-left:0}
+  .f-row{grid-template-columns:1fr;row-gap:18px}.f-rule span:first-child{display:none}.f-stack{grid-template-columns:1fr}.f-info{grid-template-columns:1fr;row-gap:26px}.f-card-top{flex-wrap:wrap;row-gap:10px}.f-badge{white-space:normal}.f-legal nav{gap:18px}
 }
 @media (max-width:640px){
   .nav{padding:16px 18px}
