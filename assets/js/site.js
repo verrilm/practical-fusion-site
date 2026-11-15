@@ -19,6 +19,7 @@ const FORM_ENDPOINT = "";
 
   const body = document.body;
   const hero = $('.hero'), world = $('#world'), shade = $('#heroShade');
+  const qPhoto = $('#quotePhoto'), qBg = qPhoto && qPhoto.querySelector('.qp-bg'), qDots = qPhoto && qPhoto.querySelector('.qp-dots'), qImg = qPhoto && qPhoto.querySelector('img');
   const stack = $('#stack'), contactFloor = $('#contactFloor'), contactBg = $('#contactBg'), contactCard = $('.contact-card'), contactEl = $('#contact');
   const layers = $$('.hero .layer').map(el => ({ el, d: +el.dataset.depth, lift: +el.dataset.lift, lift2: +(el.dataset.lift2 || el.dataset.lift), shift: +(el.dataset.shift || 0),
     cur: /rocks/.test(el.className) ? 2 : 1 }));   // rocks react more strongly to the cursor
@@ -373,6 +374,18 @@ const FORM_ENDPOINT = "";
     // the stack is cropped into a smaller rounded window as the contact section is revealed
     const sb = stack.getBoundingClientRect().bottom;
     const p2 = clamp((H - sb) / (H * 0.6), 0, 1);
+
+    // testimonial photo: backdrop + dots drift slower than the person (scroll), and lean with the cursor
+    if (qPhoto) {
+      const r = qPhoto.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < H) {
+        const p = clamp((r.top + r.height / 2 - H / 2) / (H / 2), -1.2, 1.2);   // -1 above centre … 1 below
+        const cx = reduce ? 0 : mx, cy = reduce ? 0 : my;
+        qBg.style.transform = `translate3d(${(-cx * 6).toFixed(2)}px, ${(p * 16 - cy * 4).toFixed(2)}px, 0)`;
+        qDots.style.transform = `translate3d(${(-cx * 10).toFixed(2)}px, ${(p * 24 - cy * 6).toFixed(2)}px, 0)`;
+        qImg.style.transform = `translate3d(0, ${(p * -7).toFixed(2)}px, 0)`;
+      }
+    }
 
     // contact: background, card and landscape move at different speeds as it comes in
     if (contactEl) {
