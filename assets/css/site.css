@@ -388,8 +388,8 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
   .m-menu{display:flex}
 }
 
-/* gem stays desktop-only until it's finalised */
-@media (max-width:640px){.gem{display:none}}
+/* phones: the gem's circle needs room above the headline */
+@media (max-width:1100px){.sec-head{gap:30px}}
 @media (prefers-reduced-motion:reduce){
   .bob{animation:none}
   .lw,.slide-in,.fade,.hero-title .w,.mission .w,.begin *{transition:none!important}
