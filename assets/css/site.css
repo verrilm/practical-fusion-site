@@ -141,6 +141,7 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .intro-go .begin .lbl{opacity:1}
 .intro-go .begin .arr{opacity:1;transform:none}
 .begin .btn.boxed:hover{transform:scale(1.04)}
+.begin .btn.boxed.pressed{transform:scale(.97)}
 .begin .btn.boxed:hover .arr{transform:translateX(3px);transition-delay:0s}
 
 /* the mission panel (after "Begin your mission"): a header and two lines */

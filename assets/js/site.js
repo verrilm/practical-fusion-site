@@ -248,6 +248,14 @@ const FORM_ENDPOINT = "";
     addEventListener('scroll', () => { if (running && Math.abs(scrollY - cur) > 3) { running = false; last = 0; target = cur = scrollY; } }, { passive: true });
     addEventListener('resize', () => { target = clamp(target, 0, maxY()); });
   }
+  // Enter on the landing presses "Begin your Mission" (unless focus is on another control, which keeps its own Enter)
+  addEventListener('keydown', e => {
+    if (e.key !== 'Enter' || e.repeat || missionOn || body.classList.contains('menu-open')) return;
+    const f = document.activeElement;
+    if (f && f !== body && f !== beginBtn && f.matches('a, button, input, textarea, select, [contenteditable]')) return;
+    e.preventDefault(); beginBtn.classList.add('pressed'); setTimeout(() => beginBtn.classList.remove('pressed'), 180);
+    startMission();
+  });
   addEventListener('keydown', e => {
     if (['ArrowDown', 'PageDown', ' ', 'Spacebar'].includes(e.key)) gesture(1, missionOn ? null : e);
     else if (['ArrowUp', 'PageUp', 'Home'].includes(e.key)) gesture(-1, null);
