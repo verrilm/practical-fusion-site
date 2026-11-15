@@ -1,0 +1,122 @@
+/* ============================================================
+   Service pages (marketing.html)
+   hero landscape · auto-playing list + sticky use cases ·
+   dotted icons · process rows that open as you scroll
+   ============================================================ */
+
+/* ---------- hero: layered landscape ---------- */
+.svc-hero{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;background:#0D1438;isolation:isolate}
+.svc-hero .stage{position:absolute;inset:0;perspective:1400px;overflow:hidden}
+.svc-hero .sky{inset:-10% -6% -10%}
+.svc-hero .sky img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* the 1920×1080 artboard: covers the width (plus a little spare so moving layers never show an edge), sits on the bottom edge */
+.svc-hero .frame{position:absolute;left:50%;bottom:-4%;width:max(104vw,185vh);aspect-ratio:16/9;transform:translateX(-50%)}
+.svc-hero .frame .layer img{position:absolute;inset:0;width:100%;height:100%}
+@media (max-aspect-ratio:1/1){.svc-hero .frame{left:calc(48vw - 185vh*.37);transform:none}}   /* phones: keep the astronaut near the middle */
+
+.svc-title{position:absolute;left:50%;top:26%;transform:translateX(-50%);width:min(1100px,92vw);text-align:center;z-index:5;will-change:transform,opacity}
+.svc-title h1{font-family:"Nohemi";font-weight:400;font-size:clamp(34px,3.9vw,62px);line-height:1.04;letter-spacing:-.02em}
+.svc-title p{margin:22px auto 0;max-width:470px;font-weight:300;font-size:clamp(15px,1.1vw,16px);line-height:1.45;color:rgba(255,255,255,.86)}
+.svc-title .w{display:inline-block;opacity:.18;filter:blur(6px);transform:translateY(8px);transition:opacity .7s,filter .7s,transform .9s var(--ease);transition-delay:calc(.35s + var(--i)*55ms)}
+.svc-title p .w{transition-delay:calc(.7s + var(--i)*18ms)}
+.intro-go .svc-title .w{opacity:1;filter:none;transform:none}
+.svc-title .begin{margin-top:26px}
+@media (max-aspect-ratio:1/1){.svc-title{top:15%}}
+
+/* ---------- content sits on its own sheet, the contact is revealed beneath it (as on the home page) ---------- */
+.svc-stack{box-shadow:none}
+
+/* ---------- overview: list on the left, use cases on the right ---------- */
+.svc-intro{display:grid;grid-template-columns:minmax(0,540px) minmax(0,524px);justify-content:space-between;align-items:start;column-gap:60px;padding-top:clamp(110px,10vw,150px)}
+.svc-left .h-l{max-width:540px}
+.svc-left .body-l{margin-top:24px;max-width:510px;color:var(--mute)}
+.svc-left .body-l + .body-l{margin-top:16px}
+.svc-right{position:sticky;top:110px;align-self:start}
+
+/* accordion: each item's dotted top border doubles as its loading bar */
+.acc{margin-top:clamp(56px,6vw,80px)}
+.acc-bar{position:relative;height:1px}
+.acc-bar::before,.acc-bar i{position:absolute;left:0;right:0;top:0;height:1px;
+  background:radial-gradient(circle,currentColor .6px,transparent 1px) 0 50%/6px 2px repeat-x}
+.acc-bar::before{content:"";color:rgba(255,255,255,.22)}
+.acc-bar i{color:#fff;clip-path:inset(0 calc(100% - var(--p,0%)) 0 0);transition:opacity .4s}
+.acc-bar.fade-out i{opacity:0}
+.acc-head{display:flex;align-items:center;gap:20px;width:100%;padding:16px 0;text-align:left;font-family:"Nohemi";font-weight:500;font-size:15px;line-height:1.2;color:#fff;transition:opacity .3s}
+.acc-box{position:relative;flex:none;width:34px;height:34px;background:#1D1E31;border-radius:2px;transition:background .3s}
+.acc-box i{position:absolute;left:50%;top:50%;width:12px;height:1.3px;margin:-.65px 0 0 -6px;background:#fff;transition:transform .45s var(--ease)}
+.acc-box i:last-child{transform:rotate(90deg)}
+.acc-item.open .acc-box{background:#2B2860}
+.acc-item.open .acc-box i:last-child{transform:rotate(0)}   /* + becomes − */
+.acc-head:hover .acc-box{background:#2B2860}
+.acc-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
+.acc-item.open .acc-panel{grid-template-rows:1fr}
+.acc-in{overflow:hidden}
+.acc-in p{padding:0 0 22px 54px;max-width:520px;font-weight:300;font-size:14px;line-height:1.5;color:var(--mute);opacity:0;transform:translateY(-6px);transition:opacity .35s,transform .5s var(--ease)}
+.acc-item.open .acc-in p{opacity:1;transform:none;transition:opacity .6s .15s,transform .7s var(--ease) .1s}
+
+/* use-case slideshow (placeholders until the real cases are in) */
+.cases{position:relative;aspect-ratio:524/520}
+.case{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transform:scale(.985);transition:opacity .7s,transform 1s var(--ease);pointer-events:none}
+.case.on{opacity:1;transform:none;pointer-events:auto}
+.case-media{position:relative;flex:1;border-radius:4px;overflow:hidden;background:#13142A repeating-linear-gradient(135deg,rgba(255,255,255,.045) 0 1px,transparent 1px 22px)}
+.case-ph{position:absolute;left:18px;top:16px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.case figcaption{display:flex;align-items:center;gap:14px;margin-top:10px;padding:10px;background:#1D1E31;border-radius:3px;font-size:13px;line-height:1.35;color:#fff}
+.case-ic{flex:none;width:28px;height:28px;background:#2B2860;border-radius:2px}
+
+/* ---------- section heads (centered) ---------- */
+.center-head{text-align:center;padding:0 var(--pad)}
+.eyebrow{font-size:15px;font-weight:300;color:var(--mute)}
+.center-head .h-l{margin-top:22px;font-size:clamp(30px,3.6vw,52px);line-height:1.12}
+.center-head .h-l b{font-weight:500}
+
+/* ---------- how we're different ---------- */
+.svc-why{padding-top:clamp(170px,16vw,250px)}
+.why-grid{display:grid;grid-template-columns:1fr repeat(4,minmax(0,290px)) 1fr;margin-top:clamp(70px,7vw,110px);border-top:1px solid var(--line-soft)}
+.why-grid::before,.why-grid::after{content:""}
+.why-cell{padding:30px 22px 46px;border-left:1px solid var(--line-soft);display:flex;flex-direction:column;align-items:center;text-align:center}
+.why-cell:last-of-type{border-right:1px solid var(--line-soft)}
+.why-ic{height:132px;width:100%;display:grid;place-items:center}
+.why-ic img{width:132px;height:132px;object-fit:contain}
+.why-ic.tall img{width:auto;height:132px}
+.why-cell h3{margin-top:28px;font-family:"Nohemi";font-weight:500;font-size:15px;line-height:1.2}
+.why-cell p{margin-top:12px;max-width:220px;font-weight:300;font-size:13px;line-height:1.45;color:var(--faint)}
+
+/* ---------- process ---------- */
+.svc-process{padding-top:clamp(170px,16vw,250px)}
+.p-list{display:flex;flex-direction:column;gap:10px;margin-top:clamp(70px,7vw,110px)}
+.p-row{opacity:var(--o,.3)}
+/* the frame is clipped down to the number + label, then opens to the right as the row comes up the screen */
+.p-frame{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);column-gap:40px;min-height:140px;padding:30px 30px 34px;background:#26273A;
+  clip-path:inset(0 var(--r,0px) 0 0);will-change:clip-path}
+.p-left{display:flex;align-items:flex-start;gap:20px}
+.p-n{flex:none;width:52px;height:52px;display:grid;place-items:center;background:#1A1640;font-size:15px;letter-spacing:.02em}
+.p-left h3{font-family:"Nohemi";font-weight:400;font-size:clamp(24px,2.1vw,30px);line-height:1;padding-top:4px;white-space:nowrap}
+.p-desc{opacity:var(--d,0);padding-top:2px}
+.p-desc b{display:block;font-family:"Nohemi";font-weight:500;font-size:15px;line-height:1.25}
+.p-desc p{margin-top:12px;font-weight:300;font-size:14px;line-height:1.5;color:var(--mute);max-width:470px}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .svc-intro{grid-template-columns:1fr;row-gap:60px}
+  .svc-right{position:relative;top:auto}
+  .cases{max-width:560px;aspect-ratio:4/3.4}
+  .why-grid{grid-template-columns:repeat(2,minmax(0,1fr));border-top:0;margin-left:var(--pad);margin-right:var(--pad)}
+  .why-grid::before,.why-grid::after{display:none}
+  .why-cell{border-top:1px solid var(--line-soft);border-left:0;border-right:0!important;padding:32px 14px 40px}
+  .why-cell:nth-child(odd){border-right:1px solid var(--line-soft)!important}
+  .p-frame{grid-template-columns:1fr;row-gap:22px;min-height:0}
+  .p-desc{padding-left:72px}
+}
+@media (max-width:640px){
+  .acc-head{gap:16px;font-size:14px}.acc-box{width:30px;height:30px}.acc-in p{padding-left:46px}
+  .why-grid{grid-template-columns:1fr}
+  .why-cell{border-right:0!important}
+  .p-frame{padding:20px 18px 24px}
+  .p-n{width:42px;height:42px;font-size:13px}
+  .p-left{gap:14px}
+  .p-desc{padding-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .svc-title .w{transition:none!important}
+  .p-row{opacity:1}.p-frame{clip-path:none}.p-desc{opacity:1}
+}

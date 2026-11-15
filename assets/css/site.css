@@ -474,3 +474,11 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .tilt-ask #tiltYes{flex:none;background:#fff;color:var(--ink);font:500 13px/1 "Nohemi";padding:10px 12px;border-radius:3px}
 .tilt-ask .x{flex:none;width:26px;height:26px;display:grid;place-items:center;opacity:.7}.tilt-ask .x svg{width:12px;height:12px}
 .menu-open .tilt-ask{opacity:0!important;pointer-events:none!important}
+
+/* ---------- page wipe (wipe.js): dark bar with a violet leading edge, bottom-right → top-left ---------- */
+.wipe{position:fixed;inset:0;z-index:200;pointer-events:none;display:none}
+.wipe.on{display:block;pointer-events:auto}
+.wipe i{position:absolute;inset:0;clip-path:polygon(200% 0,200% 0,200% 200%,0 200%,0 200%)}
+.wipe-a{background:#5243B6}
+.wipe-b{background:#030419}
+html.wipe-in::after{content:"";position:fixed;inset:0;z-index:200;background:#030419}

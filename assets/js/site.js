@@ -4,9 +4,6 @@
    stacked-card scroll · text reveals · layered story parallax
    ============================================================ */
 
-// Paste a Formspree (or similar) endpoint here to receive contact form messages.
-const FORM_ENDPOINT = "";
-
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -419,7 +416,7 @@ const FORM_ENDPOINT = "";
   form.addEventListener('submit', async e => {
     e.preventDefault();
     if (!form.checkValidity()) { status.textContent = 'Please fill in every field marked with *.'; form.reportValidity(); return; }
-    if (!FORM_ENDPOINT) { status.textContent = 'The form isn’t connected yet. Add a form endpoint in assets/js/site.js.'; return; }
+    if (!FORM_ENDPOINT) { status.textContent = 'The form isn’t connected yet. Add a form endpoint in assets/js/config.js.'; return; }
     status.textContent = 'Sending…';
     try {
       const res = await fetch(FORM_ENDPOINT, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
