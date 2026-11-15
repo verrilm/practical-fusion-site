@@ -240,7 +240,7 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 /* the person's photo on the same backdrop as the success-story cards */
 .quote-photo{position:relative;width:min(217px,80%);aspect-ratio:217/250;overflow:hidden;border:1px solid var(--line);border-radius:2px;
   background:#0A0A1A url(../img/story-bg.webp) center bottom/cover no-repeat}
-.quote-photo img{position:absolute;left:50%;bottom:0;width:94%;height:auto;transform:translateX(-50%)}
+.quote-photo img{position:absolute;left:-1px;top:11%;width:calc(100% + 2px);height:auto}   /* head room on top, flush to the sides; the torso runs off the bottom */
 .stack-end{height:clamp(140px,12vw,190px)}
 
 /* contact (revealed underneath the stack) */
