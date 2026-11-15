@@ -71,3 +71,21 @@ document.querySelectorAll('.btn:not(.boxed), .f-btn').forEach(b => {
   const l = r.cloneNode(true); l.classList.remove('arr-r'); l.classList.add('arr-l'); l.setAttribute('aria-hidden', 'true');
   b.insertBefore(l, b.firstChild); b.classList.add('swap');
 });
+
+// Header on scroll: hides while scrolling down, slides back in on a dark backing when scrolling up,
+// and the backing fades away again once the page is back at the very top.
+(() => {
+  const nav = document.getElementById('nav'); if (!nav) return;
+  let lastY = scrollY, ticking = false;
+  setTimeout(() => nav.classList.add('nav-live'), 2000);   // after the intro fade-in, switch to the quick scroll transitions
+  const update = () => {
+    ticking = false;
+    const y = Math.max(0, scrollY), d = y - lastY;
+    const busy = document.body.classList.contains('menu-open') || nav.querySelector('.nav-item.open');
+    if (y <= 8) { nav.classList.remove('nav-hidden', 'nav-solid'); }
+    else if (!busy && d > 4 && y > 80) { nav.classList.add('nav-hidden'); }
+    else if (d < -4) { nav.classList.remove('nav-hidden'); nav.classList.add('nav-solid'); }
+    if (Math.abs(d) > 4 || y <= 8) lastY = y;
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+})();
