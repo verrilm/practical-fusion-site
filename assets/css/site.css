@@ -237,9 +237,10 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .quote blockquote{font-family:"Nohemi";font-size:clamp(22px,2.1vw,30px);line-height:1.2;max-width:600px}
 .quote .who{margin-top:56px;font-size:15px;line-height:1.2;color:#fff}
 .quote .who .org{display:block;margin-top:6px;color:var(--mute)}
-/* placeholder for the person's photo: swap the div for an <img> */
-.quote-photo{width:min(217px,80%);aspect-ratio:217/250;background:
-  repeating-linear-gradient(-45deg,rgba(255,255,255,.12) 0 1px,transparent 1px 16px),rgba(255,255,255,.06)}
+/* the person's photo on the same backdrop as the success-story cards */
+.quote-photo{position:relative;width:min(217px,80%);aspect-ratio:217/250;overflow:hidden;border:1px solid var(--line);border-radius:2px;
+  background:#0A0A1A url(../img/story-bg.webp) center bottom/cover no-repeat}
+.quote-photo img{position:absolute;left:50%;bottom:0;width:94%;height:auto;transform:translateX(-50%)}
 .stack-end{height:clamp(140px,12vw,190px)}
 
 /* contact (revealed underneath the stack) */
