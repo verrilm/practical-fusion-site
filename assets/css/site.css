@@ -199,8 +199,12 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .venture{padding-top:clamp(160px,15vw,240px)}
 .venture-card{position:relative;background:var(--panel);border-radius:22px;padding:50px 50px 46px;min-height:366px;display:grid;grid-template-columns:minmax(0,522px) 1fr;overflow:hidden;isolation:isolate}
 .venture-card > div{position:relative;z-index:1}
+/* dot grid over the card background, fading toward the right where the atom sits */
+.venture-card::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle,rgba(150,160,230,.42) 1.1px,transparent 1.6px) 14px 14px/28px 28px;
+  -webkit-mask:linear-gradient(90deg,#000 0%,#000 55%,rgba(0,0,0,.45) 100%);mask:linear-gradient(90deg,#000 0%,#000 55%,rgba(0,0,0,.45) 100%)}
 .venture-card .body-l{margin-top:12px;max-width:522px}
-.venture-card .btn{margin-top:30px}
+.venture-card .btn{margin-top:56px}
 #atom3d{position:absolute;right:0;top:0;width:42%;height:200%;pointer-events:none}
 
 /* about (about.html) */
