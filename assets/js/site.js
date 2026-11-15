@@ -403,8 +403,12 @@
 
   // start the intro once the fonts are in, so the headline doesn't jump
   const go = () => { body.classList.add('intro-go'); PF.ready = true; };
-  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => requestAnimationFrame(() => requestAnimationFrame(go)));
-  setTimeout(go, 1500); // fallback
+  // arriving from a service page under the sliding scene: the intro starts as the scene begins to lift
+  if (window.PFWipe && PFWipe.arriving) { addEventListener('pf:reveal', go, { once: true }); setTimeout(go, 2500); }
+  else {
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => requestAnimationFrame(() => requestAnimationFrame(go)));
+    setTimeout(go, 1500); // fallback
+  }
   requestAnimationFrame(frame);
 
   // someone arriving at a section link (e.g. /#contact) skips the intro gate

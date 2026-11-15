@@ -48,10 +48,63 @@
     leave(url.href);
   });
 
+  /* ---- Home / logo on a service page: glide to the top, keep a copy of the scene, then load home ---- */
+  const SLIDE = 'pf-slide';
+  document.addEventListener('click', e => {
+    const link = e.target.closest('a[data-home-slide]');
+    if (!link || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const hero = document.querySelector('.svc-hero');
+    if (!hero || reduce) return;                          // plain navigation
+    e.preventDefault();
+    const href = link.href;
+    const send = () => requestAnimationFrame(() => requestAnimationFrame(() => {   // two frames: the scene settles at the top
+      const copy = hero.cloneNode(true);
+      copy.querySelectorAll('[id]').forEach(x => x.removeAttribute('id')); copy.removeAttribute('id');
+      copy.querySelectorAll('a,button').forEach(x => { const s = document.createElement('span'); s.className = x.className; s.innerHTML = x.innerHTML; x.replaceWith(s); });
+      try { sessionStorage.setItem(SLIDE, copy.outerHTML); } catch {}
+      location.href = href;
+    }));
+    const y0 = scrollY;
+    if (y0 <= 2) { send(); return; }
+    const t0 = performance.now(), dur = clamp(y0 / 4, 450, 900);
+    const step = now => {
+      const t = clamp((now - t0) / dur, 0, 1);
+      scrollTo(0, y0 * (1 - ease(t)));
+      if (t < 1) requestAnimationFrame(step); else send();
+    };
+    requestAnimationFrame(step);
+  });
+
+  /* ---- arriving on home from a service page: that scene covers the screen, then lifts away ---- */
+  const lifting = root.classList.contains('scene-lift');
+  if (lifting) {
+    let html = null; try { html = sessionStorage.getItem(SLIDE); sessionStorage.removeItem(SLIDE); } catch {}
+    const cur = document.createElement('div');
+    cur.className = 'scene-curtain'; cur.setAttribute('aria-hidden', 'true');
+    if (html) cur.innerHTML = html;
+    document.body.appendChild(cur);
+    root.classList.remove('scene-lift');
+    const imgs = [...cur.querySelectorAll('img')];
+    const ready = Promise.race([
+      Promise.all([document.fonts ? document.fonts.ready : null, ...imgs.map(i => i.decode().catch(() => {}))]),
+      new Promise(r => setTimeout(r, 900))
+    ]);
+    ready.then(() => requestAnimationFrame(() => {
+      dispatchEvent(new Event('pf:reveal'));
+      const t0 = performance.now(), dur = 1150;
+      const step = now => {
+        const t = clamp((now - t0) / dur, 0, 1);
+        cur.style.transform = `translate3d(0, ${(-102 * ease(t)).toFixed(3)}%, 0)`;
+        if (t < 1) requestAnimationFrame(step); else cur.remove();
+      };
+      requestAnimationFrame(step);
+    }));
+  }
+
   /* ---- arriving: start covered (the inline <head> script sets .wipe-in), then sweep out ---- */
-  const arriving = root.classList.contains('wipe-in');
+  const arriving = root.classList.contains('wipe-in') || lifting;
   window.PFWipe = { arriving };
-  if (arriving) {
+  if (arriving && !lifting) {
     try { sessionStorage.removeItem(KEY); } catch {}
     ov.classList.add('on'); coverFrom(a, 0); coverFrom(b, 0);
     root.classList.remove('wipe-in');
