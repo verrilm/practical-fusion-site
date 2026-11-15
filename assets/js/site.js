@@ -215,6 +215,39 @@ const FORM_ENDPOINT = "";
     } else if (now < busyUntil && e && e.cancelable && scrollY <= 2) e.preventDefault();
   }
   addEventListener('wheel', e => { if (Math.abs(e.deltaY) > 2) gesture(Math.sign(e.deltaY), e); }, { passive: false });
+
+  /* ---------- smooth wheel scrolling (mouse + trackpad; touch stays native) ----------
+     Runs after the scene gestures above: anything they consumed (defaultPrevented) is left alone. */
+  if (!reduce) {
+    let target = scrollY, cur = scrollY, running = false, last = 0;
+    const maxY = () => document.documentElement.scrollHeight - innerHeight;
+    const px = e => e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+    const innerScroller = t => {
+      for (let el = t; el && el !== body && el !== document.documentElement; el = el.parentElement) {
+        if (el.scrollHeight > el.clientHeight + 1 && /(auto|scroll)/.test(getComputedStyle(el).overflowY)) return true;
+      }
+      return false;
+    };
+    function step(now) {
+      const dt = last ? Math.min(now - last, 50) : 16; last = now;
+      cur += (target - cur) * (1 - Math.pow(1 - 0.1, dt / 16.67));   // ~0.1 per frame at 60fps, same feel at 120Hz
+      if (Math.abs(target - cur) < 0.4) cur = target;
+      scrollTo(0, cur);
+      lastAwayFromTop = performance.now();   // the top only counts as 'reached' once the glide has stopped
+      if (cur !== target) requestAnimationFrame(step); else { running = false; last = 0; }
+    }
+    addEventListener('wheel', e => {
+      if (e.defaultPrevented || e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (body.classList.contains('locked') || body.classList.contains('menu-open') || innerScroller(e.target)) return;
+      e.preventDefault();
+      if (!running) target = cur = scrollY;
+      target = clamp(target + px(e), 0, maxY());
+      if (!running) { running = true; requestAnimationFrame(step); }
+    }, { passive: false });
+    // anything else that moves the page (links, keys, scrollbar) takes over and the glide stops
+    addEventListener('scroll', () => { if (running && Math.abs(scrollY - cur) > 3) { running = false; last = 0; target = cur = scrollY; } }, { passive: true });
+    addEventListener('resize', () => { target = clamp(target, 0, maxY()); });
+  }
   addEventListener('keydown', e => {
     if (['ArrowDown', 'PageDown', ' ', 'Spacebar'].includes(e.key)) gesture(1, missionOn ? null : e);
     else if (['ArrowUp', 'PageUp', 'Home'].includes(e.key)) gesture(-1, null);
