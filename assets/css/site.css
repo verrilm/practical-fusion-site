@@ -300,8 +300,7 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .f-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .f-wm{font-family:"Nohemi";font-size:15px;letter-spacing:.01em;white-space:nowrap}
 .f-wm b{font-weight:600}
-.f-wm.tl{display:inline-flex;align-items:center;gap:6px;font-family:"Geist";font-weight:700;font-size:14px;letter-spacing:.02em;transform:scaleX(.88);transform-origin:left center}
-.tl-mark{width:34px;height:14px}
+.f-tl{height:14px;width:auto;display:block}
 .f-badge{background:#06071A;padding:7px 8px;font-family:"Nohemi";font-weight:500;font-size:9.5px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
 .f-card p{margin-top:24px;max-width:330px;font-size:11.5px;line-height:1.25;color:var(--mute)}
 .f-btn{margin-top:auto;padding-top:28px;align-self:flex-start;display:inline-flex;align-items:center;gap:5px;font-family:"Nohemi";font-size:11px;color:var(--ink)}
