@@ -484,9 +484,10 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 html.wipe-in::after{content:"";position:fixed;inset:0;z-index:200;background:#030419}
 
 /* ---------- Home from a service page: that page's scene covers home, then lifts up and away (wipe.js) ---------- */
-html.scene-lift::after{content:"";position:fixed;inset:0;z-index:200;background:#0D1438}
-.scene-curtain{position:fixed;inset:0;z-index:200;pointer-events:none;will-change:transform;box-shadow:0 30px 80px rgba(0,0,0,.55);background:#0D1438}
-.scene-curtain .svc-hero{height:100%;min-height:0}
+html.scene-lift::after{content:"";position:fixed;inset:0;z-index:200;background:#030419}
+.scene-curtain{position:fixed;inset:0;z-index:200;will-change:transform;box-shadow:0 30px 80px rgba(0,0,0,.55);background:var(--bg)}
+.scene-curtain .sc-scroll{position:absolute;inset:0;overflow:hidden;background:var(--bg)}
+.scene-curtain .nav{position:absolute;opacity:1;transition:none}
 .scene-curtain .svc-title .w{opacity:1;filter:none;transform:none;transition:none}
 .scene-curtain .begin *{transition:none!important}
 .scene-curtain .begin .btn.boxed{clip-path:none;background:#fff}

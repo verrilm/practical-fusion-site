@@ -159,7 +159,7 @@
         const lx = -mx * L.d * 46, ly = -my * L.d * 28 + (reduce ? 0 : y * L.s);
         L.el.style.transform = `translate3d(${lx.toFixed(2)}px, ${ly.toFixed(2)}px, 0)`;
       }
-      if (!reduce) {
+      if (!reduce && finePointer) {                       // phones/tablets: the title block just scrolls with the page (no lag)
         title.style.transform = `translate3d(-50%, ${(y * 0.42).toFixed(1)}px, 0)`;
         title.style.opacity = (1 - clamp(y / (H * 0.55), 0, 1)).toFixed(3);
       }

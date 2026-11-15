@@ -48,41 +48,39 @@
     leave(url.href);
   });
 
-  /* ---- Home / logo on a service page: glide to the top, keep a copy of the scene, then load home ---- */
+  /* ---- Home / logo on a service page: keep a copy of exactly what's on screen, then load home under it ---- */
   const SLIDE = 'pf-slide';
+  const strip = el => {                                   // a lifeless copy: no ids (home has its own), no links or buttons
+    el.querySelectorAll('[id]').forEach(x => x.removeAttribute('id')); el.removeAttribute('id');
+    el.querySelectorAll('a,button').forEach(x => { const s = document.createElement('span'); s.className = x.className; s.innerHTML = x.innerHTML; x.replaceWith(s); });
+    el.querySelectorAll('input,select,textarea').forEach(x => x.setAttribute('tabindex', '-1'));
+    return el;
+  };
   document.addEventListener('click', e => {
     const link = e.target.closest('a[data-home-slide]');
-    if (!link || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    const hero = document.querySelector('.svc-hero');
-    if (!hero || reduce) return;                          // plain navigation
+    if (!link || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || reduce) return;
     e.preventDefault();
-    const href = link.href;
-    const send = () => requestAnimationFrame(() => requestAnimationFrame(() => {   // two frames: the scene settles at the top
-      const copy = hero.cloneNode(true);
-      copy.querySelectorAll('[id]').forEach(x => x.removeAttribute('id')); copy.removeAttribute('id');
-      copy.querySelectorAll('a,button').forEach(x => { const s = document.createElement('span'); s.className = x.className; s.innerHTML = x.innerHTML; x.replaceWith(s); });
-      try { sessionStorage.setItem(SLIDE, copy.outerHTML); } catch {}
-      location.href = href;
-    }));
-    const y0 = scrollY;
-    if (y0 <= 2) { send(); return; }
-    const t0 = performance.now(), dur = clamp(y0 / 4, 450, 900);
-    const step = now => {
-      const t = clamp((now - t0) / dur, 0, 1);
-      scrollTo(0, y0 * (1 - ease(t)));
-      if (t < 1) requestAnimationFrame(step); else send();
-    };
-    requestAnimationFrame(step);
+    document.body.classList.remove('menu-open');
+    const page = [...document.body.children]
+      .filter(el => !el.matches('script, .nav, .m-menu, .wipe, .tilt-ask'))
+      .map(el => strip(el.cloneNode(true)).outerHTML).join('');
+    const nav = document.getElementById('nav');
+    const data = { y: scrollY, page, nav: nav ? strip(nav.cloneNode(true)).outerHTML : '' };
+    try { sessionStorage.setItem(SLIDE, JSON.stringify(data)); } catch {}
+    location.href = link.href;
   });
 
-  /* ---- arriving on home from a service page: that scene covers the screen, then lifts away ---- */
+  /* ---- arriving on home from a service page: that page covers the screen as it was left, then lifts away ---- */
   const lifting = root.classList.contains('scene-lift');
   if (lifting) {
-    let html = null; try { html = sessionStorage.getItem(SLIDE); sessionStorage.removeItem(SLIDE); } catch {}
+    let data = null; try { data = JSON.parse(sessionStorage.getItem(SLIDE)); sessionStorage.removeItem(SLIDE); } catch {}
     const cur = document.createElement('div');
-    cur.className = 'scene-curtain'; cur.setAttribute('aria-hidden', 'true');
-    if (html) cur.innerHTML = html;
+    cur.className = 'scene-curtain intro-go'; cur.setAttribute('aria-hidden', 'true'); cur.inert = true;
+    // the copy scrolls inside its own box, so sticky parts (the use-case panel, the contact) sit where they were
+    cur.innerHTML = `<div class="sc-scroll"><div class="sc-page">${data ? data.page : ''}</div></div>${data ? data.nav : ''}`;
     document.body.appendChild(cur);
+    const box = cur.firstElementChild, y = data ? data.y : 0;
+    box.scrollTop = y;
     root.classList.remove('scene-lift');
     const imgs = [...cur.querySelectorAll('img')];
     const ready = Promise.race([
@@ -90,6 +88,7 @@
       new Promise(r => setTimeout(r, 900))
     ]);
     ready.then(() => requestAnimationFrame(() => {
+      box.scrollTop = y;                                  // again, now that images have their heights
       dispatchEvent(new Event('pf:reveal'));
       const t0 = performance.now(), dur = 1150;
       const step = now => {
