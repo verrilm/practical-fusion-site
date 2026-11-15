@@ -72,20 +72,21 @@ document.querySelectorAll('.btn:not(.boxed), .f-btn').forEach(b => {
   b.insertBefore(l, b.firstChild); b.classList.add('swap');
 });
 
-// Header on scroll: hides while scrolling down, slides back in on a dark backing when scrolling up,
-// and the backing fades away again once the page is back at the very top.
+// Header on scroll: scrolling down carries it up and out with the page (no animation of its own);
+// scrolling up slides it back down on a black bar, and the bar fades away again at the very top.
 (() => {
   const nav = document.getElementById('nav'); if (!nav) return;
-  let lastY = scrollY, ticking = false;
-  setTimeout(() => nav.classList.add('nav-live'), 2000);   // after the intro fade-in, switch to the quick scroll transitions
+  let lastY = scrollY, off = 0, ticking = false;
+  setTimeout(() => nav.classList.add('nav-live'), 2000);   // after the intro fade-in
+  const set = (v, animate) => { off = v; nav.classList.toggle('nav-anim', !!animate); nav.style.transform = off ? `translateY(${off.toFixed(1)}px)` : ''; };
   const update = () => {
     ticking = false;
-    const y = Math.max(0, scrollY), d = y - lastY;
+    const y = Math.max(0, scrollY), d = y - lastY; lastY = y;
     const busy = document.body.classList.contains('menu-open') || nav.querySelector('.nav-item.open');
-    if (y <= 8) { nav.classList.remove('nav-hidden', 'nav-solid'); }
-    else if (!busy && d > 4 && y > 80) { nav.classList.add('nav-hidden'); }
-    else if (d < -4) { nav.classList.remove('nav-hidden'); nav.classList.add('nav-solid'); }
-    if (Math.abs(d) > 4 || y <= 8) lastY = y;
+    if (y <= 8) { set(0, off !== 0); nav.classList.remove('nav-solid'); return; }
+    if (d > 0 && !busy) set(Math.max(-nav.offsetHeight - 2, off - d), false);    // moves exactly with the scroll
+    else if (d < -3 && off !== 0) { set(0, true); nav.classList.add('nav-solid'); } // slides back in
+    else if (d < -3) nav.classList.add('nav-solid');
   };
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
 })();

@@ -108,10 +108,10 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .nav-right .nav-cta:hover{background:#E6E3F2}
 .nav{opacity:0;transform:translateY(-10px);transition:opacity .9s .9s,transform .9s .9s var(--ease)}
 .intro-go .nav{opacity:1;transform:none}
-.nav::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--bg);border-bottom:1px solid rgba(255,255,255,.06);opacity:0;transition:opacity .45s var(--ease);pointer-events:none}
-.nav.nav-live{transition:transform .55s var(--ease),opacity .4s}
+.nav::before{content:"";position:absolute;inset:0;z-index:-1;background:#000;opacity:0;transition:opacity .45s var(--ease);pointer-events:none}
+.nav.nav-live{transition:opacity .4s}
+.nav.nav-live.nav-anim{transition:transform .55s var(--ease),opacity .4s}
 .nav.nav-solid::before{opacity:1}
-.intro-go .nav.nav-hidden{transform:translateY(-105%)}
 
 /* ---------- HERO ---------- */
 .hero{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;z-index:1;background:#0B0A2A;will-change:clip-path}
