@@ -112,7 +112,7 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .nav.nav-live{transition:opacity .4s}
 .nav.nav-live.nav-anim{transition:transform .55s var(--ease),opacity .4s}
 .nav.nav-solid::before{opacity:1}
-.menu-open .nav::before,.menu-open .nav.nav-solid::before{opacity:0}   /* the open menu has its own backdrop */
+.menu-open .nav::before,.menu-open .nav.nav-solid::before{opacity:0;transition-delay:.3s}   /* the open menu has its own backdrop */
 
 /* ---------- HERO ---------- */
 .hero{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;z-index:1;background:#0B0A2A;will-change:clip-path}
