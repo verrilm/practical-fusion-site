@@ -50,7 +50,6 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .btn{display:inline-flex;align-items:stretch;gap:0;font-family:"Nohemi";font-weight:500;font-size:15px;line-height:1.1;color:var(--ink)}
 .btn .lbl{background:#fff;border-radius:3px;padding:13px 18px;display:flex;align-items:center;white-space:nowrap}
 .btn .arr{width:43px;display:grid;place-items:center;background:var(--ink);color:#fff;border-radius:3px;transition:transform .4s var(--ease)}
-.btn:hover .arr{transform:translateX(4px)}
 .btn.boxed{background:#fff;border-radius:3px;padding:10px 10px 10px 14px;gap:14px;align-items:center}
 .btn.boxed .lbl{padding:0;background:none}
 .btn.boxed .arr{width:30px;height:30px;border-radius:3px}
@@ -303,11 +302,11 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
 .f-tl{height:14px;width:auto;display:block}
 .f-badge{background:#06071A;padding:7px 8px;font-family:"Nohemi";font-weight:500;font-size:9.5px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
 .f-card p{margin-top:24px;max-width:330px;font-size:11.5px;line-height:1.25;color:var(--mute)}
-.f-btn{margin-top:auto;padding-top:28px;align-self:flex-start;display:inline-flex;align-items:center;gap:5px;font-family:"Nohemi";font-size:11px;color:var(--ink)}
+.f-btn{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:5px;font-family:"Nohemi";font-size:11px;color:var(--ink)}
 .f-btn .lbl{background:#fff;padding:6px 10px}
 .f-btn .arr{width:20px;height:20px;display:grid;place-items:center;background:var(--ink);color:#fff;transition:transform .4s var(--ease)}
 .f-btn .arr svg{width:12px;height:12px}
-.f-btn:hover .arr{transform:translateX(3px)}
+.f-card p{margin-bottom:28px}
 .f-logo{width:64px;margin-top:12px}
 .f-info{display:grid;grid-template-columns:380px 253px 1fr;column-gap:0}
 .f-links{display:grid;grid-template-columns:repeat(3,104px);row-gap:10px}
@@ -416,6 +415,21 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
   .nav-right{display:none!important}
   .m-btn{display:inline-flex}
   .m-menu{display:flex}
+}
+
+
+/* arrow-swap hover (Bitwip/Sharplink style): right chip exits upward, label slides right, left chip rises in */
+.swap{position:relative;overflow:hidden;--aw:43px;--g:0px}
+.f-btn.swap{--aw:20px;--g:5px}
+.swap .lbl,.swap .arr{transition:transform .55s var(--ease)}
+.swap .arr-l{position:absolute;left:0;top:0;bottom:0;width:var(--aw);transform:translateY(105%)}
+.f-btn.swap .arr-l{top:calc(50% - 10px);bottom:auto;height:20px;transform:translateY(170%)}
+@media (hover:hover){.f-btn.swap:hover .arr-r,.f-btn.swap:focus-visible .arr-r{transform:translateY(-170%)}}
+.swap .arr-r{transition-delay:.04s}
+@media (hover:hover){
+  .swap:hover .lbl,.swap:focus-visible .lbl{transform:translateX(calc(var(--aw) + var(--g)))}
+  .swap:hover .arr-r,.swap:focus-visible .arr-r{transform:translateY(-105%);transition-delay:0s}
+  .swap:hover .arr-l,.swap:focus-visible .arr-l{transform:none;transition-delay:.08s}
 }
 
 /* phones: the gem's circle needs room above the headline */

@@ -62,3 +62,12 @@
   addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   addEventListener('resize', () => { if (innerWidth > 640) close(); });
 })();
+
+// Arrow buttons: on hover the arrow chip leaves out the top on the right, the label slides right,
+// and a second chip rises into place on the left (reversed on leave).
+document.querySelectorAll('.btn:not(.boxed), .f-btn').forEach(b => {
+  const r = b.querySelector('.arr'); if (!r || b.querySelector('.arr-l')) return;
+  r.classList.add('arr-r');
+  const l = r.cloneNode(true); l.classList.remove('arr-r'); l.classList.add('arr-l'); l.setAttribute('aria-hidden', 'true');
+  b.insertBefore(l, b.firstChild); b.classList.add('swap');
+});
